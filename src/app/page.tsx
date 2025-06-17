@@ -88,8 +88,8 @@ export default function Home() {
         <div className="max-w-[900px] mx-auto aspect-video rounded-xl shadow-xl overflow-hidden">
           <iframe
             className="w-full h-full"
-            src="https://www.youtube.com/embed/hxCk3r6v25g"
-            title="YouTube video player - Example Sermon (Tim Keller - The Search for Happiness)"
+            src="https://www.youtube.com/embed/YOUR_HSCM_VIDEO_ID_HERE"
+            title="Watch a sermon from Holy Spirit Connect Ministries"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           ></iframe>
