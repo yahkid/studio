@@ -8,7 +8,7 @@ import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handshake, CalendarDays, Users, ArrowRight, Heart, Film, CalendarHeart, HandCoins } from 'lucide-react';
+import { Handshake, CalendarDays, Users, ArrowRight, Film, CalendarHeart, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 
 
@@ -63,20 +63,20 @@ export default function Home() {
         </Card>
       </section>
 
-      <section className="w-full max-w-4xl text-center py-8 space-y-6">
-        <Heart className="h-12 w-12 text-primary mx-auto" />
-        <h2 className="font-headline text-3xl">Our Mission: A FAMILY BUILT ON FAITH</h2>
-        <p className="font-body text-lg max-w-xl mx-auto">
-          We are a vibrant community dedicated to sharing God's love, fostering spiritual growth, and making a positive impact. Join us as we build a family rooted in faith and compassion.
+      <section className="w-full text-center py-24 space-y-8">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="h-12 w-12 text-primary-green mx-auto"
+        >
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <h2 className="font-headline">Our Mission: A FAMILY BUILT ON FAITH</h2>
+        <p className="font-body text-lg max-w-2xl mx-auto mt-4">
+          We are a vibrant community dedicated to sharing God’s love, fostering spiritual growth, and making a positive impact. Join us as we build a family rooted in faith and compassion.
         </p>
-        <Image
-          src="https://placehold.co/1200x400.png"
-          alt="Family built on faith"
-          width={1200}
-          height={400}
-          className="rounded-lg shadow-md object-cover"
-          data-ai-hint="diverse community"
-        />
+        <div className="w-32 h-1 mx-auto bg-[#A8B8AD] mt-8"></div>
       </section>
 
       <section className="w-full max-w-4xl text-center py-8 space-y-6">
