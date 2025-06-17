@@ -1,23 +1,23 @@
 import Link from "next/link";
-import { Church } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { User } from "lucide-react"; // Replaced Church and ThemeToggle related imports
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <Church className="h-6 w-6 text-primary" />
-          <span className="font-headline text-xl font-bold text-foreground">
+    <header className="sticky top-0 z-50 w-full border-b border-[#e0e0e0] bg-white">
+      <div className="container flex items-center justify-between py-6">
+        <Link href="/" className="flex items-center">
+          <span className="font-body font-bold text-2xl text-primary-green">
             HSCM Connect
           </span>
         </Link>
         <nav className="flex items-center space-x-4">
-          <Button variant="link" asChild>
-            <Link href="/decision" className="font-headline">I've Raised My Hand</Link>
-          </Button>
-          <ThemeToggle />
+          <Link
+            href="/decision"
+            className="font-body font-bold py-2 px-4 border border-primary-green text-primary-green rounded-md transition-all duration-300 ease-in-out hover:bg-secondary-green-light hover:text-primary-green"
+          >
+            I've Raised My Hand
+          </Link>
+          <User className="h-6 w-6 text-primary-green" />
         </nav>
       </div>
     </header>
