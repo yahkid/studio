@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import './globals.css';
+import './global-styles.css'; // Import the new global styles
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -20,10 +21,11 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+        {/* Updated Google Fonts import */}
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased min-h-screen flex flex-col">
+      {/* Ensure Lato is the default body font if Tailwind's font-body utility is removed or overridden */}
+      <body className="antialiased min-h-screen flex flex-col" style={{ fontFamily: "'Lato', sans-serif" }}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -31,6 +33,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
+          {/* The main container might use Tailwind's container or the new .container class depending on implementation */}
           <main className="flex-grow container py-8">{children}</main>
           <Footer />
           <Toaster />

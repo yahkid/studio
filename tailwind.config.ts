@@ -10,13 +10,28 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        // Updated to reflect new font choices, 'Lato' for body, 'Merriweather' for headlines
         body: ['Lato', 'sans-serif'],
-        headline: ['Montserrat', 'sans-serif'],
+        headline: ['Merriweather', 'serif'],
         code: ['monospace'],
       },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        // Existing ShadCN/Tailwind theme colors - these might be overridden or co-exist
+        // with the new CSS variables depending on usage.
+        // For the new design foundation, primary styling should come from global-styles.css variables.
+        background: 'hsl(var(--background))', // This will be var(--neutral-light) from global-styles.css for body
+        foreground: 'hsl(var(--foreground))', // This will be var(--neutral-dark) or var(--primary-green) from global-styles.css
+
+        // New CSS variables from global-styles.css for direct use in Tailwind if needed
+        'primary-green': 'var(--primary-green)',
+        'secondary-green-light': 'var(--secondary-green-light)',
+        'accent-yellow': 'var(--accent-yellow)',
+        'neutral-dark': 'var(--neutral-dark)',
+        'neutral-medium': 'var(--neutral-medium)',
+        'neutral-light': 'var(--neutral-light)',
+        'white': 'var(--white)',
+
+        // ShadCN theme variables (kept for compatibility with existing components)
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
@@ -26,11 +41,11 @@ export default {
           foreground: 'hsl(var(--popover-foreground))',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'hsl(var(--primary))', // Corresponds to HSCM Jade Green from PDR
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: 'hsl(var(--secondary))', // Corresponds to HSCM Gold from PDR
           foreground: 'hsl(var(--secondary-foreground))',
         },
         muted: {

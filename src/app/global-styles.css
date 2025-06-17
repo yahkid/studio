@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-green: #4A6C55;
+  --secondary-green-light: #E8F0E4;
+  --accent-yellow: #FFC72C;
+  --neutral-dark: #333333;
+  --neutral-medium: #666666;
+  --neutral-light: #F5F5F3;
+  --white: #FFFFFF;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--neutral-dark);
+  background-color: var(--neutral-light);
+  /* Overriding Tailwind's base body background and text if necessary */
+  @apply bg-[var(--neutral-light)] text-[var(--neutral-dark)];
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+  color: var(--primary-green);
+  margin-bottom: 0.5em;
+   /* Overriding Tailwind's base heading color if necessary */
+  @apply text-[var(--primary-green)];
+}
+
+h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2.5rem;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
