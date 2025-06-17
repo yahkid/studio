@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -76,6 +77,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Your full name"
+                suppressHydrationWarning={true}
               />
             </div>
           </div>
@@ -93,6 +95,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Your email address"
+                suppressHydrationWarning={true}
               />
             </div>
           </div>
@@ -134,7 +137,7 @@ export function DecisionForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full font-headline">Submit My Decision</Button>
+          <Button type="submit" className="w-full font-headline" suppressHydrationWarning={true}>Submit My Decision</Button>
         </CardFooter>
       </form>
     </Card>
