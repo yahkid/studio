@@ -46,13 +46,9 @@ export default function RootLayout({
     };
   }, []);
 
-
-  // Render nothing or a loader while initialSession is undefined
-  if (initialSession === undefined && typeof window !== 'undefined') {
-     // Or a more sophisticated loading spinner
-    return <div className="flex justify-center items-center min-h-screen">Loading authentication...</div>;
-  }
-
+  // The problematic early return that caused hydration errors has been removed.
+  // The main HTML structure is now consistently rendered on server and client.
+  // SessionContextProvider will handle its own loading state.
 
   return (
     <html lang="en" suppressHydrationWarning>
