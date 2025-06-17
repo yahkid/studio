@@ -8,8 +8,9 @@ import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handshake, CalendarDays, Users, ArrowRight, PlayCircle, CalendarHeart, HandCoins } from 'lucide-react';
+import { Handshake, CalendarDays, Users, ArrowRight, PlayCircle, HandCoins } from 'lucide-react';
 import Link from 'next/link';
+import { EventsSection } from '@/components/sections/events-section';
 
 
 export default function Home() {
@@ -115,24 +116,7 @@ export default function Home() {
         </Button>
       </section>
 
-      <section id="events" className="w-full max-w-4xl text-center py-8 space-y-6">
-        <CalendarHeart className="h-12 w-12 text-primary-green mx-auto" />
-        <h2 className="font-headline text-3xl">Events: LIFE IS BETTER TOGETHER</h2>
-        <p className="font-body text-lg max-w-xl mx-auto">
-          Join us for upcoming events, workshops, and gatherings. It's a great way to connect with others, grow in your faith, and experience the joy of community.
-        </p>
-        <Image
-          src="https://placehold.co/1200x400.png"
-          alt="Church events"
-          width={1200}
-          height={400}
-          className="rounded-lg shadow-md object-cover"
-          data-ai-hint="church event"
-        />
-         <Button variant="outline" size="lg" className="font-headline font-bold">
-            View Upcoming Events <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </section>
+      <EventsSection />
 
       <section id="partnership" className="w-full max-w-4xl text-center py-8 space-y-6">
         <HandCoins className="h-12 w-12 text-primary-green mx-auto" />
