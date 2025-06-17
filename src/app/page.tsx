@@ -86,7 +86,7 @@ export default function Home() {
           </p>
           <div className="max-w-[900px] mx-auto aspect-video rounded-xl shadow-xl overflow-hidden">
             {/*
-              IMPORTANT: Replace 'KMj5hG0FpEE' with an actual video ID from the 
+              IMPORTANT: Replace 'KMj5hG0FpEE' with an actual video ID from the
               Holy Spirit Connect Ministries YouTube channel: https://www.youtube.com/@holyspiritconnect
               To get a video ID:
               1. Go to the channel.
@@ -97,26 +97,26 @@ export default function Home() {
             */}
             <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/KMj5hG0FpEE" 
+              src="https://www.youtube.com/embed/KMj5hG0FpEE"
               title="Featured Sermon Video Player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             ></iframe>
           </div>
         </section>
-        
+
         <section id="decision-pathway" className="w-full max-w-4xl mx-auto text-center py-8 space-y-6">
-          <Image 
-            src="https://placehold.co/1200x400.png" 
-            alt="Community gathering for decision pathway" 
-            width={1200} 
-            height={400} 
+          <Image
+            src="https://placehold.co/1200x400.png"
+            alt="Community gathering for decision pathway"
+            width={1200}
+            height={400}
             className="rounded-lg shadow-md object-cover"
-            data-ai-hint="spiritual decision" 
+            data-ai-hint="spiritual decision"
           />
           <h2 className="font-headline text-3xl mt-8 mb-4">MADE A DECISION TODAY?</h2>
           <p className="font-body text-lg max-w-xl mx-auto mb-6">
-              We offer various ways to connect, from small groups to serving opportunities. 
+              We offer various ways to connect, from small groups to serving opportunities.
               If you've made a decision for Christ, we'd love to hear from you and help you take your next step.
           </p>
           <Button asChild variant="secondary" size="lg" className="font-body font-bold">
