@@ -8,7 +8,7 @@ import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme() // theme can be 'light', 'dark', or 'system'
+  const { theme, setTheme } = useTheme() 
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
@@ -20,23 +20,19 @@ export function ThemeToggle() {
     if (theme === 'system' && typeof window !== 'undefined') {
       currentDisplayTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
-    // Always toggle between explicit light and dark
     setTheme(currentDisplayTheme === "light" ? "dark" : "light");
   }
 
   if (!mounted) {
-    // Render a static version that matches the server's default rendering (theme="system").
-    // For "system", `theme === "light"` is false, so Sun icon and "Switch to light mode" is rendered.
-    // Adding `disabled` helps prevent interaction before full hydration if needed,
-    // though matching the output is the primary goal for avoiding hydration errors.
     return (
-      <Button variant="ghost" size="icon" aria-label="Switch to light mode" disabled>
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
+      <Button variant="ghost" size="icon" aria-label="Toggle theme" className="rounded-full" disabled>
+        {/* Render a placeholder or a default icon that matches server render for "system" */}
+        {/* System theme often defaults to light, so Moon might be shown initially if server can't know preference */}
+        <Sun className="h-[1.2rem] w-[1.2rem]" /> 
       </Button>
     )
   }
 
-  // Determine the currently displayed theme after mounting.
   let displayTheme = theme;
   if (theme === 'system' && typeof window !== 'undefined') {
     displayTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -48,11 +44,12 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label={displayTheme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+      className="rounded-full hover:bg-accent transition-colors"
     >
       {displayTheme === "light" ? (
-        <Moon className="h-[1.2rem] w-[1.2rem]" />
+        <Moon className="h-[1.2rem] w-[1.2rem] text-primary" />
       ) : (
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <Sun className="h-[1.2rem] w-[1.2rem] text-secondary" />
       )}
     </Button>
   )
