@@ -1,7 +1,8 @@
+
 // This file is a placeholder for your Supabase database types.
 // You can generate them using the Supabase CLI:
-// npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > src/types/supabase.ts
-// Replace YOUR_PROJECT_ID with your actual Supabase project ID.
+// npx supabase gen types typescript --project-id xmgcypojvvswfsjsfxhm --schema public > src/types/supabase.ts
+// Replace xmgcypojvvswfsjsfxhm with your actual Supabase project ID if different.
 
 export type Json =
   | string
@@ -14,29 +15,132 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      // Define your tables here as you create them in Supabase.
-      // Example:
-      // posts: {
-      //   Row: {
-      //     id: number
-      //     created_at: string
-      //     title: string | null
-      //     content: string | null
-      //   }
-      //   Insert: {
-      //     id?: number
-      //     created_at?: string
-      //     title?: string | null
-      //     content?: string | null
-      //   }
-      //   Update: {
-      //     id?: number
-      //     created_at?: string
-      //     title?: string | null
-      //     content?: string | null
-      //   }
-      //   Relationships: []
-      // }
+      decisions: {
+        Row: {
+          id: string // UUID
+          created_at: string // TIMESTAMPTZ
+          name: string
+          email: string
+          decision_type: string
+          comments: string | null
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          name: string
+          email: string
+          decision_type: string
+          comments?: string | null
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          name?: string
+          email?: string
+          decision_type?: string
+          comments?: string | null
+        }
+        Relationships: []
+      }
+      lead_magnet_signups: {
+        Row: {
+          id: string // UUID
+          created_at: string // TIMESTAMPTZ
+          email: string
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          email: string
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          email?: string
+        }
+        Relationships: []
+      }
+      visit_requests: {
+        Row: {
+          id: string // UUID
+          created_at: string // TIMESTAMPTZ
+          name: string
+          email: string
+          message: string | null
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          name: string
+          email: string
+          message?: string | null
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          name?: string
+          email?: string
+          message?: string | null
+        }
+        Relationships: []
+      }
+      exit_intent_offers: {
+        Row: {
+          id: string // UUID
+          created_at: string // TIMESTAMPTZ
+          email: string
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          email: string
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          email?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          id: string // UUID
+          created_at: string // TIMESTAMPTZ
+          title: string
+          description: string | null
+          details: string | null
+          image_src: string | null
+          image_alt: string | null
+          ai_hint: string | null
+          button_text: string | null
+          button_link: string | null
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          title: string
+          description?: string | null
+          details?: string | null
+          image_src?: string | null
+          image_alt?: string | null
+          ai_hint?: string | null
+          button_text?: string | null
+          button_link?: string | null
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          title?: string
+          description?: string | null
+          details?: string | null
+          image_src?: string | null
+          image_alt?: string | null
+          ai_hint?: string | null
+          button_text?: string | null
+          button_link?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -52,19 +156,3 @@ export interface Database {
     }
   }
 }
-
-// Example of how to use the Database type (if you had a 'posts' table):
-// import { PostgrestResponse } from '@supabase/supabase-js';
-// import { supabase } from '@/lib/supabaseClient';
-//
-// async function getPosts() {
-//   const { data, error }: PostgrestResponse<Database['public']['Tables']['posts']['Row']> = await supabase
-//     .from('posts')
-//     .select('*');
-//
-//   if (error) {
-//     console.error('Error fetching posts:', error);
-//     return null;
-//   }
-//   return data;
-// }
