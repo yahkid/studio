@@ -8,7 +8,7 @@ import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handshake, CalendarDays, Users, ArrowRight, Film, CalendarHeart, HandCoins } from 'lucide-react';
+import { Handshake, CalendarDays, Users, ArrowRight, PlayCircle, CalendarHeart, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 
 
@@ -17,8 +17,8 @@ export default function Home() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
 
   return (
-    <div className="flex flex-col items-center space-y-12 py-8">
-      <header className="text-center space-y-4">
+    <div className="flex flex-col items-center space-y-12">
+      <header className="text-center space-y-4 pt-8">
         <h1 className="font-headline text-4xl md:text-5xl font-bold">
           FIND YOUR PURPOSE.
         </h1>
@@ -79,20 +79,21 @@ export default function Home() {
         <div className="w-32 h-1 mx-auto bg-[#A8B8AD] mt-8"></div>
       </section>
 
-      <section className="w-full max-w-4xl text-center py-8 space-y-6">
-        <Film className="h-12 w-12 text-primary mx-auto" />
+      <section className="w-full text-center py-24 space-y-6 bg-[var(--secondary-green-light)]">
+        <PlayCircle className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Watch & Grow: A MESSAGE THAT CHANGES EVERYTHING</h2>
-        <p className="font-body text-lg max-w-xl mx-auto">
+        <p className="font-body text-lg max-w-2xl mx-auto mt-4 mb-10">
           Explore our library of messages designed to inspire, challenge, and equip you for a life of purpose. Discover teachings that can transform your perspective and deepen your relationship with God.
         </p>
-        <Image
-          src="https://placehold.co/1200x400.png"
-          alt="Message that changes everything"
-          width={1200}
-          height={400}
-          className="rounded-lg shadow-md object-cover"
-          data-ai-hint="sermon teaching"
-        />
+        <div className="max-w-[900px] mx-auto aspect-video rounded-xl shadow-xl overflow-hidden">
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/hxCk3r6v25g"
+            title="YouTube video player - Example Sermon (Tim Keller - The Search for Happiness)"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
+        </div>
       </section>
       
       <section className="w-full max-w-4xl text-center py-8 space-y-6">
@@ -115,7 +116,7 @@ export default function Home() {
       </section>
 
       <section className="w-full max-w-4xl text-center py-8 space-y-6">
-        <CalendarHeart className="h-12 w-12 text-primary mx-auto" />
+        <CalendarHeart className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Events: LIFE IS BETTER TOGETHER</h2>
         <p className="font-body text-lg max-w-xl mx-auto">
           Join us for upcoming events, workshops, and gatherings. It's a great way to connect with others, grow in your faith, and experience the joy of community.
@@ -134,7 +135,7 @@ export default function Home() {
       </section>
 
       <section className="w-full max-w-4xl text-center py-8 space-y-6">
-        <HandCoins className="h-12 w-12 text-primary mx-auto" />
+        <HandCoins className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Partnership: BECOME PART OF THE STORY</h2>
         <p className="font-body text-lg max-w-xl mx-auto">
           Partner with us in spreading hope and transforming lives. Your support helps us continue our mission and reach more people with the message of faith.
