@@ -1,3 +1,4 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import './global-styles.css'; // Import the new global styles
@@ -5,6 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from '@/contexts/auth-context';
 
 export const metadata: Metadata = {
   title: 'HSCM Connect',
@@ -32,11 +34,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          {/* The main container might use Tailwind's container or the new .container class depending on implementation */}
-          <main className="flex-grow container py-8">{children}</main>
-          <Footer />
-          <Toaster />
+          <AuthProvider>
+            <Header />
+            {/* The main container might use Tailwind's container or the new .container class depending on implementation */}
+            <main className="flex-grow container py-8">{children}</main>
+            <Footer />
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
