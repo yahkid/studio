@@ -1,48 +1,49 @@
-/*
-  This file previously contained Tailwind directives and ShadCN theme variables.
-  The core foundational styles (colors, typography, global body/heading styles)
-  are now primarily managed by src/app/global-styles.css as per the new design requirements.
 
-  Tailwind directives are still needed for Tailwind to function.
-  ShadCN variables are kept for any existing ShadCN components that might still rely on them,
-  but the visual appearance should largely be dictated by global-styles.css.
-  A full integration would involve aligning ShadCN theme variables with the new
-  CSS variables from global-styles.css.
-*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Default Light Mode HSCM PDR Styles (kept for reference/ShadCN compatibility) */
-    --background: 200 20% 98%; /* #F9F9F9 Warm, off-white (original: 0 0% 98%) */
-    --foreground: 240 10% 10%; /* #1A1A1A Near-black (original: 0 0% 10%) */
-    --card: 200 20% 98%; /* (original: 0 0% 98%) */
-    --card-foreground: 240 10% 10%; /* (original: 0 0% 10%) */
-    --popover: 200 20% 98%; /* (original: 0 0% 98%) */
-    --popover-foreground: 240 10% 10%; /* (original: 0 0% 10%) */
-    --primary: 158 100% 33%; /* #00A86B HSCM Jade Green */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 51 100% 50%; /* #FFD700 HSCM Gold */
-    --secondary-foreground: 0 0% 10%;
-    --muted: 0 0% 96.1%; /* (original: 0 0% 96%) */
-    --muted-foreground: 0 0% 45.1%; /* #5A5A5A Dark Gray (original: 0 0% 35%) */
-    --accent: 158 100% 30%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%; /* (original: 0 0% 90%) */
-    --input: 0 0% 87.8%; /* (original: 0 0% 88%) */
-    --ring: 158 100% 33%;
+    /* Light Mode HSCM Brand Styles */
+    --background: 0 0% 100%; /* --white */
+    --foreground: 240 10% 10%; /* Near-black #1A1A1A for headings */
+    
+    --card: 0 0% 100%; /* Card background - white */
+    --card-foreground: 240 10% 10%; /* Card text color */
+    
+    --popover: 0 0% 100%; /* Popover background - white */
+    --popover-foreground: 240 10% 10%; /* Popover text color */
+    
+    --primary: 158 100% 33%; /* --hscm-green #00A86B */
+    --primary-foreground: 0 0% 98%; /* Text on primary buttons - off-white */
+    
+    --secondary: 51 100% 50%; /* --hscm-gold #FFD700 */
+    --secondary-foreground: 240 10% 10%; /* Text on secondary buttons - near-black */
+    
+    --muted: 0 0% 96.1%; /* Muted background */
+    --muted-foreground: 240 0% 35%; /* --body-text-light #5A5A5A */
+    
+    --accent: 158 100% 30%; /* Slightly darker green for accents if needed */
+    --accent-foreground: 0 0% 98%; /* Text on accent elements */
+    
+    --destructive: 0 72% 51%; /* --hscm-red as HSL approx D90429 -> 349 96% 44% - using ShadCN default for now */
+    --destructive-foreground: 0 0% 98%; /* Text on destructive elements */
+    
+    --border: 0 0% 89.8%; /* Border color */
+    --input: 0 0% 87.8%; /* Input field border */
+    --ring: 158 100% 33%; /* Focus ring - primary green */
+
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 10%;
+
+    /* Sidebar specific colors - can align with main theme or be distinct */
+    --sidebar-background: 0 0% 98%; /* Off-white for sidebar */
+    --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 158 100% 33%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 158 100% 30%;
@@ -52,31 +53,42 @@
   }
 
   .dark {
-    /* Default Dark Mode HSCM PDR Styles (kept for reference/ShadCN compatibility) */
-    --background: 240 10% 7%; /* #121212 Very Dark Gray (original: 0 0% 7%) */
-    --foreground: 0 0% 98%; /* #F9F9F9 Off-white */
-    --card: 240 10% 7%; /* (original: 0 0% 7%) */
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 7%; /* (original: 0 0% 7%) */
-    --popover-foreground: 0 0% 98%;
-    --primary: 162 100% 35%; /* #00B37F Brighter HSCM Jade Green */
-    --primary-foreground: 0 0% 7%;
-    --secondary: 52 100% 55%; /* #FFDE33 Brighter HSCM Gold */
-    --secondary-foreground: 0 0% 7%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 63%; /* #A0A0A0 Light Gray */
-    --accent: 162 100% 32%;
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 62.8% 30.6%;
+    /* Dark Mode HSCM Brand Styles */
+    --background: 240 10% 7%; /* Very Dark Gray #121212 */
+    --foreground: 0 0% 98%; /* Off-white #F9F9F9 for headings */
+    
+    --card: 240 10% 7%; /* Card background - dark */
+    --card-foreground: 0 0% 98%; /* Card text color - off-white */
+    
+    --popover: 240 10% 7%; /* Popover background - dark */
+    --popover-foreground: 0 0% 98%; /* Popover text color - off-white */
+    
+    --primary: 162 100% 35%; /* --hscm-green-dark-theme #00B37F */
+    --primary-foreground: 0 0% 7%; /* Text on primary buttons - dark */
+    
+    --secondary: 52 100% 55%; /* --hscm-gold-dark-theme #FFDE33 */
+    --secondary-foreground: 0 0% 7%; /* Text on secondary buttons - dark */
+    
+    --muted: 0 0% 10%; /* Muted background - dark */
+    --muted-foreground: 0 0% 63%; /* --body-text-dark #A0A0A0 */
+    
+    --accent: 162 100% 32%; /* Slightly darker bright green for accents */
+    --accent-foreground: 0 0% 7%; /* Text on accent elements - dark */
+    
+    --destructive: 0 63% 40%; /* Darker red for destructive actions, adjust if --hscm-red needs dark variant */
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%; /* (original: 0 0% 15%) */
-    --input: 0 0% 16.9%; /* (original: 0 0% 17%) */
-    --ring: 162 100% 35%;
+    
+    --border: 0 0% 14.9%; /* Border color - dark */
+    --input: 0 0% 16.9%; /* Input field border - dark */
+    --ring: 162 100% 35%; /* Focus ring - bright green */
+
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Sidebar specific colors - dark theme */
     --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 162 100% 35%;
@@ -87,24 +99,3 @@
     --sidebar-ring: 162 100% 35%;
   }
 }
-
-/*
-  The global body and heading styles from the previous setup are commented out
-  as they are now defined in global-styles.css. Tailwind utility classes
-  (e.g., text-foreground, bg-background) applied directly to elements will still work
-  based on the ShadCN variables above, but the base styling for raw <body>, <h1> etc.
-  tags comes from global-styles.css.
-*/
-/*
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-muted-foreground antialiased;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground;
-  }
-}
-*/

@@ -3,31 +3,40 @@
 @tailwind utilities;
 
 :root {
-  --primary-green: #4A6C55;
-  --secondary-green-light: #E8F0E4;
-  --accent-yellow: #FFC72C;
-  --neutral-dark: #333333;
-  --neutral-medium: #666666;
-  --neutral-light: #F5F5F3;
+  /* HSCM Brand Colors */
+  --hscm-red: #D90429;
+  --hscm-gold: #FFD700; /* For light theme */
+  --hscm-green: #00A86B; /* For light theme */
+  --hscm-green-dark-theme: #00B37F; /* For dark theme */
+  --hscm-gold-dark-theme: #FFDE33; /* For dark theme */
+  
   --white: #FFFFFF;
+  --body-text-light: #5A5A5A;
+  --body-text-dark: #A0A0A0;
+
+  /* Fallbacks for older variables - these will be superseded by ShadCN theme */
+  --primary-green: var(--hscm-green);
+  --secondary-green-light: #E8F0E4; /* This might need re-evaluation based on new theme */
+  --accent-yellow: var(--hscm-gold);
+  --neutral-dark: hsl(var(--foreground)); /* Near-black / Off-white */
+  --neutral-medium: hsl(var(--muted-foreground)); /* Dark Gray / Light Gray */
+  --neutral-light: hsl(var(--background)); /* Off-white / Very Dark Gray */
 }
 
 body {
   font-family: 'Lato', sans-serif;
-  font-size: 18px;
+  font-size: 18px; /* Default body font size */
   line-height: 1.6;
-  color: var(--neutral-dark);
-  background-color: var(--neutral-light);
-  /* Overriding Tailwind's base body background and text if necessary */
-  @apply bg-[var(--neutral-light)] text-[var(--neutral-dark)];
+  /* Colors applied via Tailwind theme in globals.css */
+  @apply bg-background text-muted-foreground;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Merriweather', serif;
-  color: var(--primary-green);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; /* Bold for headings */
+  /* Color applied via Tailwind theme in globals.css */
+  @apply text-foreground;
   margin-bottom: 0.5em;
-   /* Overriding Tailwind's base heading color if necessary */
-  @apply text-[var(--primary-green)];
 }
 
 h1 {

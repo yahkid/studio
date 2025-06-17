@@ -1,6 +1,5 @@
-
 import { Button } from '@/components/ui/button';
-import { HeartHandshake, HelpingHand, Users, Handshake } from 'lucide-react';
+import { HeartHandshake, HelpingHand, Users, Handshake as PartnershipIcon } from 'lucide-react'; // Renamed Handshake to PartnershipIcon
 
 export function PartnershipSection() {
   return (
@@ -9,12 +8,12 @@ export function PartnershipSection() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-headline font-bold text-5xl md:text-6xl text-foreground mb-6">
-              BECOME PART OF
-              <span className="block text-primary">THE STORY</span>
+              Partner With
+              <span className="block text-primary">THE MISSION</span>
             </h2>
             <p className="font-body text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Partner with us in transforming lives and communities through the power of the Gospel.
-              Your support helps us reach more people with God's love.
+              Your generous partnership enables us to connect the world to the life-changing power of the Gospel, 
+              transforming lives and communities with God's love.
             </p>
           </div>
 
@@ -22,19 +21,19 @@ export function PartnershipSection() {
             <div className="space-y-8">
               <div className="bg-card rounded-xl p-8 border shadow-lg">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <HeartHandshake className="h-6 w-6 text-primary" />
+                  <div className="w-12 h-12 bg-hscm-red/10 dark:bg-hscm-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <HeartHandshake className="h-6 w-6 text-hscm-red" />
                   </div>
                   <div>
                     <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
                       Financial Partnership
                     </h3>
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                      Support our mission through regular giving, helping us expand our reach
-                      and impact in the community.
+                      Support our mission through your giving. Every contribution helps us expand our reach
+                      and impact in sharing the message of Jesus Christ.
                     </p>
                     <Button
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-body"
+                      className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold"
                     >
                       Give Now
                     </Button>
@@ -53,7 +52,7 @@ export function PartnershipSection() {
                     </h3>
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
                       Join our prayer team and intercede for our ministry, community,
-                      and the needs of those we serve.
+                      and the needs of those we serve. Your prayers are vital.
                     </p>
                     <Button
                       variant="outline"
@@ -90,36 +89,36 @@ export function PartnershipSection() {
             </div>
 
             <div className="space-y-8">
-              <div className="bg-[#FCFBF8] dark:bg-neutral-dark rounded-2xl p-8 border">
+               <div className="bg-[#FCFBF8] dark:bg-neutral-dark/30 rounded-2xl p-8 border"> {/* Updated dark mode background slightly */}
                 <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
-                  Partnership Impact
+                  Your Partnership Impact
                 </h3>
 
                 <div className="space-y-6 font-body">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Lives Transformed</span>
+                    <span className="text-muted-foreground">Lives Transformed Annually</span>
                     <span className="font-headline font-bold text-2xl text-primary">
                       500+
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Families Served</span>
+                    <span className="text-muted-foreground">Families Ministered To</span>
                     <span className="font-headline font-bold text-2xl text-primary">
                       250+
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Community Events</span>
-                    <span className="font-headline font-bold text-2xl text-primary">
+                    <span className="text-muted-foreground">Community Outreach Events</span>
+                    <span className="font-headline font-bold text-2xl text-secondary">
                       50+
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Prayer Requests Answered</span>
-                    <span className="font-headline font-bold text-2xl text-primary">
+                    <span className="text-muted-foreground">Weekly Online Viewers</span>
+                    <span className="font-headline font-bold text-2xl text-secondary">
                       1000+
                     </span>
                   </div>
@@ -131,13 +130,13 @@ export function PartnershipSection() {
                   Ready to Partner With Us?
                 </h3>
                 <p className="font-body text-muted-foreground mb-6">
-                  Get started today and become part of something bigger than yourself.
+                  Become a vital part of what God is doing through HSCM Connect.
                 </p>
                 <Button
                   size="lg"
-                  className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-body font-bold w-full px-8 py-4 text-lg"
+                  className="bg-hscm-gold hover:bg-hscm-gold/90 text-black font-body font-bold w-full px-8 py-4 text-lg" // Using HSCM Gold for this main conversion
                 >
-                  <Handshake className="mr-2 h-5 w-5" />
+                  <PartnershipIcon className="mr-2 h-5 w-5" />
                   Start My Partnership
                 </Button>
               </div>

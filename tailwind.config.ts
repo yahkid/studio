@@ -10,29 +10,24 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Updated to reflect new font choices, 'Lato' for body, 'Merriweather' for headlines
-        body: ['Lato', 'sans-serif'],
-        headline: ['Merriweather', 'serif'],
-        montserrat: ['Montserrat', 'sans-serif'], // Added Montserrat
+        body: ['Lato', 'sans-serif'], // Secondary Typeface (Body)
+        headline: ['Montserrat', 'sans-serif'], // Primary Typeface (Headings)
+        montserrat: ['Montserrat', 'sans-serif'], // Explicit for direct use if needed
         code: ['monospace'],
       },
       colors: {
-        // Existing ShadCN/Tailwind theme colors - these might be overridden or co-exist
-        // with the new CSS variables depending on usage.
-        // For the new design foundation, primary styling should come from global-styles.css variables.
-        background: 'hsl(var(--background))', // This will be var(--neutral-light) from global-styles.css for body
-        foreground: 'hsl(var(--foreground))', // This will be var(--neutral-dark) or var(--primary-green) from global-styles.css
+        // HSCM Brand Colors (available as Tailwind utilities e.g., bg-hscm-green)
+        'hscm-red': 'var(--hscm-red)', // #D90429
+        'hscm-gold': 'var(--hscm-gold)', // #FFD700
+        'hscm-green': 'var(--hscm-green)', // #00A86B
+        'hscm-green-dark-theme': 'var(--hscm-green-dark-theme)', // #00B37F
+        'hscm-gold-dark-theme': 'var(--hscm-gold-dark-theme)', // #FFDE33
+        'body-text-light': 'var(--body-text-light)', // #5A5A5A
+        'body-text-dark': 'var(--body-text-dark)', // #A0A0A0
 
-        // New CSS variables from global-styles.css for direct use in Tailwind if needed
-        'primary-green': 'var(--primary-green)',
-        'secondary-green-light': 'var(--secondary-green-light)',
-        'accent-yellow': 'var(--accent-yellow)',
-        'neutral-dark': 'var(--neutral-dark)',
-        'neutral-medium': 'var(--neutral-medium)',
-        'neutral-light': 'var(--neutral-light)',
-        'white': 'var(--white)',
-
-        // ShadCN theme variables (kept for compatibility with existing components)
+        // ShadCN theme variables (for consistency with existing components & theme structure)
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
@@ -42,11 +37,11 @@ export default {
           foreground: 'hsl(var(--popover-foreground))',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))', // Corresponds to HSCM Jade Green from PDR
+          DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))', // Corresponds to HSCM Gold from PDR
+          DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         muted: {
