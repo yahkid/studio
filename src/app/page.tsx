@@ -85,10 +85,20 @@ export default function Home() {
             Explore our library of messages designed to inspire, challenge, and equip you for a life of purpose. Discover teachings that can transform your perspective and deepen your relationship with God.
           </p>
           <div className="max-w-[900px] mx-auto aspect-video rounded-xl shadow-xl overflow-hidden">
+            {/*
+              IMPORTANT: Replace 'KMj5hG0FpEE' with an actual video ID from the 
+              Holy Spirit Connect Ministries YouTube channel: https://www.youtube.com/@holyspiritconnect
+              To get a video ID:
+              1. Go to the channel.
+              2. Click on the video you want to embed.
+              3. In the browser's address bar, the URL will be like https://www.youtube.com/watch?v=VIDEO_ID
+                 The 'VIDEO_ID' part is what you need.
+              4. Or, click "Share" below the video, then "Embed". The `src` attribute in the embed code will have it.
+            */}
             <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/YOUR_HSCM_VIDEO_ID_HERE"
-              title="Watch a sermon from Holy Spirit Connect Ministries"
+              src="https://www.youtube.com/embed/KMj5hG0FpEE" 
+              title="Featured Sermon Video Player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             ></iframe>
