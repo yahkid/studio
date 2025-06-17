@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { HeartHandshake, HelpingHand, Users } from 'lucide-react';
+import { HeartHandshake, HelpingHand, Users, Handshake } from 'lucide-react';
 
 export function PartnershipSection() {
   return (
@@ -44,8 +44,8 @@ export function PartnershipSection() {
 
               <div className="bg-card rounded-xl p-8 border shadow-lg">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <HelpingHand className="h-6 w-6 text-secondary" />
+                  <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <HelpingHand className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
@@ -57,7 +57,7 @@ export function PartnershipSection() {
                     </p>
                     <Button
                       variant="outline"
-                      className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-body"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
                     >
                       Join Prayer Team
                     </Button>
@@ -90,7 +90,7 @@ export function PartnershipSection() {
             </div>
 
             <div className="space-y-8">
-              <div className="bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 rounded-2xl p-8 border">
+              <div className="bg-[#FCFBF8] dark:bg-neutral-dark rounded-2xl p-8 border">
                 <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
                   Partnership Impact
                 </h3>
@@ -105,7 +105,7 @@ export function PartnershipSection() {
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Families Served</span>
-                    <span className="font-headline font-bold text-2xl text-secondary">
+                    <span className="font-headline font-bold text-2xl text-primary">
                       250+
                     </span>
                   </div>
@@ -119,7 +119,7 @@ export function PartnershipSection() {
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Prayer Requests Answered</span>
-                    <span className="font-headline font-bold text-2xl text-secondary">
+                    <span className="font-headline font-bold text-2xl text-primary">
                       1000+
                     </span>
                   </div>
@@ -135,8 +135,9 @@ export function PartnershipSection() {
                 </p>
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-body font-semibold w-full"
+                  className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-body font-bold w-full px-8 py-4 text-lg"
                 >
+                  <Handshake className="mr-2 h-5 w-5" />
                   Start My Partnership
                 </Button>
               </div>
