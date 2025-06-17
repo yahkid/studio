@@ -49,24 +49,25 @@ export function Footer() {
               </h4>
               <ul className="space-y-3 font-body text-sm">
                 <li>
-                  <a href="#" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
+                  <a href="https://facebook.com/@holyspiritconnect" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
                     <span role="img" aria-label="Facebook icon">📘</span>
                     <span>Facebook</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
+                  <a href="https://instagram.com/holyspiritconnect" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
                     <span role="img" aria-label="Instagram icon">📸</span>
                     <span>Instagram</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
-                    <span role="img" aria-label="Twitter icon">🐦</span>
-                    <span>Twitter</span>
+                  <a href="https://tiktok.com/@hscworship" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
+                    <span role="img" aria-label="TikTok icon">🎵</span> {/* Using a generic music note for TikTok */}
+                    <span>TikTok</span>
                   </a>
                 </li>
                 <li>
+                  {/* YouTube link as specified: href="#" */}
                   <a href="#" className="flex items-center space-x-2 hover:text-white/80 transition-colors">
                     <span role="img" aria-label="YouTube icon">📺</span>
                     <span>YouTube</span>
