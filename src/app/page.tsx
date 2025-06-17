@@ -147,7 +147,7 @@ export default function Home() {
           className="rounded-lg shadow-md object-cover"
           data-ai-hint="giving support"
         />
-        <Button variant="outline" size="lg" className="font-headline">
+        <Button variant="outline" size="lg" className="font-headline font-bold">
             Learn About Partnership <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </section>
