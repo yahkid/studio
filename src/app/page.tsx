@@ -8,10 +8,11 @@ import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handshake, CalendarDays, Users, ArrowRight, PlayCircle, HandCoins } from 'lucide-react';
+import { Handshake, CalendarDays, Users, ArrowRight, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
 import { EventsSection } from '@/components/sections/events-section';
 import { HeroSection } from '@/components/sections/hero-section';
+import { PartnershipSection } from '@/components/sections/partnership-section';
 
 
 export default function Home() {
@@ -114,25 +115,7 @@ export default function Home() {
         </section>
 
         <EventsSection />
-
-        <section id="partnership" className="w-full max-w-4xl mx-auto text-center py-8 space-y-6">
-          <HandCoins className="h-12 w-12 text-primary-green mx-auto" />
-          <h2 className="font-headline text-3xl">Partnership: BECOME PART OF THE STORY</h2>
-          <p className="font-body text-lg max-w-xl mx-auto">
-            Partner with us in spreading hope and transforming lives. Your support helps us continue our mission and reach more people with the message of faith.
-          </p>
-          <Image
-            src="https://placehold.co/1200x400.png"
-            alt="Partnership in ministry"
-            width={1200}
-            height={400}
-            className="rounded-lg shadow-md object-cover"
-            data-ai-hint="giving support"
-          />
-          <Button variant="outline" size="lg" className="font-body font-bold">
-              Learn About Partnership <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </section>
+        <PartnershipSection />
       </div>
 
 
