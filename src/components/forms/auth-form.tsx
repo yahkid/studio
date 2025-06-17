@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useAuth } from '@/contexts/auth-context';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, Lock, LogIn, UserPlus, Loader2 } from 'lucide-react';
 
@@ -28,9 +29,10 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthFormProps) {
-  const { signIn, signUp, isLoading: authLoading } = useAuth();
+  const supabase = useSupabaseClient();
+  const router = useRouter();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(AuthFormSchema),
@@ -41,27 +43,38 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   });
 
   const onSubmit = async (values: AuthFormValues) => {
-    setIsSubmitting(true);
+    setIsLoading(true);
     try {
       if (mode === 'login') {
-        await signIn(values);
+        const { error } = await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
+        if (error) throw error;
         toast({ title: 'Login Successful', description: "Welcome back!" });
+        router.push('/');
+        router.refresh(); // Important to update server components if any
       } else {
-        await signUp(values);
-        // Message about checking email is handled by redirect in AuthContext
+        const { error } = await supabase.auth.signUp({
+          email: values.email,
+          password: values.password,
+        });
+        if (error) throw error;
+        // Supabase sends a confirmation email by default.
+        toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
+        router.push('/auth?message=check-email');
+        router.refresh();
       }
     } catch (error: any) {
       toast({
         title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
-        description: error.message || `An unexpected error occurred. Please try again.`,
+        description: error.message || 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
       });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
-
-  const loading = authLoading || isSubmitting;
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-xl">
@@ -74,7 +87,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         </CardDescription>
       </CardHeader>
       {initialMessage && (
-        <div className="px-6 pb-4 text-center text-sm text-green-600">
+        <div className="px-6 pb-4 text-center text-sm text-green-600 dark:text-green-400">
           {initialMessage === 'check-email' && 'Please check your email to verify your account.'}
         </div>
       )}
@@ -90,7 +103,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <Input type="email" placeholder="you@example.com" className="pl-10 font-body" {...field} />
+                      <Input type="email" placeholder="you@example.com" className="pl-10 font-body" {...field} disabled={isLoading} />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -106,7 +119,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" className="pl-10 font-body" {...field} />
+                      <Input type="password" placeholder="••••••••" className="pl-10 font-body" {...field} disabled={isLoading} />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -115,18 +128,18 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
             />
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full font-headline" disabled={loading}>
-              {loading ? (
+            <Button type="submit" className="w-full font-headline" disabled={isLoading}>
+              {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : mode === 'login' ? (
                 <LogIn className="mr-2 h-4 w-4" />
               ) : (
                 <UserPlus className="mr-2 h-4 w-4" />
               )}
-              {loading ? 'Processing...' : mode === 'login' ? 'Login' : 'Create Account'}
+              {isLoading ? 'Processing...' : mode === 'login' ? 'Login' : 'Create Account'}
             </Button>
             {onSwitchMode && (
-              <Button variant="link" type="button" onClick={onSwitchMode} className="font-body text-sm" disabled={loading}>
+              <Button variant="link" type="button" onClick={onSwitchMode} className="font-body text-sm" disabled={isLoading}>
                 {mode === 'login' ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
               </Button>
             )}

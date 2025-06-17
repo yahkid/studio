@@ -1,5 +1,4 @@
 
-// This file is kept for semantic clarity, but its content is now in src/contexts/auth-context.tsx
-// If you were previously importing useAuth from here, please update imports to '@/contexts/auth-context'.
-
-export { useAuth } from '@/contexts/auth-context';
+// This file is no longer needed as the custom useAuth hook and its context
+// have been replaced by @supabase/auth-helpers-react (useSession, useSupabaseClient).
+// It can be safely deleted.
