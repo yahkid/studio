@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -7,7 +8,7 @@ import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handshake, CalendarDays, Users, ArrowRight } from 'lucide-react';
+import { Handshake, CalendarDays, Users, ArrowRight, Heart, Film, CalendarHeart, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 
 
@@ -19,7 +20,7 @@ export default function Home() {
     <div className="flex flex-col items-center space-y-12 py-8">
       <header className="text-center space-y-4">
         <h1 className="font-headline text-4xl md:text-5xl font-bold">
-          Welcome to HSCM Connect
+          FIND YOUR PURPOSE.
         </h1>
         <p className="text-lg md:text-xl max-w-2xl mx-auto font-body">
           Discover community, grow in faith, and find your place. We're excited to connect with you!
@@ -61,26 +62,95 @@ export default function Home() {
           </CardContent>
         </Card>
       </section>
+
+      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+        <Heart className="h-12 w-12 text-primary mx-auto" />
+        <h2 className="font-headline text-3xl">Our Mission: A FAMILY BUILT ON FAITH</h2>
+        <p className="font-body text-lg max-w-xl mx-auto">
+          We are a vibrant community dedicated to sharing God's love, fostering spiritual growth, and making a positive impact. Join us as we build a family rooted in faith and compassion.
+        </p>
+        <Image
+          src="https://placehold.co/1200x400.png"
+          alt="Family built on faith"
+          width={1200}
+          height={400}
+          className="rounded-lg shadow-md object-cover"
+          data-ai-hint="diverse community"
+        />
+      </section>
+
+      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+        <Film className="h-12 w-12 text-primary mx-auto" />
+        <h2 className="font-headline text-3xl">Watch & Grow: A MESSAGE THAT CHANGES EVERYTHING</h2>
+        <p className="font-body text-lg max-w-xl mx-auto">
+          Explore our library of messages designed to inspire, challenge, and equip you for a life of purpose. Discover teachings that can transform your perspective and deepen your relationship with God.
+        </p>
+        <Image
+          src="https://placehold.co/1200x400.png"
+          alt="Message that changes everything"
+          width={1200}
+          height={400}
+          className="rounded-lg shadow-md object-cover"
+          data-ai-hint="sermon teaching"
+        />
+      </section>
       
-      <section className="w-full max-w-4xl text-center py-8">
+      <section className="w-full max-w-4xl text-center py-8 space-y-6">
         <Image 
           src="https://placehold.co/1200x400.png" 
-          alt="Community gathering" 
+          alt="Community gathering for decision pathway" 
           width={1200} 
           height={400} 
           className="rounded-lg shadow-md object-cover"
-          data-ai-hint="church community" 
+          data-ai-hint="spiritual decision" 
         />
-        <h2 className="font-headline text-3xl mt-8 mb-4">Connect and Grow</h2>
+        <h2 className="font-headline text-3xl mt-8 mb-4">MADE A DECISION TODAY?</h2>
         <p className="font-body text-lg max-w-xl mx-auto mb-6">
             We offer various ways to connect, from small groups to serving opportunities. 
-            Find where you belong and grow with us.
+            If you've made a decision for Christ, we'd love to hear from you and help you take your next step.
         </p>
         <Button asChild variant="secondary" size="lg" className="font-headline">
-            <Link href="/decision">Made a Decision? Share with Us <Users className="ml-2 h-5 w-5" /></Link>
+            <Link href="/decision">Share Your Decision <Users className="ml-2 h-5 w-5" /></Link>
         </Button>
       </section>
 
+      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+        <CalendarHeart className="h-12 w-12 text-primary mx-auto" />
+        <h2 className="font-headline text-3xl">Events: LIFE IS BETTER TOGETHER</h2>
+        <p className="font-body text-lg max-w-xl mx-auto">
+          Join us for upcoming events, workshops, and gatherings. It's a great way to connect with others, grow in your faith, and experience the joy of community.
+        </p>
+        <Image
+          src="https://placehold.co/1200x400.png"
+          alt="Church events"
+          width={1200}
+          height={400}
+          className="rounded-lg shadow-md object-cover"
+          data-ai-hint="church event"
+        />
+         <Button variant="outline" size="lg" className="font-headline">
+            View Upcoming Events <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </section>
+
+      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+        <HandCoins className="h-12 w-12 text-primary mx-auto" />
+        <h2 className="font-headline text-3xl">Partnership: BECOME PART OF THE STORY</h2>
+        <p className="font-body text-lg max-w-xl mx-auto">
+          Partner with us in spreading hope and transforming lives. Your support helps us continue our mission and reach more people with the message of faith.
+        </p>
+        <Image
+          src="https://placehold.co/1200x400.png"
+          alt="Partnership in ministry"
+          width={1200}
+          height={400}
+          className="rounded-lg shadow-md object-cover"
+          data-ai-hint="giving support"
+        />
+        <Button variant="outline" size="lg" className="font-headline">
+            Learn About Partnership <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </section>
 
       <LeadMagnetModal open={isLeadMagnetOpen} onOpenChange={setIsLeadMagnetOpen} />
       <VisitPlannerModal open={isVisitPlannerOpen} onOpenChange={setIsVisitPlannerOpen} />
