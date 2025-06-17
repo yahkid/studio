@@ -16,7 +16,7 @@ export function DecisionForm() {
   const [email, setEmail] = useState('');
   const [decisionType, setDecisionType] = useState('');
   const [comments, setComments] = useState('');
-  const { toast } = useToast();
+  const { toast, dismiss } = useToast(); // Destructure dismiss from useToast
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +37,19 @@ export function DecisionForm() {
       return;
     }
     console.log("Decision form submitted:", { name, email, decisionType, comments });
-    toast({
+
+    // Show the success toast and capture its ID
+    const { id: toastId } = toast({
       title: "Thank You for Sharing!",
       description: "We've received your decision and will be in touch soon.",
     });
+
+    // Automatically dismiss the toast after 5 seconds
+    setTimeout(() => {
+      dismiss(toastId);
+    }, 5000);
+
+    // Reset form fields
     setName('');
     setEmail('');
     setDecisionType('');
