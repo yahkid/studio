@@ -39,7 +39,7 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => setIsLeadMagnetOpen(true)} className="w-full font-headline">
+            <Button onClick={() => setIsLeadMagnetOpen(true)} className="w-full font-headline font-bold">
               Get Your 'First Steps' Guide <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>
@@ -56,7 +56,7 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => setIsVisitPlannerOpen(true)} className="w-full font-headline">
+            <Button onClick={() => setIsVisitPlannerOpen(true)} className="w-full font-headline font-bold">
               Plan Your Visit <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>
@@ -109,7 +109,7 @@ export default function Home() {
             We offer various ways to connect, from small groups to serving opportunities. 
             If you've made a decision for Christ, we'd love to hear from you and help you take your next step.
         </p>
-        <Button asChild variant="secondary" size="lg" className="font-headline">
+        <Button asChild variant="secondary" size="lg" className="font-headline font-bold">
             <Link href="/decision">Share Your Decision <Users className="ml-2 h-5 w-5" /></Link>
         </Button>
       </section>
@@ -128,7 +128,7 @@ export default function Home() {
           className="rounded-lg shadow-md object-cover"
           data-ai-hint="church event"
         />
-         <Button variant="outline" size="lg" className="font-headline">
+         <Button variant="outline" size="lg" className="font-headline font-bold">
             View Upcoming Events <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </section>
