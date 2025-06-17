@@ -63,7 +63,7 @@ export default function Home() {
         </Card>
       </section>
 
-      <section className="w-full text-center py-24 space-y-8">
+      <section id="mission" className="w-full text-center py-24 space-y-8">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ export default function Home() {
         <div className="w-32 h-1 mx-auto bg-[#A8B8AD] mt-8"></div>
       </section>
 
-      <section className="w-full text-center py-24 space-y-6 bg-[var(--secondary-green-light)]">
+      <section id="watch" className="w-full text-center py-24 space-y-6 bg-[var(--secondary-green-light)]">
         <PlayCircle className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Watch & Grow: A MESSAGE THAT CHANGES EVERYTHING</h2>
         <p className="font-body text-lg max-w-2xl mx-auto mt-4 mb-10">
@@ -96,7 +96,7 @@ export default function Home() {
         </div>
       </section>
       
-      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+      <section id="decision-pathway" className="w-full max-w-4xl text-center py-8 space-y-6">
         <Image 
           src="https://placehold.co/1200x400.png" 
           alt="Community gathering for decision pathway" 
@@ -115,7 +115,7 @@ export default function Home() {
         </Button>
       </section>
 
-      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+      <section id="events" className="w-full max-w-4xl text-center py-8 space-y-6">
         <CalendarHeart className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Events: LIFE IS BETTER TOGETHER</h2>
         <p className="font-body text-lg max-w-xl mx-auto">
@@ -134,7 +134,7 @@ export default function Home() {
         </Button>
       </section>
 
-      <section className="w-full max-w-4xl text-center py-8 space-y-6">
+      <section id="partnership" className="w-full max-w-4xl text-center py-8 space-y-6">
         <HandCoins className="h-12 w-12 text-primary-green mx-auto" />
         <h2 className="font-headline text-3xl">Partnership: BECOME PART OF THE STORY</h2>
         <p className="font-body text-lg max-w-xl mx-auto">

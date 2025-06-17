@@ -13,6 +13,7 @@ export default {
         // Updated to reflect new font choices, 'Lato' for body, 'Merriweather' for headlines
         body: ['Lato', 'sans-serif'],
         headline: ['Merriweather', 'serif'],
+        montserrat: ['Montserrat', 'sans-serif'], // Added Montserrat
         code: ['monospace'],
       },
       colors: {

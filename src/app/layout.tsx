@@ -22,7 +22,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Updated Google Fonts import */}
-        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato:wght@400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
       </head>
       {/* Ensure Lato is the default body font if Tailwind's font-body utility is removed or overridden */}
       <body className="antialiased min-h-screen flex flex-col" style={{ fontFamily: "'Lato', sans-serif" }}>
