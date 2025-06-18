@@ -14,12 +14,12 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
         src="https://placehold.co/1920x1080.png"
-        alt="Woman reading a book, symbolizing finding knowledge and peace with HSCM Connect"
+        alt="Hopeful landscape with HSCM Connect text overlay"
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="woman reading"
+        data-ai-hint="landscape hope"
         priority
         suppressHydrationWarning={true}
       />
@@ -56,3 +56,4 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     </section>
   );
 }
+
