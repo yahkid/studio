@@ -61,7 +61,8 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         });
         if (error) throw error; 
         toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
-        router.push('/auth?message=check-email');
+        // router.push('/auth?message=check-email'); // original
+        router.push('/auth/confirmation-info'); // Direct to info page
         router.refresh();
       }
     } catch (error: any) {
@@ -73,12 +74,21 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
       } else if (error && typeof error.message === 'string' && error.message.trim() !== '') {
         description = error.message; 
       }
-
-      toast({
-        title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
-        description: description,
-        variant: 'destructive',
-      });
+      
+      // Specific handling for "Error sending confirmation email"
+      if (description.includes("Error sending confirmation email")) {
+          toast({
+            title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
+            description: "Error sending confirmation email. Please check your Supabase email settings or contact support.",
+            variant: 'destructive',
+          });
+      } else {
+          toast({
+            title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
+            description: description,
+            variant: 'destructive',
+          });
+      }
     } finally {
       setIsLoading(false);
     }
