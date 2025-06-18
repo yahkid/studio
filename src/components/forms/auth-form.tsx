@@ -59,21 +59,19 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           email: values.email,
           password: values.password,
         });
-        if (error) throw error; // This error is the AuthApiError from Supabase
+        if (error) throw error; 
         toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
         router.push('/auth?message=check-email');
         router.refresh();
       }
     } catch (error: any) {
-      // Log the raw error object for detailed debugging of backend issues
       console.error(`Supabase auth error (${mode}):`, error);
 
       let description = 'An unexpected error occurred. Please try again.';
-      // Prioritize error.error_description, then error.message for the toast
       if (error && typeof error.error_description === 'string' && error.error_description.trim() !== '') {
         description = error.error_description;
       } else if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message; // This will pick up "Error sending confirmation email"
+        description = error.message; 
       }
 
       toast({
