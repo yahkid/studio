@@ -33,7 +33,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           </h1>
 
           <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed">
-            Holy Spirit Connect ni familia ya kimataifa inayounganisha ulimwengu na ujumbe wa Yesu Kristo unaoleta uzima.
+            Holy Spirit Connect: Familia ya kimataifa inayokuletea ujumbe wa Yesu Kristo unaobadilisha maisha.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
@@ -56,3 +56,4 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     </section>
   );
 }
+

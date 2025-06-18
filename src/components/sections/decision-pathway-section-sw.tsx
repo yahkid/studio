@@ -21,7 +21,7 @@ export function DecisionPathwaySectionSw() {
         UMEFANYA UAMUZI LEO?
       </h2>
       <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-        Huu ndio uamuzi mkuu kuliko yote uliyowahi kufanya! Tunataka kusherehekea nawe na kukuongoza katika hatua zako zinazofuata.
+        Hongera kwa uamuzi wako mkuu! Sisi sote katika HSCM Connect tunafurahi pamoja nawe. Tuko hapa kukushika mkono na kukuongoza katika hatua zako za kwanza za safari hii mpya na ya kusisimua.
       </p>
       <Button asChild size="lg" className="text-lg font-headline" suppressHydrationWarning={true}>
         <Link href="/decision">
@@ -31,3 +31,4 @@ export function DecisionPathwaySectionSw() {
     </section>
   );
 }
+

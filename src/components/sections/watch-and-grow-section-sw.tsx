@@ -130,11 +130,9 @@ export function WatchAndGrowSectionSw() {
 
         <Card className="max-w-xl mx-auto mt-12 p-6 sm:p-8">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl text-foreground mb-2"> {/* Reduced mb */}
-              Pata Ujumbe na Taarifa za Kila Wiki za Kukutia Moyo
+            <CardTitle className="font-headline text-2xl text-foreground mb-2">
+              Pokea Neno la Wiki Linaloweza Kubadilisha Maisha Yako
             </CardTitle>
-            {/* Optional: Add a short description here if needed */}
-            {/* <CardDescription className="font-body">Stay connected with inspiring content.</CardDescription> */}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -167,3 +165,4 @@ export function WatchAndGrowSectionSw() {
     </section>
   );
 }
+

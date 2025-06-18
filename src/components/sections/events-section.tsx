@@ -6,7 +6,6 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { initialEventsData } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
-// import { sw } from 'date-fns/locale'; // Removed problematic import
 import Link from 'next/link';
 
 interface EventsSectionSwProps {
@@ -149,10 +148,10 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
               <Card className="text-center p-0 overflow-hidden">
                  <div className="p-6 md:p-8">
                   <h3 className="font-headline font-semibold text-xl text-foreground mb-4">
-                    Mpya katika HSCM?
+                    Mpya Katika HSCM?
                   </h3>
                   <p className="font-body text-muted-foreground mb-6">
-                    Tunahitaji kufahamu zaidi kukuhusu ili tuweze kukusaidia kutafuta mahali pako katika familia yetu.
+                    Wewe ni mgeni? Tungependa kukukaribisha rasmi na kukusaidia kuungana na familia yetu. Tujulishe unakuja!
                   </p>
                   <Button 
                     onClick={onOpenVisitPlanner}
@@ -170,3 +169,4 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
     </section>
   );
 }
+

@@ -41,7 +41,7 @@ export default function ImaniYetuPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-4xl md:text-5xl text-foreground mb-4">Imani Yetu</h1>
           <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto">
-            Hizi ndizo kweli za msingi zinazoongoza huduma yetu na matembezi yetu na Mungu.
+            Gundua kweli za msingi zinazojenga msingi wa huduma yetu na kuongoza safari yetu ya imani na Mungu.
           </p>
         </div>
       </div>
@@ -90,3 +90,4 @@ export default function ImaniYetuPage() {
     </div>
   );
 }
+

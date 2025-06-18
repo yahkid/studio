@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MapPin, Clock, Smile, Users, Baby, Coffee } from 'lucide-react';
 import { VisitPlannerModal } from '@/components/modals/visit-planner-modal';
-import { Button } from '@/components/ui/button'; // Changed from GradientButton
+import { Button } from '@/components/ui/button';
 
 export default function MimiMgeniPage() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
@@ -22,8 +22,7 @@ export default function MimiMgeniPage() {
               Karibu HSCM Connect!
             </h1>
             <p className="font-body text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Tunafurahi kuwa uko hapa na unafikiria kututembelea. Tunajua kutembelea kanisa jipya kunaweza kuwa tukio la kusisimua,
-              na tunataka kufanya uzoefu wako wa kwanza nasi uwe wa kukaribisha na kustarehesha iwezekanavyo.
+              Tunafurahi sana umefika hapa na unafikiria kututembelea! Kuingia katika kanisa jipya kunaweza kuwa na msisimko, na tunataka kuhakikisha uzoefu wako wa kwanza nasi ni wa kukaribisha, rahisi, na wenye kuburudisha.
             </p>
             <Button 
               onClick={() => setIsVisitPlannerOpen(true)}
@@ -128,7 +127,7 @@ export default function MimiMgeniPage() {
               Uko Tayari Kupata Uzoefu wa HSCM Connect?
             </h2>
             <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Tunatarajia kukutana nawe! Bofya kitufe hapa chini kutujulisha unakuja au kama una maswali yoyote.
+             Tunatamani sana kukutana nawe! Bofya kitufe hapa chini ili kupanga ujio wako au kama una maswali yoyote. Tuko hapa kukusaidia!
             </p>
             <Button
               onClick={() => setIsVisitPlannerOpen(true)}
@@ -145,3 +144,4 @@ export default function MimiMgeniPage() {
     </>
   );
 }
+

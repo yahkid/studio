@@ -12,10 +12,11 @@ export function MissionSectionSw() {
           FAMILIA ILIYOJENGWA KATIKA IMANI
         </h2>
         <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-          Kuunganisha watu na Mungu, wao kwa wao, na na kusudi walilopewa na Mungu—ndio moyo wa Holy Spirit Connect. Sisi ni jamii inayojengwa juu ya tumaini la Yesu, na kutiwa nguvu na Roho kuleta nuru na uzima Tanzania na ulimwenguni kote.
+          Katika Holy Spirit Connect, tunakuletea pamoja: wewe na Mungu, wewe na wengine, na wewe na kusudi lako tukufu. Sisi ni jamii iliyojikita katika tumaini la Yesu, tukiongozwa na Roho Mtakatifu kuangaza nuru na kuleta uzima, hapa Tanzania na kote ulimwenguni.
         </p>
         <div className="w-32 h-1 mx-auto bg-muted-foreground/30 mt-10"></div>
       </div>
     </section>
   );
 }
+
