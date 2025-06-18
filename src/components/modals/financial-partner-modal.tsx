@@ -41,13 +41,16 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     setEmail('');
     setPhoneNumber('');
     setCountry('');
-    setIsLoading(false);
+    // isLoading is reset in the finally block of handleSubmitStep1
   };
 
-  const handleModalClose = () => {
-    resetForm();
-    setCurrentStep(1); // Reset to step 1 when modal is closed
-    onOpenChange(false);
+  // This handler is now used by the Dialog's onOpenChange
+  const handleDialogStateChange = (isOpen: boolean) => {
+    if (!isOpen) { // Only reset if the dialog is being closed
+      resetForm();
+      setCurrentStep(1);
+    }
+    onOpenChange(isOpen); // Propagate to parent
   };
 
   const handleSubmitStep1 = async (e: React.FormEvent) => {
@@ -88,7 +91,6 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         description: "Taarifa zako zimepokelewa.",
       });
       setCurrentStep(2); // Move to step 2
-      // Do not reset form fields yet, user might want to see them if step 2 was an actual form
     } catch (error: any) {
       toast({
         title: "Hitilafu Imetokea",
@@ -101,7 +103,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleModalClose}>
+    <Dialog open={open} onOpenChange={handleDialogStateChange}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
@@ -213,7 +215,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             </p>
             <DialogFooter className="mt-6">
                <DialogClose asChild>
-                <Button onClick={handleModalClose} className="font-headline w-full" suppressHydrationWarning={true}>
+                <Button className="font-headline w-full" suppressHydrationWarning={true}> {/* onClick is not needed here, DialogClose handles it */}
                   Funga
                 </Button>
               </DialogClose>
