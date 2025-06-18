@@ -2,6 +2,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 
 interface EventsSectionSwProps {
@@ -52,13 +53,13 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                     </p>
                   </div>
                 </div>
-                <Button 
+                <GradientButton 
                   onClick={onOpenVisitPlanner}
                   className="w-full font-headline"
                   suppressHydrationWarning={true}
                 >
                   Panga Ujio Wako
-                </Button>
+                </GradientButton>
               </div>
 
               <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -134,14 +135,13 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                 <p className="font-body text-muted-foreground mb-6">
                   Tunahitaji kufahamu zaidi kukuhusu ili tuweze kukusaidia kutafuta mahali pako katika familia yetu.
                 </p>
-                <Button 
-                  size="lg"
+                <GradientButton 
                   onClick={onOpenVisitPlanner}
                   className="w-full font-headline font-semibold"
                   suppressHydrationWarning={true}
                 >
                   Panga Ujio Wako wa Kwanza
-                </Button>
+                </GradientButton>
               </div>
             </div>
           </div>

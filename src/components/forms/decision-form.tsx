@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { GradientButton } from "@/components/ui/gradient-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -208,10 +209,10 @@ export function DecisionForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+          <GradientButton type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Inawasilisha...' : 'Wasilisha Uamuzi Wangu'}
-          </Button>
+          </GradientButton>
         </CardFooter>
       </form>
     </Card>

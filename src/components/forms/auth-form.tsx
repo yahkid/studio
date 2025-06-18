@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -166,7 +167,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
             />
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full font-headline" disabled={isLoading}>
+            <GradientButton type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : mode === 'login' ? (
@@ -175,7 +176,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
                 <UserPlus className="mr-2 h-4 w-4" />
               )}
               {isLoading ? 'Processing...' : mode === 'login' ? 'Login' : 'Create Account'}
-            </Button>
+            </GradientButton>
             {onSwitchMode && (
               <Button variant="link" type="button" onClick={onSwitchMode} className="font-body text-sm" disabled={isLoading}>
                 {mode === 'login' ? "Don't have an account? Sign Up" : 'Already have an account? Login'}

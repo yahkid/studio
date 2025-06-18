@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PlayCircle, Mail, Loader2 } from 'lucide-react';
@@ -46,35 +47,32 @@ export function WatchAndGrowSectionSw() {
       let description = defaultMessage;
       
       console.error('--- Supabase Insert Error Details (WatchAndGrowSectionSw) ---');
+      console.error('Type of caughtError:', typeof caughtError);
       if (caughtError) {
         console.error('Caught Error Object:', caughtError);
-        if (typeof caughtError === 'object' && caughtError !== null) {
-          if ('message' in caughtError) {
-            console.error('Message:', caughtError.message);
-            if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-              description = caughtError.message;
-            }
-          }
-          if ('details' in caughtError) {
-            console.error('Details:', caughtError.details);
-          }
-          if ('code' in caughtError) {
-            console.error('Code:', caughtError.code);
-          }
-          if ('hint' in caughtError) {
+        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+          description = caughtError.message;
+          console.error('Message property:', caughtError.message);
+        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
+          description = caughtError.error_description;
+          console.error('Error Description property:', caughtError.error_description);
+        } else if (typeof caughtError === 'string') {
+          description = caughtError;
+        }
+
+        if (caughtError.details) { 
+          console.error('Details:', caughtError.details);
+        }
+        if (caughtError.code) {
+          console.error('Code:', caughtError.code);
+        }
+        if (caughtError.hint) {
             console.error('Hint:', caughtError.hint);
-          }
-          try {
-            console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-          } catch (e_stringify) {
-            console.error('Could not stringify caughtError:', e_stringify);
-          }
-        } else {
-          console.error('Caught Error Type:', typeof caughtError);
-          console.error('Caught Error Value:', String(caughtError));
-          if (typeof caughtError === 'string' && caughtError.trim() !== '') {
-            description = caughtError;
-          }
+        }
+        try {
+          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify caughtError:', e_stringify);
         }
       } else {
         console.error('Caught error is undefined or null.');
@@ -140,14 +138,13 @@ export function WatchAndGrowSectionSw() {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full font-headline text-base" suppressHydrationWarning={true} disabled={isLoading}>
+            <GradientButton type="submit" className="w-full font-headline text-base" suppressHydrationWarning={true} disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? 'Inasajili...' : 'Jisajili Sasa'}
-            </Button>
+            </GradientButton>
           </form>
         </div>
       </div>
     </section>
   );
 }
-

@@ -1,13 +1,15 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { FinancialPartnerModal } from '@/components/modals/financial-partner-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
-import { HandCoins, Sparkles, HandHeart } from 'lucide-react';
+import { HandCoins, Sparkles, HandHeart, Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton'; // For loading state
 
 interface PartnershipOption {
   id: string;
@@ -17,13 +19,18 @@ interface PartnershipOption {
   action: () => void;
   buttonText: string;
   buttonVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
-  buttonClass?: string;
+  buttonType: "gradient" | "default" | "outline";
 }
 
 export function PartnershipSectionSw() {
   const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const partnershipOptions: PartnershipOption[] = [
     { 
@@ -32,9 +39,8 @@ export function PartnershipSectionSw() {
       icon: HandCoins, 
       description: 'Unga mkono dhamira yetu kupitia kuchangia mara kwa mara, tukisaidia kupanua mwelekeo wetu na athari katika jamii.', 
       action: () => setIsFinancialModalOpen(true), 
-      buttonText: 'Changia Sasa', 
-      buttonVariant: 'default', 
-      buttonClass: 'bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold' 
+      buttonText: 'Changia Sasa',
+      buttonType: 'gradient',
     },
     { 
       id: 'prayer', 
@@ -43,8 +49,8 @@ export function PartnershipSectionSw() {
       description: 'Jiunge na timu yetu ya maombi na uombee huduma yetu, jamii, na mahitaji ya wale tunaowawakilisha.', 
       action: () => setIsPrayerModalOpen(true), 
       buttonText: 'Jiunge na Timu ya Maombi', 
-      buttonVariant: 'outline', 
-      buttonClass: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body' 
+      buttonType: 'outline',
+      buttonVariant: 'outline',
     },
     { 
       id: 'volunteer', 
@@ -53,10 +59,50 @@ export function PartnershipSectionSw() {
       description: 'Tumia vipawa na talanta zako kutumika katika huduma mbalimbali na kuwa na athari ya moja kwa moja katika maisha ya watu.', 
       action: () => setIsVolunteerModalOpen(true), 
       buttonText: 'Jitolee Leo', 
+      buttonType: 'outline',
       buttonVariant: 'outline', 
-      buttonClass: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body' 
     }
   ];
+
+  if (!mounted) {
+    return (
+      <section id="ushirika" className="py-16 md:py-20 bg-muted/30 dark:bg-muted/10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12 md:mb-16">
+              <Skeleton className="h-10 w-3/4 mx-auto mb-6" />
+              <Skeleton className="h-6 w-1/2 mx-auto" />
+            </div>
+            <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-start">
+              <div className="space-y-8">
+                {[1, 2, 3].map(i => (
+                  <Card key={i} className="shadow-lg">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start space-x-4">
+                        <Skeleton className="w-12 h-12 rounded-lg" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-6 w-1/2" />
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-3/4" />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardFooter>
+                      <Skeleton className="h-10 w-full" />
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+              <div className="space-y-8">
+                <Skeleton className="h-64 w-full rounded-2xl" />
+                <Skeleton className="h-48 w-full rounded-xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
@@ -91,14 +137,24 @@ export function PartnershipSectionSw() {
                       </div>
                     </CardHeader>
                     <CardFooter>
-                      <Button 
-                        onClick={option.action}
-                        variant={option.buttonVariant || 'default'}
-                        className={`w-full ${option.buttonClass}`}
-                        suppressHydrationWarning={true}
-                      >
-                        {option.buttonText}
-                      </Button>
+                      {option.buttonType === 'gradient' ? (
+                        <GradientButton
+                          onClick={option.action}
+                          className="w-full font-body font-semibold"
+                          suppressHydrationWarning={true}
+                        >
+                          {option.buttonText}
+                        </GradientButton>
+                      ) : (
+                        <Button 
+                          onClick={option.action}
+                          variant={option.buttonVariant || 'default'}
+                          className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
+                          suppressHydrationWarning={true}
+                        >
+                          {option.buttonText}
+                        </Button>
+                      )}
                     </CardFooter>
                   </Card>
                 ))}
@@ -167,14 +223,13 @@ export function PartnershipSectionSw() {
                     </div>
                   </div>
                   
-                  <Button 
+                  <GradientButton 
                     onClick={() => setIsFinancialModalOpen(true)}
-                    size="lg"
-                    className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-headline font-semibold"
+                    className="w-full mt-6 font-headline font-semibold"
                     suppressHydrationWarning={true}
                   >
                     Anza Ushirika Wangu
-                  </Button>
+                  </GradientButton>
                 </div>
               </div>
             </div>

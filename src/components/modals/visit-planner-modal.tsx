@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { GradientButton } from "@/components/ui/gradient-button";
 import {
   Dialog,
   DialogContent,
@@ -201,10 +202,10 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                 Ghairi
               </Button>
             </DialogClose>
-            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+            <GradientButton type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? 'Inatuma...' : 'Tuma Ombi'}
-            </Button>
+            </GradientButton>
           </DialogFooter>
         </form>
       </DialogContent>

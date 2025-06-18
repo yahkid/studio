@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import { GradientButton } from "@/components/ui/gradient-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,14 +51,13 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
-          <Button asChild
-            variant="outline"
-            size="sm"
-            className="font-body font-semibold py-2 px-2 sm:px-3 border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground text-xs sm:text-sm"
+          <GradientButton
+            asChild
+            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3"
             suppressHydrationWarning={true}
           >
             <Link href="/decision">Nimeamua Leo</Link>
-          </Button>
+          </GradientButton>
 
           {isSigningOut ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
