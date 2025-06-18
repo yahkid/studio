@@ -76,23 +76,45 @@ export function ExitIntentModal() {
       setEmail('');
       setIsOpen(false);
       setShowOnExit(false);
-    } catch (error: any) {
+    } catch (caughtError: any) {
       const defaultMessage = "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.";
       let description = defaultMessage;
       
-      console.error('Error in ExitIntentModal:', error);
-      
-      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message;
-      }
-      
-      if (typeof error === 'object' && error !== null) {
-        try {
-          console.error('Error in ExitIntentModal (JSON):', JSON.stringify(error, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify error in ExitIntentModal:', e_stringify);
+      console.error('--- Supabase Insert Error Details (ExitIntentModal) ---');
+      console.error('Type of caughtError:', typeof caughtError);
+
+      if (caughtError) {
+        console.error('Caught Error Object:', caughtError);
+        
+        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+          description = caughtError.message;
+          console.error('Message property:', caughtError.message);
+        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
+          description = caughtError.error_description;
+          console.error('Error Description property:', caughtError.error_description);
+        } else if (typeof caughtError === 'string') {
+          description = caughtError;
         }
+
+        if (caughtError.details) { 
+          console.error('Details:', caughtError.details);
+        }
+        if (caughtError.code) {
+          console.error('Code:', caughtError.code);
+        }
+        if (caughtError.hint) {
+            console.error('Hint:', caughtError.hint);
+        }
+        
+        try {
+          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify caughtError:', e_stringify);
+        }
+      } else {
+        console.error('Caught error is undefined or null.');
       }
+      console.error('--- End Supabase Error Details (ExitIntentModal) ---');
       
       toast({
         title: "Hitilafu Imetokea",

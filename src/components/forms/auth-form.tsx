@@ -54,7 +54,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         toast({ title: 'Login Successful', description: "Welcome back!" });
         router.push('/');
         router.refresh();
-      } else {
+      } else { // signup mode
         const { error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
@@ -64,25 +64,45 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         router.push('/auth/confirmation-info');
         router.refresh();
       }
-    } catch (error: any) {
+    } catch (caughtError: any) {
       const defaultMessage = 'An unexpected error occurred. Please try again.';
       let description = defaultMessage;
       
-      console.error(`Supabase auth error (${mode}):`, error);
-      
-      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message;
-      } else if (error && typeof error.error_description === 'string' && error.error_description.trim() !== '') {
-        description = error.error_description;
-      }
-      
-      if (typeof error === 'object' && error !== null) {
-        try {
-          console.error(`Supabase auth error (${mode}) (JSON):`, JSON.stringify(error, null, 2));
-        } catch (e) {
-          console.error(`Could not stringify Supabase auth error (${mode}):`, e);
+      console.error(`--- Supabase Auth Error Details (Mode: ${mode}) ---`);
+      console.error('Type of caughtError:', typeof caughtError);
+
+      if (caughtError) {
+        console.error('Caught Error Object:', caughtError);
+        
+        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+          description = caughtError.message;
+          console.error('Message property:', caughtError.message);
+        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
+          description = caughtError.error_description;
+          console.error('Error Description property:', caughtError.error_description);
+        } else if (typeof caughtError === 'string') {
+          description = caughtError;
         }
+
+        if (caughtError.details) { 
+          console.error('Details:', caughtError.details);
+        }
+        if (caughtError.code) {
+          console.error('Code:', caughtError.code);
+        }
+        if (caughtError.hint) {
+            console.error('Hint:', caughtError.hint);
+        }
+        
+        try {
+          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify caughtError:', e_stringify);
+        }
+      } else {
+        console.error('Caught error is undefined or null.');
       }
+      console.error(`--- End Supabase Auth Error Details (Mode: ${mode}) ---`);
       
       toast({
         title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,

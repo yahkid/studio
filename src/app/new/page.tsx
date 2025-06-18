@@ -2,20 +2,11 @@
 "use client";
 
 import { useState } from 'react';
-import { type Metadata } from 'next';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MapPin, Clock, Smile, Users, Baby, Coffee } from 'lucide-react';
 import { VisitPlannerModal } from '@/components/modals/visit-planner-modal';
-
-// export const metadata: Metadata = { // Metadata should be defined at the top level or exported if dynamic
-// title: "Mimi Mgeni | HSCM Connect",
-// description: "Karibu Holy Spirit Connect Ministry! Pata nyakati za ibada, nini cha kutarajia, na panga ujio wako.",
-// };
-// For client components, metadata is typically handled by parent server components or layout.tsx
-// If this page MUST have its own metadata, it should be a server component, or metadata handled differently.
-// For now, let's assume metadata is handled by the root layout or a parent.
 
 export default function MimiMgeniPage() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
