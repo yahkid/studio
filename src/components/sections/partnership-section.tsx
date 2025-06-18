@@ -6,11 +6,71 @@ import { Button } from '@/components/ui/button';
 import { FinancialPartnerModal } from '@/components/modals/financial-partner-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
+import { ExpandableTabs } from '@/components/ui/expandable-tabs'; // Import ExpandableTabs
+import { HandCoins, Sparkles, HandHeart } from 'lucide-react'; // Import icons
+import type { LucideIcon } from 'lucide-react';
+
+interface PartnershipOption {
+  id: string;
+  title: string;
+  icon: LucideIcon;
+  description: string;
+  action: () => void;
+  buttonText: string;
+  buttonVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
+  buttonClass?: string;
+}
 
 export function PartnershipSectionSw() {
   const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+  
+  const partnershipOptions: PartnershipOption[] = [
+    { 
+      id: 'financial', 
+      title: 'Mshirika wa Kifedha', 
+      icon: HandCoins, 
+      description: 'Unga mkono dhamira yetu kupitia kuchangia mara kwa mara, tukisaidia kupanua mwelekeo wetu na athari katika jamii.', 
+      action: () => setIsFinancialModalOpen(true), 
+      buttonText: 'Changia Sasa', 
+      buttonVariant: 'default', 
+      buttonClass: 'bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold' 
+    },
+    { 
+      id: 'prayer', 
+      title: 'Mshirika wa Maombi', 
+      icon: Sparkles, 
+      description: 'Jiunge na timu yetu ya maombi na uombee huduma yetu, jamii, na mahitaji ya wale tunaowawakilisha.', 
+      action: () => setIsPrayerModalOpen(true), 
+      buttonText: 'Jiunge na Timu ya Maombi', 
+      buttonVariant: 'outline', 
+      buttonClass: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body' 
+    },
+    { 
+      id: 'volunteer', 
+      title: 'Mshirika wa Kujitolea', 
+      icon: HandHeart, 
+      description: 'Tumia vipawa na talanta zako kutumika katika huduma mbalimbali na kuwa na athari ya moja kwa moja katika maisha ya watu.', 
+      action: () => setIsVolunteerModalOpen(true), 
+      buttonText: 'Jitolee Leo', 
+      buttonVariant: 'outline', 
+      buttonClass: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body' 
+    }
+  ];
+
+  const [selectedPartnership, setSelectedPartnership] = useState<PartnershipOption | null>(partnershipOptions[0]); // Default to first option selected
+
+  const expandableTabsItems = partnershipOptions.map(p => ({ title: p.title, icon: p.icon }));
+
+  const handleTabChange = (index: number | null) => {
+    if (index !== null) {
+      setSelectedPartnership(partnershipOptions[index]);
+    } else {
+      // Optionally, clear selection or default to first if clicks outside deselect
+      setSelectedPartnership(null); 
+    }
+  };
 
   return (
     <>
@@ -29,82 +89,40 @@ export function PartnershipSectionSw() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 mb-12 md:mb-16 items-start">
+              {/* Left Column: Expandable Tabs and Selected Partnership Details */}
               <div className="space-y-8">
-                <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-hscm-red/10 dark:bg-hscm-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">💝</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                        Mshirika wa Kifedha
-                      </h3>
-                      <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                        Unga mkono dhamira yetu kupitia kuchangia mara kwa mara, tukisaidia kupanua 
-                        mwelekeo wetu na athari katika jamii.
-                      </p>
-                      <Button 
-                        onClick={() => setIsFinancialModalOpen(true)}
-                        className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold"
-                        suppressHydrationWarning={true}
-                      >
-                        Changia Sasa
-                      </Button>
-                    </div>
-                  </div>
+                <div className="flex justify-center lg:justify-start">
+                  <ExpandableTabs tabs={expandableTabsItems} onChange={handleTabChange} />
                 </div>
 
-                <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🙏</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                        Mshirika wa Maombi
-                      </h3>
-                      <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                        Jiunge na timu yetu ya maombi na uombee huduma yetu, jamii, 
-                        na mahitaji ya wale tunaowawakilisha.
-                      </p>
-                      <Button 
-                        onClick={() => setIsPrayerModalOpen(true)}
-                        variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
-                        suppressHydrationWarning={true}
-                      >
-                        Jiunge na Timu ya Maombi
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🤝</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                        Mshirika wa Kujitolea
-                      </h3>
-                      <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                        Tumia vipawa na talanta zako kutumika katika huduma mbalimbali na 
-                        kuwa na athari ya moja kwa moja katika maisha ya watu.
-                      </p>
-                      <Button 
-                        onClick={() => setIsVolunteerModalOpen(true)}
-                        variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
-                        suppressHydrationWarning={true}
-                      >
-                        Jitolee Leo
-                      </Button>
+                {selectedPartnership && (
+                  <div className="mt-6 bg-card rounded-xl p-6 md:p-8 border shadow-lg animate-fadeIn">
+                    <div className="flex items-start space-x-4">
+                      <div className={`w-12 h-12 ${selectedPartnership.id === 'financial' ? 'bg-hscm-red/10 dark:bg-hscm-red/20' : 'bg-primary/10 dark:bg-primary/20'} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                        <selectedPartnership.icon className={`w-6 h-6 ${selectedPartnership.id === 'financial' ? 'text-hscm-red' : 'text-primary'}`} />
+                      </div>
+                      <div>
+                        <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
+                          {selectedPartnership.title}
+                        </h3>
+                        <p className="font-body text-muted-foreground mb-4 leading-relaxed">
+                          {selectedPartnership.description}
+                        </p>
+                        <Button 
+                          onClick={selectedPartnership.action}
+                          variant={selectedPartnership.buttonVariant || 'default'}
+                          className={selectedPartnership.buttonClass}
+                          suppressHydrationWarning={true}
+                        >
+                          {selectedPartnership.buttonText}
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
+              {/* Right Column: Impact Stats and Final CTA (remains largely unchanged) */}
               <div className="space-y-8">
                 <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/10 dark:via-card dark:to-secondary/10 rounded-2xl p-8 border shadow-lg">
                   <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
@@ -187,3 +205,28 @@ export function PartnershipSectionSw() {
     </>
   );
 }
+
+// Basic fade-in animation for the selected partnership details
+// Add this to your globals.css or a relevant CSS file if you want a smoother transition
+// @keyframes fadeIn {
+//   from { opacity: 0; transform: translateY(10px); }
+//   to { opacity: 1; transform: translateY(0); }
+// }
+// .animate-fadeIn {
+//   animation: fadeIn 0.3s ease-out forwards;
+// }
+// For Tailwind, you can define it in tailwind.config.js
+// theme: {
+//   extend: {
+//     keyframes: {
+//       fadeIn: {
+//         '0%': { opacity: '0', transform: 'translateY(10px)' },
+//         '100%': { opacity: '1', transform: 'translateY(0)' },
+//       },
+//     },
+//     animation: {
+//       fadeIn: 'fadeIn 0.3s ease-out forwards',
+//     },
+//   },
+// },
+
