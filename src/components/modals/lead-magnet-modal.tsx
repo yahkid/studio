@@ -14,7 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Download } from 'lucide-react';
+import { Mail, Download, Loader2 } from 'lucide-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { Database } from '@/types/supabase';
 
 interface LeadMagnetModalProps {
   open: boolean;
@@ -23,9 +25,11 @@ interface LeadMagnetModalProps {
 
 export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const supabase = useSupabaseClient<Database>();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       toast({
@@ -35,13 +39,30 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
       });
       return;
     }
-    console.log("Lead magnet (Hatua za Kwanza) email submitted:", email);
-    toast({
-      title: "Asante!",
-      description: "Mwongozo wako wa 'Misingi ya Imani' utatumwa kwa barua pepe yako hivi karibuni.",
-    });
-    setEmail('');
-    onOpenChange(false);
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('lead_magnet_signups')
+        .insert({ email: email });
+
+      if (error) throw error;
+
+      toast({
+        title: "Asante!",
+        description: "Mwongozo wako wa 'Misingi ya Imani' utatumwa kwa barua pepe yako hivi karibuni.",
+      });
+      setEmail('');
+      onOpenChange(false);
+    } catch (error: any) {
+      toast({
+        title: "Hitilafu Imetokea",
+        description: error.message || "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,12 +92,16 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
                   className="pl-10 font-body"
                   required
                   aria-label="Anwani ya barua pepe kwa mwongozo wa hatua za kwanza"
+                  disabled={isLoading}
                 />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="font-headline w-full">Pata Mwongozo Wako</Button>
+            <Button type="submit" className="font-headline w-full" disabled={isLoading} suppressHydrationWarning={true}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? 'Inatuma...' : 'Pata Mwongozo Wako'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -15,7 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare, CalendarCheck } from 'lucide-react';
+import { User, Mail, MessageSquare, CalendarCheck, Loader2 } from 'lucide-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { Database } from '@/types/supabase';
 
 interface VisitPlannerModalProps {
   open: boolean;
@@ -26,11 +28,13 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const supabase = useSupabaseClient<Database>();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email) { // Message is optional
+    if (!name || !email) {
       toast({
         title: "Taarifa Hazijakamilika",
         description: "Tafadhali jaza jina lako na barua pepe.",
@@ -46,15 +50,32 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
       });
       return;
     }
-    console.log("Visit planner form submitted (Swahili):", { name, email, message });
-    toast({
-      title: "Tutawasiliana Nawe!",
-      description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
-    });
-    setName('');
-    setEmail('');
-    setMessage('');
-    onOpenChange(false);
+    
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('visit_requests')
+        .insert({ name, email, message: message || null });
+
+      if (error) throw error;
+
+      toast({
+        title: "Tutawasiliana Nawe!",
+        description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
+      });
+      setName('');
+      setEmail('');
+      setMessage('');
+      onOpenChange(false);
+    } catch (error: any) {
+      toast({
+        title: "Hitilafu Imetokea",
+        description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -84,6 +105,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                   className="pl-10 font-body"
                   required
                   aria-label="Jina lako"
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -100,6 +122,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                   className="pl-10 font-body"
                   required
                   aria-label="Anwani yako ya barua pepe"
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -115,12 +138,16 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                   className="pl-10 font-body"
                   rows={3}
                   aria-label="Ujumbe wako"
+                  disabled={isLoading}
                 />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="font-headline w-full">Tuma Ombi</Button>
+            <Button type="submit" className="font-headline w-full" disabled={isLoading} suppressHydrationWarning={true}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? 'Inatuma...' : 'Tuma Ombi'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

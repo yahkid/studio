@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Heart } from 'lucide-react'; // Using Heart icon as a placeholder for the SVG icon
+import { Heart } from 'lucide-react';
 
 export function MissionSectionSw() {
   return (

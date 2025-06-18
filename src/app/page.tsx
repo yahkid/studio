@@ -16,7 +16,6 @@ import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 export default function HomePageSwahili() {
   const [isLeadMagnetOpen, setIsLeadMagnetOpen] = useState(false);
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
-  // Decision form is a page, not a modal here. Exit intent modal handles itself.
 
   return (
     <div className="flex flex-col items-center">
@@ -24,10 +23,10 @@ export default function HomePageSwahili() {
 
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
         <MissionSectionSw />
-        <WatchAndGrowSectionSw /> {/* Placeholder for email signup form inside */}
+        <WatchAndGrowSectionSw />
         <DecisionPathwaySectionSw />
         <EventsSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
-        <PartnershipSectionSw />
+        <PartnershipSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
       </div>
 
       <LeadMagnetModal open={isLeadMagnetOpen} onOpenChange={setIsLeadMagnetOpen} />

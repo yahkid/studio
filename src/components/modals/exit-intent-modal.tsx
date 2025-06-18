@@ -14,12 +14,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Mail, MessageCircleHeart } from 'lucide-react'; // Changed icon to MessageCircleHeart for prayer focus
+import { Mail, MessageCircleHeart, Loader2 } from 'lucide-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { Database } from '@/types/supabase';
 
 export function ExitIntentModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState(''); // Keep email if prayer request might be emailed, otherwise can be removed
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const supabase = useSupabaseClient<Database>();
   const [showOnExit, setShowOnExit] = useState(true);
 
   useEffect(() => {
@@ -45,10 +49,8 @@ export function ExitIntentModal() {
     };
   }, [showOnExit]);
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmitPrayerWithEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    // If collecting email for prayer:
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       toast({
         title: "Barua Pepe Batili",
@@ -57,16 +59,36 @@ export function ExitIntentModal() {
       });
       return;
     }
-    console.log("Exit intent prayer request with email:", email);
-    toast({
-      title: "Ombi Limepokelewa",
-      description: "Tutakuombea. Asante kwa kushiriki nasi.",
-    });
-    setEmail('');
-    setIsOpen(false);
+    
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('exit_intent_offers') // Using existing table for email capture
+        .insert({ email: email });
+
+      if (error) throw error;
+      
+      toast({
+        title: "Ombi Limepokelewa",
+        description: "Tutakuombea. Asante kwa kushiriki nasi.",
+      });
+      setEmail('');
+      setIsOpen(false);
+      setShowOnExit(false);
+    } catch (error: any) {
+      toast({
+        title: "Hitilafu Imetokea",
+        description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleJustPray = () => {
+    // This action doesn't submit data, just provides comfort.
+    // If tracking desired, could submit an anonymous record to a different table.
     console.log("Exit intent prayer requested (no email).");
     toast({
       title: "Ombi Limepokelewa",
@@ -76,15 +98,14 @@ export function ExitIntentModal() {
     setShowOnExit(false); 
   };
 
-
   if (!isOpen) {
     return null;
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      setIsOpen(open);
-      if (!open) setShowOnExit(false); 
+    <Dialog open={isOpen} onOpenChange={(openStatus) => {
+      setIsOpen(openStatus);
+      if (!openStatus) setShowOnExit(false); 
     }}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
@@ -96,7 +117,7 @@ export function ExitIntentModal() {
             Ungependa tukuombee? Tungependa kukuombea wewe na mahitaji yako.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmitPrayerWithEmail}>
           <div className="grid gap-4 py-4">
             <div className="space-y-1">
               <Label htmlFor="email-exit-prayer" className="font-body">Barua Pepe (Hiari, kwa mawasiliano zaidi)</Label>
@@ -110,18 +131,36 @@ export function ExitIntentModal() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 font-body"
                   aria-label="Barua pepe kwa ombi la maombi (hiari)"
+                  disabled={isLoading}
                 />
               </div>
             </div>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
-            <Button variant="outline" onClick={() => { setIsOpen(false); setShowOnExit(false);}} className="font-headline">
+            <Button 
+              variant="outline" 
+              onClick={() => { setIsOpen(false); setShowOnExit(false);}} 
+              className="font-headline"
+              disabled={isLoading}
+              type="button"
+              suppressHydrationWarning={true}
+            >
               Hapana Asante
             </Button>
-            <Button type="button" onClick={handleJustPray} className="font-headline bg-secondary hover:bg-secondary/90 text-secondary-foreground">
+            <Button 
+              type="button" 
+              onClick={handleJustPray} 
+              className="font-headline bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+              disabled={isLoading}
+              suppressHydrationWarning={true}
+            >
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Niombee Tu
             </Button>
-            <Button type="submit" className="font-headline">Tuma Ombi na Barua Pepe</Button>
+            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

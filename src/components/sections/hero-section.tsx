@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link'; // Import Link for anchor scrolling
 
 interface HeroSectionSwProps {
   onOpenLeadMagnet: () => void;
@@ -11,7 +12,6 @@ interface HeroSectionSwProps {
 export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
-      {/* Background Image */}
       <Image
         src="/DSC00243.png"
         alt="Abstract sunrise or light rays representing hope and Jesus as the light of the world - Picha ya miale ya nuru au jua linapochomoza kuwakilisha tumaini"
@@ -23,7 +23,6 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
         priority
         suppressHydrationWarning={true}
       />
-      {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40 z-10"></div>
 
       <div className="container mx-auto px-4 relative z-20">
@@ -39,14 +38,13 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Button
+              asChild // Use asChild to make the Button render as a Link
               size="lg"
               className="bg-hscm-green hover:bg-hscm-green/90 text-primary-foreground font-body font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-shadow"
-              // onClick={() => { /* Link to watch page or open video modal */ }}
               suppressHydrationWarning={true}
             >
-              Tazama Ujumbe wa Karibuni
+              <Link href="/#tazama-na-ukue">Tazama Ujumbe wa Karibuni</Link>
             </Button>
-            {/* Secondary CTA from PRD (Plan your visit) is handled in Events section as per PRD */}
           </div>
 
           <div className="mt-8">
