@@ -76,16 +76,18 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     }
     
     setIsLoading(true);
+    const payload = {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone_number: phoneNumber || null,
+        country: country || null,
+    };
+
     try {
       const { error } = await supabase
         .from('financial_partner_signups')
-        .insert({ 
-          first_name: firstName, 
-          last_name: lastName, 
-          email,
-          phone_number: phoneNumber || null,
-          country: country || null,
-        });
+        .insert(payload);
 
       if (error) throw error;
 
@@ -95,40 +97,39 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       });
       setCurrentStep(2); 
     } catch (caughtError: any) {
-      let errorMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
+      const defaultMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
       console.error('--- Supabase Insert Error Details (FinancialPartnerModal) ---');
+      console.error('Type of caughtError:', typeof caughtError);
+
       if (caughtError) {
         console.error('Caught Error Object:', caughtError);
-        if (typeof caughtError === 'object' && caughtError !== null) {
-          // Log known Supabase error properties
-          if ('message' in caughtError) {
-            console.error('Message:', caughtError.message);
-            if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-              errorMessage = caughtError.message;
-            }
-          }
-          if ('details' in caughtError) {
-            console.error('Details:', caughtError.details);
-          }
-          if ('code' in caughtError) {
-            console.error('Code:', caughtError.code);
-          }
-          if ('hint' in caughtError) {
+        
+        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+          description = caughtError.message;
+          console.error('Message property:', caughtError.message);
+        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
+          description = caughtError.error_description;
+          console.error('Error Description property:', caughtError.error_description);
+        } else if (typeof caughtError === 'string') {
+          description = caughtError;
+        }
+
+        if (caughtError.details) { 
+          console.error('Details:', caughtError.details);
+        }
+        if (caughtError.code) {
+          console.error('Code:', caughtError.code);
+        }
+        if (caughtError.hint) {
             console.error('Hint:', caughtError.hint);
-          }
-          // Attempt to stringify
-          try {
-            console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-          } catch (e) {
-            console.error('Could not stringify caughtError:', e);
-          }
-        } else {
-          // If it's not an object, log its type and value
-          console.error('Caught Error Type:', typeof caughtError);
-          console.error('Caught Error Value:', String(caughtError));
-          if (typeof caughtError === 'string' && caughtError.trim() !== '') {
-            errorMessage = caughtError;
-          }
+        }
+        
+        try {
+          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify caughtError:', e_stringify);
         }
       } else {
         console.error('Caught error is undefined or null.');
@@ -137,7 +138,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
 
       toast({
         title: "Hitilafu Imetokea",
-        description: errorMessage,
+        description: description,
         variant: "destructive",
       });
     } finally {
