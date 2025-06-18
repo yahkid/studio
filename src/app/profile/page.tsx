@@ -8,7 +8,7 @@ import type { Database } from '@/types/supabase';
 import type { Course } from '@/lib/courses-data';
 import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
-import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare } from 'lucide-react'; // Added BookOpen, CheckSquare
+import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare, Search } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -214,7 +214,8 @@ export default function ProfilePage() {
 
             {/* Learning Journey Section */}
             <div>
-              <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6">
+              <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6 flex items-center">
+                <BookOpen className="mr-3 h-7 w-7 text-primary" />
                 Safari Yangu ya Kujifunza
               </h2>
               {isProgressLoading ? (
@@ -236,11 +237,18 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : (
-                <Card>
-                  <CardContent className="pt-6">
-                    <p className="font-body text-muted-foreground text-center py-8">
-                      Bado haujaanza kozi yoyote au hakuna maendeleo yaliyorekodiwa. Tembelea sehemu ya kozi ili kuanza kujifunza!
+                <Card className="text-center">
+                  <CardContent className="pt-8 pb-10">
+                    <Search className="h-16 w-16 text-muted-foreground/50 mx-auto mb-6" />
+                    <h3 className="font-headline text-xl text-foreground mb-3">
+                      Safari Yako ya Kujifunza Inasubiri!
+                    </h3>
+                    <p className="font-body text-muted-foreground mb-6 max-w-md mx-auto">
+                      Gundua kozi zetu za kina na anza kukua katika ufahamu wako wa Neno la Mungu leo.
                     </p>
+                    <Button asChild size="lg" className="font-headline">
+                      <Link href="/kozi">Anza Kujifunza Sasa</Link>
+                    </Button>
                   </CardContent>
                 </Card>
               )}
@@ -251,3 +259,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
