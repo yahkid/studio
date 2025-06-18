@@ -61,34 +61,34 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         });
         if (error) throw error; 
         toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
-        // router.push('/auth?message=check-email'); // original
-        router.push('/auth/confirmation-info'); // Direct to info page
+        router.push('/auth/confirmation-info');
         router.refresh();
       }
     } catch (error: any) {
+      const defaultMessage = 'An unexpected error occurred. Please try again.';
+      let description = defaultMessage;
+      
       console.error(`Supabase auth error (${mode}):`, error);
-
-      let description = 'An unexpected error occurred. Please try again.';
-      if (error && typeof error.error_description === 'string' && error.error_description.trim() !== '') {
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      } else if (error && typeof error.error_description === 'string' && error.error_description.trim() !== '') {
         description = error.error_description;
-      } else if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message; 
       }
       
-      // Specific handling for "Error sending confirmation email"
-      if (description.includes("Error sending confirmation email")) {
-          toast({
-            title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
-            description: "Error sending confirmation email. Please check your Supabase email settings or contact support.",
-            variant: 'destructive',
-          });
-      } else {
-          toast({
-            title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
-            description: description,
-            variant: 'destructive',
-          });
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error(`Supabase auth error (${mode}) (JSON):`, JSON.stringify(error, null, 2));
+        } catch (e) {
+          console.error(`Could not stringify Supabase auth error (${mode}):`, e);
+        }
       }
+      
+      toast({
+        title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
+        description: description,
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }

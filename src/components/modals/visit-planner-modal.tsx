@@ -81,10 +81,26 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
       onOpenChange(false); 
       resetForm(); 
     } catch (error: any) {
-      console.error('Supabase insert error in VisitPlannerModal:', error);
+      const defaultMessage = "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
+      console.error('Error in VisitPlannerModal:', error);
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      }
+      
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error('Error in VisitPlannerModal (JSON):', JSON.stringify(error, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify error in VisitPlannerModal:', e_stringify);
+        }
+      }
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
+        description: description,
         variant: "destructive",
       });
     } finally {

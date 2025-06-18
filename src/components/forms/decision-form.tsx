@@ -65,10 +65,26 @@ export function DecisionForm() {
       setDecisionType('');
       setComments('');
     } catch (error: any) {
-      console.error('Supabase insert error in DecisionForm:', error);
+      const defaultMessage = `Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena.`;
+      let description = defaultMessage;
+      
+      console.error('Error in DecisionForm:', error);
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      }
+      
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error('Error in DecisionForm (JSON):', JSON.stringify(error, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify error in DecisionForm:', e_stringify);
+        }
+      }
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: `Imeshindwa kuwasilisha uamuzi wako. ${error.message || 'Tafadhali jaribu tena.'}`,
+        description: description,
         variant: "destructive",
       });
     } finally {

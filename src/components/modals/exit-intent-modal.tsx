@@ -77,10 +77,26 @@ export function ExitIntentModal() {
       setIsOpen(false);
       setShowOnExit(false);
     } catch (error: any) {
-      console.error('Supabase insert error in ExitIntentModal:', error);
+      const defaultMessage = "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
+      console.error('Error in ExitIntentModal:', error);
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      }
+      
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error('Error in ExitIntentModal (JSON):', JSON.stringify(error, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify error in ExitIntentModal:', e_stringify);
+        }
+      }
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
+        description: description,
         variant: "destructive",
       });
     } finally {
@@ -148,7 +164,7 @@ export function ExitIntentModal() {
                 variant="outline"
                 className="font-headline"
                 disabled={isLoading}
-                type="button" // Ensure it's not submitting the form
+                type="button" 
                 suppressHydrationWarning={true}
               >
                 Hapana Asante

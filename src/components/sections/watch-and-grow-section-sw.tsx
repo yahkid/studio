@@ -42,10 +42,26 @@ export function WatchAndGrowSectionSw() {
       });
       setEmail('');
     } catch (error: any) {
-      console.error('Supabase insert error in WatchAndGrowSectionSw:', error);
+      const defaultMessage = "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
+      console.error('Error in WatchAndGrowSectionSw:', error);
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      }
+      
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error('Error in WatchAndGrowSectionSw (JSON):', JSON.stringify(error, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify error in WatchAndGrowSectionSw:', e_stringify);
+        }
+      }
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: error.message || "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.",
+        description: description,
         variant: "destructive",
       });
     } finally {

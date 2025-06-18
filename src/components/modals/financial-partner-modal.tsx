@@ -41,19 +41,19 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     setEmail('');
     setPhoneNumber('');
     setCountry('');
-    setIsLoading(false); 
+    setIsLoading(false);
   };
 
   const handleDialogStateChange = (isOpen: boolean) => {
-    if (!isOpen) { 
+    if (!isOpen) {
       resetForm();
       // Only reset to step 1 if the dialog is being closed,
       // not when it's just re-rendering while open.
-      if (open) { // Check if it was previously open
-         setCurrentStep(1); 
+      if (open) { 
+         setCurrentStep(1);
       }
     }
-    onOpenChange(isOpen); 
+    onOpenChange(isOpen);
   };
 
   const handleSubmitStep1 = async (e: React.FormEvent) => {
@@ -94,19 +94,47 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         description: "Taarifa zako zimepokelewa.",
       });
       setCurrentStep(2); 
-    } catch (error: any) {
+    } catch (caughtError: any) {
       let errorMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
-      if (error && error.message) {
-        errorMessage = error.message;
+      console.error('--- Supabase Insert Error Details (FinancialPartnerModal) ---');
+      if (caughtError) {
+        console.error('Caught Error Object:', caughtError);
+        if (typeof caughtError === 'object' && caughtError !== null) {
+          // Log known Supabase error properties
+          if ('message' in caughtError) {
+            console.error('Message:', caughtError.message);
+            if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+              errorMessage = caughtError.message;
+            }
+          }
+          if ('details' in caughtError) {
+            console.error('Details:', caughtError.details);
+          }
+          if ('code' in caughtError) {
+            console.error('Code:', caughtError.code);
+          }
+          if ('hint' in caughtError) {
+            console.error('Hint:', caughtError.hint);
+          }
+          // Attempt to stringify
+          try {
+            console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+          } catch (e) {
+            console.error('Could not stringify caughtError:', e);
+          }
+        } else {
+          // If it's not an object, log its type and value
+          console.error('Caught Error Type:', typeof caughtError);
+          console.error('Caught Error Value:', String(caughtError));
+          if (typeof caughtError === 'string' && caughtError.trim() !== '') {
+            errorMessage = caughtError;
+          }
+        }
+      } else {
+        console.error('Caught error is undefined or null.');
       }
-      
-      console.error(
-        'Supabase insert error in FinancialPartnerModal (Step 1). Raw error object:', 
-        error, 
-        'Error stringified:', 
-        JSON.stringify(error, null, 2)
-      );
-      
+      console.error('--- End Supabase Error Details (FinancialPartnerModal) ---');
+
       toast({
         title: "Hitilafu Imetokea",
         description: errorMessage,

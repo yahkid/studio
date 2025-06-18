@@ -56,10 +56,26 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
       setEmail('');
       onOpenChange(false); 
     } catch (error: any) {
-      console.error('Supabase insert error in LeadMagnetModal:', error);
+      const defaultMessage = "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
+      console.error('Error in LeadMagnetModal:', error);
+      
+      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+        description = error.message;
+      }
+      
+      if (typeof error === 'object' && error !== null) {
+        try {
+          console.error('Error in LeadMagnetModal (JSON):', JSON.stringify(error, null, 2));
+        } catch (e_stringify) {
+          console.error('Could not stringify error in LeadMagnetModal:', e_stringify);
+        }
+      }
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: error.message || "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.",
+        description: description,
         variant: "destructive",
       });
     } finally {
