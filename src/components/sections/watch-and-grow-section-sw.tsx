@@ -13,9 +13,9 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import type { Database } from '@/types/supabase';
 
 const videoThumbnails = [
-  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 1' },
-  { id: '7Ja9JmMign0', alt: 'Video thumbnail 2' },
-  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 3' },
+  { id: '7Ja9JmMign0', alt: 'Video thumbnail 1' }, // Previously SP3FVbEP0ps
+  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 2' }, // Previously 7Ja9JmMign0
+  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 3' }, // Previously zqZlRS_v4z8
 ];
 
 export function WatchAndGrowSectionSw() {
@@ -164,3 +164,4 @@ export function WatchAndGrowSectionSw() {
     </section>
   );
 }
+
