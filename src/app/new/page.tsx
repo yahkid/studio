@@ -3,10 +3,10 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MapPin, Clock, Smile, Users, Baby, Coffee } from 'lucide-react';
 import { VisitPlannerModal } from '@/components/modals/visit-planner-modal';
+import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
 
 export default function MimiMgeniPage() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
@@ -25,14 +25,13 @@ export default function MimiMgeniPage() {
               Tunafurahi kuwa uko hapa na unafikiria kututembelea. Tunajua kutembelea kanisa jipya kunaweza kuwa tukio la kusisimua,
               na tunataka kufanya uzoefu wako wa kwanza nasi uwe wa kukaribisha na kustarehesha iwezekanavyo.
             </p>
-            <Button 
-              size="lg" 
-              className="bg-hscm-green hover:bg-hscm-green/90 text-primary-foreground font-body font-semibold px-10 py-5 text-lg"
+            <GradientButton 
               onClick={() => setIsVisitPlannerOpen(true)}
               suppressHydrationWarning={true}
+              className="text-lg" // GradientButton applies its own padding, so size="lg" is not directly applicable
             >
               Panga Ujio Wako Leo
-            </Button>
+            </GradientButton>
           </div>
         </section>
 
@@ -130,14 +129,13 @@ export default function MimiMgeniPage() {
             <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Tunatarajia kukutana nawe! Bofya kitufe hapa chini kutujulisha unakuja au kama una maswali yoyote.
             </p>
-            <Button
-              size="lg"
-              className="bg-hscm-green hover:bg-hscm-green/90 text-primary-foreground font-body font-semibold px-12 py-5 text-lg"
+            <GradientButton
               onClick={() => setIsVisitPlannerOpen(true)}
               suppressHydrationWarning={true}
+              className="text-lg" // GradientButton applies its own padding
             >
               Tujulishe Unakuja
-            </Button>
+            </GradientButton>
           </div>
         </section>
       </div>

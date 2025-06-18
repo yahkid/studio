@@ -2,9 +2,9 @@
 "use client";
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
+import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
 
 export function DecisionPathwaySectionSw() {
   return (
@@ -23,11 +23,11 @@ export function DecisionPathwaySectionSw() {
       <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
         Huu ndio uamuzi mkuu kuliko yote uliyowahi kufanya! Tunataka kusherehekea nawe na kukuongoza katika hatua zako zinazofuata.
       </p>
-      <Button asChild variant="secondary" size="lg" className="font-body font-bold text-lg px-10 py-6">
+      <GradientButton asChild className="text-lg" suppressHydrationWarning={true}>
         <Link href="/decision">
           Nimeamua Leo <Users className="ml-2 h-5 w-5" />
         </Link>
-      </Button>
+      </GradientButton>
     </section>
   );
 }

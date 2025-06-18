@@ -2,8 +2,8 @@
 "use client";
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
 
 interface HeroSectionSwProps {
   onOpenLeadMagnet: () => void;
@@ -37,15 +37,9 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button
-              asChild
-              size="lg"
-              className="bg-hscm-green hover:bg-hscm-green/90 text-primary-foreground font-body font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-shadow"
-              href="/#tazama-na-ukue"
-              suppressHydrationWarning={true}
-            >
+            <GradientButton asChild suppressHydrationWarning={true}>
               <Link href="/#tazama-na-ukue">Tazama Ujumbe wa Karibuni</Link>
-            </Button>
+            </GradientButton>
           </div>
 
           <div className="mt-8">
