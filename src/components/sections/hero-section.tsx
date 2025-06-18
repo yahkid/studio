@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link'; 
+import Link from 'next/link';
 
 interface HeroSectionSwProps {
   onOpenLeadMagnet: () => void;
@@ -13,17 +13,17 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/DSC00243.png" 
+        src="/DSC00243.png"
         alt="Washirika wa Holy Spirit Connect Ministry wamesimama pamoja nje - Holy Spirit Connect Ministry members standing together outdoors"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
         data-ai-hint="group people"
         priority
         suppressHydrationWarning={true}
       />
-      <div className="absolute inset-0 bg-black/50 z-10"></div> {/* Slightly increased overlay for text visibility */}
+      <div className="absolute inset-0 bg-black/50 z-10"></div> {/* Overlay */}
 
       <div className="container mx-auto px-4 relative z-20">
         <div className="max-w-3xl mx-auto">
@@ -32,7 +32,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
             <span className="block text-hscm-gold-dark-theme drop-shadow-md">GUNDUA KUSUDI.</span>
           </h1>
 
-          <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed"> {/* Slightly lighter text color */}
+          <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed">
             Holy Spirit Connect ni familia ya kimataifa inayounganisha ulimwengu na ujumbe wa Yesu Kristo unaoleta uzima.
           </p>
 
