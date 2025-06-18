@@ -47,24 +47,25 @@ export default function ProfilePage() {
         console.log("ProfilePage: Fetched UserCourseProgress data from Supabase (raw):", { data, error });
 
         if (error) {
-          // Check for the "empty-ish" error object scenario (often RLS or permissions)
-          if (typeof error === 'object' && error !== null && Object.keys(error).length === 0) {
-            console.warn("ProfilePage: Supabase returned an error object with no enumerable properties while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible as expected. User progress will be shown as empty.", error);
+          const isNonDescriptiveError = typeof error === 'object' && error !== null && !error.message;
+
+          if (isNonDescriptiveError) {
+            console.warn("ProfilePage: Supabase returned an error without a message while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible. User progress will be shown as empty. Raw error:", error);
             toast({
               title: 'Progress Unavailable',
-              description: 'We could not retrieve your learning progress at this time. This might be due to access permissions or the necessary data table not being set up. Please try again later or contact support if the issue persists.',
-              variant: 'default', 
+              description: 'We could not retrieve your learning progress at this time. This might be due to access permissions or if the necessary data table is not set up. Please try again later or contact support if the issue persists.',
+              variant: 'default',
             });
-            setUserProgress([]); // Explicitly set progress to empty
+            setUserProgress([]);
           } else {
-            // Handle other, more specific errors
-            console.error("ProfilePage: Error fetching UserCourseProgress raw data (with details):", error);
+            // Handle errors that have a message (more specific Supabase errors)
+            console.error("ProfilePage: Error fetching UserCourseProgress (with details):", error);
             toast({
               title: 'Error Fetching Progress',
               description: error.message || 'An unexpected error occurred while fetching your learning journey.',
               variant: 'destructive',
             });
-            setUserProgress([]); // Explicitly set progress to empty
+            setUserProgress([]);
           }
         } else if (data) {
           const enrichedData = data.map(progressRecord => {
@@ -176,3 +177,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
