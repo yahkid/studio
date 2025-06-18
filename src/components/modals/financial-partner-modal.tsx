@@ -274,4 +274,3 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     </Dialog>
   );
 }
-
