@@ -1,19 +1,18 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { FinancialPartnerModal } from '@/components/modals/financial-partner-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
-import { ExpandableTabs } from '@/components/ui/expandable-tabs';
 import { HandCoins, Sparkles, HandHeart } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 
 interface PartnershipOption {
   id: string;
   title: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
   description: string;
   action: () => void;
   buttonText: string;
@@ -25,12 +24,7 @@ export function PartnershipSectionSw() {
   const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
   const partnershipOptions: PartnershipOption[] = [
     { 
       id: 'financial', 
@@ -64,26 +58,6 @@ export function PartnershipSectionSw() {
     }
   ];
 
-  const [selectedPartnership, setSelectedPartnership] = useState<PartnershipOption | null>(null);
-
-  useEffect(() => {
-    // Set default selected partnership only on the client after mount
-    if (mounted && partnershipOptions.length > 0) {
-      setSelectedPartnership(partnershipOptions[0]);
-    }
-  }, [mounted]);
-
-
-  const expandableTabsItems = partnershipOptions.map(p => ({ title: p.title, icon: p.icon }));
-
-  const handleTabChange = (index: number | null) => {
-    if (index !== null && index >= 0 && index < partnershipOptions.length) {
-      setSelectedPartnership(partnershipOptions[index]);
-    } else {
-      setSelectedPartnership(null); 
-    }
-  };
-
   return (
     <>
       <section id="ushirika" className="py-16 md:py-20 bg-muted/30 dark:bg-muted/10">
@@ -101,49 +75,36 @@ export function PartnershipSectionSw() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 mb-12 md:mb-16 items-start">
+              {/* Left Column: Partnership Options */}
               <div className="space-y-8">
-                {!mounted ? (
-                  <div className="flex justify-center lg:justify-start">
-                    <div className="h-12 w-64 bg-muted rounded-2xl animate-pulse" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex justify-center lg:justify-start">
-                      <ExpandableTabs 
-                        tabs={expandableTabsItems} 
-                        onChange={handleTabChange} 
-                      />
-                    </div>
-
-                    {selectedPartnership && (
-                      <div className="mt-6 bg-card rounded-xl p-6 md:p-8 border shadow-lg animate-fadeIn">
-                        <div className="flex items-start space-x-4">
-                          <div className={`w-12 h-12 ${selectedPartnership.id === 'financial' ? 'bg-hscm-red/10 dark:bg-hscm-red/20' : 'bg-primary/10 dark:bg-primary/20'} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                            <selectedPartnership.icon className={`w-6 h-6 ${selectedPartnership.id === 'financial' ? 'text-hscm-red' : 'text-primary'}`} />
-                          </div>
-                          <div>
-                            <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                              {selectedPartnership.title}
-                            </h3>
-                            <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                              {selectedPartnership.description}
-                            </p>
-                            <Button 
-                              onClick={selectedPartnership.action}
-                              variant={selectedPartnership.buttonVariant || 'default'}
-                              className={selectedPartnership.buttonClass}
-                              suppressHydrationWarning={true}
-                            >
-                              {selectedPartnership.buttonText}
-                            </Button>
-                          </div>
+                {partnershipOptions.map((option) => (
+                  <Card key={option.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start space-x-4">
+                        <div className={`w-12 h-12 ${option.id === 'financial' ? 'bg-hscm-red/10 dark:bg-hscm-red/20' : 'bg-primary/10 dark:bg-primary/20'} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          <option.icon className={`w-6 h-6 ${option.id === 'financial' ? 'text-hscm-red' : 'text-primary'}`} />
+                        </div>
+                        <div>
+                          <CardTitle className="font-headline text-xl text-foreground mb-1">{option.title}</CardTitle>
+                           <CardDescription className="font-body text-sm text-muted-foreground">{option.description}</CardDescription>
                         </div>
                       </div>
-                    )}
-                  </>
-                )}
+                    </CardHeader>
+                    <CardFooter>
+                      <Button 
+                        onClick={option.action}
+                        variant={option.buttonVariant || 'default'}
+                        className={`w-full ${option.buttonClass}`}
+                        suppressHydrationWarning={true}
+                      >
+                        {option.buttonText}
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
               </div>
 
+              {/* Right Column: Impact Stats & Final CTA */}
               <div className="space-y-8">
                 <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/10 dark:via-card dark:to-secondary/10 rounded-2xl p-8 border shadow-lg">
                   <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
@@ -226,5 +187,3 @@ export function PartnershipSectionSw() {
     </>
   );
 }
-
-    
