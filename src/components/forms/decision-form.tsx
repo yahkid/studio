@@ -9,14 +9,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle } from 'lucide-react'; // Users2 for membership
+import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2 } from 'lucide-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { Database } from '@/types/supabase';
 
 export function DecisionForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [decisionType, setDecisionType] = useState('');
   const [comments, setComments] = useState('');
-  const { toast, dismiss } = useToast(); 
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast, dismiss } = useToast();
+  const supabase = useSupabaseClient<Database>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,43 +41,43 @@ export function DecisionForm() {
       return;
     }
     
-    // Basic console log, replace with actual submission logic (e.g., to Supabase)
-    console.log("Decision form submitted (Swahili):", { name, email, decisionType, comments });
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.from('decisions').insert([
+        { name, email, decision_type: decisionType, comments: comments || null }
+      ]);
 
-    // Supabase submission example (uncomment and adapt if using Supabase)
-    /*
-    const { error } = await supabase.from('decisions').insert([
-      { name, email, decision_type: decisionType, comments }
-    ]);
+      if (error) {
+        throw error;
+      }
 
-    if (error) {
+      const { id: toastId } = toast({
+        title: "Asante kwa Kushiriki!",
+        description: "Tumepokea uamuzi wako na tutawasiliana nawe hivi karibuni.",
+      });
+
+      setTimeout(() => {
+        dismiss(toastId);
+      }, 5000);
+
+      setName('');
+      setEmail('');
+      setDecisionType('');
+      setComments('');
+    } catch (error: any) {
       toast({
         title: "Hitilafu Imetokea",
-        description: "Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena." error.message,
+        description: `Imeshindwa kuwasilisha uamuzi wako. ${error.message || 'Tafadhali jaribu tena.'}`,
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsLoading(false);
     }
-    */
-
-    const { id: toastId } = toast({
-      title: "Asante kwa Kushiriki!",
-      description: "Tumepokea uamuzi wako na tutawasiliana nawe hivi karibuni.",
-    });
-
-    setTimeout(() => {
-      dismiss(toastId);
-    }, 5000);
-
-    setName('');
-    setEmail('');
-    setDecisionType('');
-    setComments('');
   };
 
   const decisionOptions = [
     { id: "faith", label: "Nilifanya agano la kwanza na Kristo.", Icon: HeartHandshake },
-    { id: "rededication", label: "Niliweka upya maisha yangu kwa Kristo.", Icon: CheckCircle }, // Using CheckCircle for rededication
+    { id: "rededication", label: "Niliweka upya maisha yangu kwa Kristo.", Icon: CheckCircle },
     { id: "baptism", label: "Nataka kujifunza zaidi kuhusu ubatizo.", Icon: HelpCircle },
     { id: "membership", label: "Ninapenda kuwa mwanachama wa kanisa.", Icon: Users2 },
     { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
@@ -101,6 +105,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Jina lako kamili"
+                disabled={isLoading}
                 suppressHydrationWarning={true}
               />
             </div>
@@ -119,6 +124,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Anwani yako ya barua pepe"
+                disabled={isLoading}
                 suppressHydrationWarning={true}
               />
             </div>
@@ -131,11 +137,12 @@ export function DecisionForm() {
               onValueChange={setDecisionType}
               className="space-y-2"
               aria-label="Aina ya uamuzi"
+              // RadioGroup itself doesn't directly take disabled, individual items would if needed
             >
               {decisionOptions.map(option => (
-                <div key={option.id} className="flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors">
-                  <RadioGroupItem value={option.id} id={`decision-${option.id}`} />
-                  <Label htmlFor={`decision-${option.id}`} className="font-body flex items-center gap-2 cursor-pointer text-sm">
+                <div key={option.id} className={`flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <RadioGroupItem value={option.id} id={`decision-${option.id}`} disabled={isLoading} />
+                  <Label htmlFor={`decision-${option.id}`} className={`font-body flex items-center gap-2 text-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                     <option.Icon className="h-5 w-5 text-primary" />
                     {option.label}
                   </Label>
@@ -156,12 +163,16 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 rows={4}
                 aria-label="Maoni ya hiari"
+                disabled={isLoading}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full font-headline" suppressHydrationWarning={true}>Wasilisha Uamuzi Wangu</Button>
+          <Button type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading ? 'Inawasilisha...' : 'Wasilisha Uamuzi Wangu'}
+          </Button>
         </CardFooter>
       </form>
     </Card>
