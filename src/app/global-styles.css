@@ -1,41 +1,43 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* HSCM Brand Colors */
-  --hscm-red: #D90429;
-  --hscm-gold: #FFD700; /* For light theme */
-  --hscm-green: #00A86B; /* For light theme */
-  --hscm-green-dark-theme: #00B37F; /* For dark theme */
-  --hscm-gold-dark-theme: #FFDE33; /* For dark theme */
+  /* HSCM Brand Colors - Raw values for reference if needed, but prefer Tailwind config */
+  --hscm-red-value: #B91C1C; /* As per PRD */
+  --hscm-gold-value: #FBBF24; /* As per PRD */
+  --hscm-green-value: #166534; /* As per PRD */
   
   --white: #FFFFFF;
-  --body-text-light: #5A5A5A;
-  --body-text-dark: #A0A0A0;
+  --body-text-value: #333333; /* As per PRD */
+  --dark-text-value: #1C1917; /* As per PRD */
+  --background-dark-value: #1a1a1a; /* As per PRD for footer */
 
-  /* Fallbacks for older variables - these will be superseded by ShadCN theme */
-  --primary-green: var(--hscm-green);
-  --secondary-green-light: #E8F0E4; /* This might need re-evaluation based on new theme */
-  --accent-yellow: var(--hscm-gold);
-  --neutral-dark: hsl(var(--foreground)); /* Near-black / Off-white */
-  --neutral-medium: hsl(var(--muted-foreground)); /* Dark Gray / Light Gray */
-  --neutral-light: hsl(var(--background)); /* Off-white / Very Dark Gray */
+  /* Fallbacks for older variables - these will be superseded by ShadCN theme from globals.css */
+  /* These might be removable if nothing directly uses them anymore */
+  --primary-green: var(--hscm-green-value);
+  --secondary-green-light: #E8F0E4; 
+  --accent-yellow: var(--hscm-gold-value);
+  --neutral-dark: hsl(var(--foreground)); 
+  --neutral-medium: hsl(var(--muted-foreground)); 
+  --neutral-light: hsl(var(--background)); 
 }
 
 body {
   font-family: 'Lato', sans-serif;
   font-size: 18px; /* Default body font size */
   line-height: 1.6;
-  /* Colors applied via Tailwind theme in globals.css */
-  @apply bg-background text-muted-foreground;
+  /* Colors applied via Tailwind theme in globals.css and layout.tsx */
+  @apply bg-background text-muted-foreground; /* text-muted-foreground will use the new body-text color */
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700; /* Bold for headings */
-  /* Color applied via Tailwind theme in globals.css */
-  @apply text-foreground;
+  font-weight: 600; /* semibold, as per PRD (lighter than previous 700) */
+  letter-spacing: -0.025em; /* tracking-tight, as per PRD */
+  /* Color applied via Tailwind theme in globals.css and layout.tsx */
+  @apply text-foreground; /* text-foreground will use the new dark-text color */
   margin-bottom: 0.5em;
 }
 
