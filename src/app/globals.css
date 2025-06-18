@@ -5,29 +5,29 @@
 
 @layer base {
   :root {
-    /* Light Mode HSCM Brand Styles */
-    --background: 0 0% 100%; /* --white */
-    --foreground: 240 10% 10%; /* Near-black #1A1A1A for headings */
+    /* Light Mode HSCM Brand Styles - PRD v6.0 */
+    --background: 0 0% 97.6%; /* #F9F9F9 */
+    --foreground: 0 0% 10.2%; /* #1A1A1A (for headings and primary text) */
     
-    --card: 0 0% 100%; /* Card background - white */
-    --card-foreground: 240 10% 10%; /* Card text color */
+    --card: 0 0% 100%; /* Card background - white (can adjust if #F9F9F9 is preferred for cards too) */
+    --card-foreground: 0 0% 10.2%; /* Card text color */
     
     --popover: 0 0% 100%; /* Popover background - white */
-    --popover-foreground: 240 10% 10%; /* Popover text color */
+    --popover-foreground: 0 0% 10.2%; /* Popover text color */
     
-    --primary: 158 100% 33%; /* --hscm-green #00A86B */
+    --primary: 158 100% 33%; /* Accent: #00A86B */
     --primary-foreground: 0 0% 98%; /* Text on primary buttons - off-white */
     
-    --secondary: 51 100% 50%; /* --hscm-gold #FFD700 */
-    --secondary-foreground: 240 10% 10%; /* Text on secondary buttons - near-black */
+    --secondary: 51 100% 50%; /* HSCM Gold #FFD700 (Kept as a secondary brand color) */
+    --secondary-foreground: 0 0% 10.2%; /* Text on secondary buttons - near-black */
     
-    --muted: 0 0% 96.1%; /* Muted background */
-    --muted-foreground: 240 0% 35%; /* --body-text-light #5A5A5A */
+    --muted: 0 0% 94%; /* Muted background (slightly darker than main bg for subtlety) */
+    --muted-foreground: 0 0% 35%; /* Muted text color (e.g. #595959, for less emphasis than main text) */
     
-    --accent: 158 100% 30%; /* Slightly darker green for accents if needed */
+    --accent: 158 100% 33%; /* Main Accent: #00A86B */
     --accent-foreground: 0 0% 98%; /* Text on accent elements */
     
-    --destructive: 0 72% 51%; /* --hscm-red as HSL approx D90429 -> 349 96% 44% - using ShadCN default for now */
+    --destructive: 0 72% 51%; /* HSCM Red D90429 -> HSL approx 349 96% 44% (using default for now) */
     --destructive-foreground: 0 0% 98%; /* Text on destructive elements */
     
     --border: 0 0% 89.8%; /* Border color */
@@ -42,8 +42,8 @@
     --radius: 0.5rem;
 
     /* Sidebar specific colors - can align with main theme or be distinct */
-    --sidebar-background: 0 0% 98%; /* Off-white for sidebar */
-    --sidebar-foreground: 240 10% 10%;
+    --sidebar-background: 0 0% 98%; 
+    --sidebar-foreground: 0 0% 10.2%;
     --sidebar-primary: 158 100% 33%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 158 100% 30%;
@@ -53,29 +53,29 @@
   }
 
   .dark {
-    /* Dark Mode HSCM Brand Styles */
-    --background: 240 10% 7%; /* Very Dark Gray #121212 */
-    --foreground: 0 0% 98%; /* Off-white #F9F9F9 for headings */
+    /* Dark Mode HSCM Brand Styles - PRD v6.0 */
+    --background: 0 0% 7.1%; /* #121212 */
+    --foreground: 0 0% 97.6%; /* #F9F9F9 (for headings and primary text) */
     
-    --card: 240 10% 7%; /* Card background - dark */
-    --card-foreground: 0 0% 98%; /* Card text color - off-white */
+    --card: 0 0% 10%; /* Card background - slightly lighter than main bg */
+    --card-foreground: 0 0% 97.6%; /* Card text color - off-white */
     
-    --popover: 240 10% 7%; /* Popover background - dark */
-    --popover-foreground: 0 0% 98%; /* Popover text color - off-white */
+    --popover: 0 0% 10%; /* Popover background - dark */
+    --popover-foreground: 0 0% 97.6%; /* Popover text color - off-white */
     
-    --primary: 162 100% 35%; /* --hscm-green-dark-theme #00B37F */
+    --primary: 162 100% 35%; /* Accent: #00B37F */
     --primary-foreground: 0 0% 7%; /* Text on primary buttons - dark */
     
-    --secondary: 52 100% 55%; /* --hscm-gold-dark-theme #FFDE33 */
+    --secondary: 52 100% 55%; /* HSCM Gold Dark #FFDE33 (Kept as a secondary brand color) */
     --secondary-foreground: 0 0% 7%; /* Text on secondary buttons - dark */
     
-    --muted: 0 0% 10%; /* Muted background - dark */
-    --muted-foreground: 0 0% 63%; /* --body-text-dark #A0A0A0 */
+    --muted: 0 0% 12%; /* Muted background - dark (slightly lighter than main bg) */
+    --muted-foreground: 0 0% 65%; /* Muted text color (e.g. #A6A6A6, for less emphasis) */
     
-    --accent: 162 100% 32%; /* Slightly darker bright green for accents */
+    --accent: 162 100% 35%; /* Main Accent: #00B37F */
     --accent-foreground: 0 0% 7%; /* Text on accent elements - dark */
     
-    --destructive: 0 63% 40%; /* Darker red for destructive actions, adjust if --hscm-red needs dark variant */
+    --destructive: 0 63% 40%; /* Darker red for destructive actions */
     --destructive-foreground: 0 0% 98%;
     
     --border: 0 0% 14.9%; /* Border color - dark */
@@ -89,8 +89,8 @@
     --chart-5: 340 75% 55%;
 
     /* Sidebar specific colors - dark theme */
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 98%;
+    --sidebar-background: 0 0% 7.1%;
+    --sidebar-foreground: 0 0% 97.6%;
     --sidebar-primary: 162 100% 35%;
     --sidebar-primary-foreground: 0 0% 7%;
     --sidebar-accent: 162 100% 32%;

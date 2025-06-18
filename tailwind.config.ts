@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -10,9 +11,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Lato', 'sans-serif'], // Secondary Typeface (Body)
-        headline: ['Montserrat', 'sans-serif'], // Primary Typeface (Headings)
+        body: ['Lato', 'sans-serif'], // Secondary Typeface (Body) - PRD v6.0
+        headline: ['Montserrat', 'sans-serif'], // Primary Typeface (Headings) - PRD v6.0
         montserrat: ['Montserrat', 'sans-serif'], // Explicit for direct use if needed
+        lato: ['Lato', 'sans-serif'], // Explicit for direct use if needed
         code: ['monospace'],
       },
       colors: {
@@ -22,8 +24,8 @@ export default {
         'hscm-green': 'var(--hscm-green)', // #00A86B
         'hscm-green-dark-theme': 'var(--hscm-green-dark-theme)', // #00B37F
         'hscm-gold-dark-theme': 'var(--hscm-gold-dark-theme)', // #FFDE33
-        'body-text-light': 'var(--body-text-light)', // #5A5A5A
-        'body-text-dark': 'var(--body-text-dark)', // #A0A0A0
+        'body-text-light': 'var(--body-text-light)', 
+        'body-text-dark': 'var(--body-text-dark)', 
 
         // ShadCN theme variables (for consistency with existing components & theme structure)
         background: 'hsl(var(--background))',

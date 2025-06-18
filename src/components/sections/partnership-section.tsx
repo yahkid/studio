@@ -1,87 +1,79 @@
-import { Button } from '@/components/ui/button';
-import { HeartHandshake, HelpingHand, Users, Handshake as PartnershipIcon } from 'lucide-react'; // Renamed Handshake to PartnershipIcon
 
-export function PartnershipSection() {
+"use client";
+
+import { Button } from '@/components/ui/button';
+import { HeartHandshake, HelpingHand, Users, Handshake as PartnershipIcon } from 'lucide-react'; 
+
+export function PartnershipSectionSw() {
   return (
-    <section id="partnership" className="py-20 bg-muted/50 dark:bg-muted/20">
+    <section id="ushirika" className="py-16 md:py-20 bg-muted/30 dark:bg-muted/10">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-headline font-bold text-5xl md:text-6xl text-foreground mb-6">
-              Partner With
-              <span className="block text-primary">THE MISSION</span>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="font-headline font-bold text-4xl md:text-5xl text-foreground mb-6">
+              KUWA SEHEMU YA 
+              <span className="block text-primary">HADITHI</span>
             </h2>
-            <p className="font-body text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Your generous partnership enables us to connect the world to the life-changing power of the Gospel, 
-              transforming lives and communities with God's love.
+            <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Unapokuwa mshirika na HSCM, hauchangii tu—unawekeza katika maisha yanayobadilishwa. Ukarimu wako unatuwezesha kuipeleka Injili mbali zaidi na kujenga kanisa la karibu.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <div className="grid lg:grid-cols-2 gap-10 md:gap-12 mb-12 md:mb-16 items-start">
             <div className="space-y-8">
-              <div className="bg-card rounded-xl p-8 border shadow-lg">
+              {/* Financial Partnership - Example, repeat for Prayer and Volunteer */}
+              <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-hscm-red/10 dark:bg-hscm-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <HeartHandshake className="h-6 w-6 text-hscm-red" />
                   </div>
                   <div>
                     <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                      Financial Partnership
+                      Mshirika wa Kifedha
                     </h3>
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                      Support our mission through your giving. Every contribution helps us expand our reach
-                      and impact in sharing the message of Jesus Christ.
+                      Saidia dhamira yetu kupitia utoaji wako. Kila mchango husaidia kupanua ufikiaji wetu.
                     </p>
-                    <Button
-                      className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold"
-                    >
-                      Give Now
+                    <Button className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold">
+                      Toa Sasa
                     </Button>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-card rounded-xl p-8 border shadow-lg">
+             
+              <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <HelpingHand className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                      Prayer Partnership
+                      Mshirika wa Maombi
                     </h3>
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                      Join our prayer team and intercede for our ministry, community,
-                      and the needs of those we serve. Your prayers are vital.
+                      Jiunge na timu yetu ya maombi kuombea huduma na jamii yetu.
                     </p>
-                    <Button
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
-                    >
-                      Join Prayer Team
+                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body">
+                      Jiunge na Timu ya Maombi
                     </Button>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-card rounded-xl p-8 border shadow-lg">
+              
+               <div className="bg-card rounded-xl p-6 md:p-8 border shadow-lg">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Users className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                      Volunteer Partnership
+                      Mshirika wa Kujitolea
                     </h3>
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                      Use your gifts and talents to serve in various ministries and
-                      make a direct impact in people's lives.
+                      Tumia vipawa vyako kutumikia katika huduma mbalimbali na kuleta athari.
                     </p>
-                    <Button
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body"
-                    >
-                      Volunteer Today
+                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body">
+                      Jitolee Leo
                     </Button>
                   </div>
                 </div>
@@ -89,55 +81,35 @@ export function PartnershipSection() {
             </div>
 
             <div className="space-y-8">
-               <div className="bg-[#FCFBF8] dark:bg-neutral-dark/30 rounded-2xl p-8 border"> {/* Updated dark mode background slightly */}
+               <div className="bg-card dark:bg-neutral-dark/30 rounded-2xl p-8 border shadow-lg">
                 <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
-                  Your Partnership Impact
+                  Athari ya Ushirika Wako
                 </h3>
-
                 <div className="space-y-6 font-body">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Lives Transformed Annually</span>
-                    <span className="font-headline font-bold text-2xl text-primary">
-                      500+
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Families Ministered To</span>
-                    <span className="font-headline font-bold text-2xl text-primary">
-                      250+
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Community Outreach Events</span>
-                    <span className="font-headline font-bold text-2xl text-secondary">
-                      50+
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Weekly Online Viewers</span>
-                    <span className="font-headline font-bold text-2xl text-secondary">
-                      1000+
-                    </span>
+                  {/* Partnership Tiers from PRD */}
+                   <p className="text-center text-muted-foreground italic">Ungana na washirika 250+ wanaoleta mabadiliko duniani.</p>
+                  <div className="text-center space-y-2 mt-4">
+                    <p className="font-semibold text-primary">Ngazi za Ushirika:</p>
+                    <p className="text-muted-foreground">Mshirika wa Maombi</p>
+                    <p className="text-muted-foreground">Mshirika wa Maono</p>
+                    <p className="text-muted-foreground">Mjenzi wa Ufalme</p>
                   </div>
                 </div>
               </div>
-
+              
               <div className="bg-card rounded-xl p-8 border shadow-lg text-center">
                 <h3 className="font-headline font-semibold text-xl text-foreground mb-4">
-                  Ready to Partner With Us?
+                  Tayari Kuwa Mshirika?
                 </h3>
                 <p className="font-body text-muted-foreground mb-6">
-                  Become a vital part of what God is doing through HSCM Connect.
+                  Kuwa sehemu muhimu ya kile Mungu anachofanya kupitia HSCM Connect.
                 </p>
                 <Button
                   size="lg"
-                  className="bg-hscm-gold hover:bg-hscm-gold/90 text-black font-body font-bold w-full px-8 py-4 text-lg" // Using HSCM Gold for this main conversion
+                  className="bg-hscm-gold hover:bg-hscm-gold/90 text-black font-body font-bold w-full px-8 py-4 text-lg"
                 >
                   <PartnershipIcon className="mr-2 h-5 w-5" />
-                  Start My Partnership
+                  Anza Ushirika Wangu
                 </Button>
               </div>
             </div>
@@ -147,3 +119,6 @@ export function PartnershipSection() {
     </section>
   );
 }
+
+// Keep old export name for compatibility if needed
+export { PartnershipSectionSw as PartnershipSection };

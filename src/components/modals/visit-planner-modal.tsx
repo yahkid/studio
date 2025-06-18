@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare } from 'lucide-react';
+import { User, Mail, MessageSquare, CalendarCheck } from 'lucide-react';
 
 interface VisitPlannerModalProps {
   open: boolean;
@@ -29,26 +30,26 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !message) {
+    if (!name || !email) { // Message is optional
       toast({
-        title: "Missing Information",
-        description: "Please fill out all fields.",
+        title: "Taarifa Hazijakamilika",
+        description: "Tafadhali jaza jina lako na barua pepe.",
         variant: "destructive",
       });
       return;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Barua Pepe Batili",
+        description: "Tafadhali ingiza anwani sahihi ya barua pepe.",
         variant: "destructive",
       });
       return;
     }
-    console.log("Visit planner form submitted:", { name, email, message });
+    console.log("Visit planner form submitted (Swahili):", { name, email, message });
     toast({
-      title: "We'll Be In Touch!",
-      description: "Thank you for planning your visit. We'll contact you soon.",
+      title: "Tutawasiliana Nawe!",
+      description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
     });
     setName('');
     setEmail('');
@@ -60,63 +61,66 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">Plan Your Visit</DialogTitle>
+          <DialogTitle className="font-headline text-2xl flex items-center">
+            <CalendarCheck className="mr-2 h-6 w-6 text-primary"/>
+            Panga Ujio Wako
+          </DialogTitle>
           <DialogDescription className="font-body">
-            We'd love to have you! Our services are on Sundays at 9:00 AM and 11:00 AM.
-            Let us know if you have any questions.
+            Tunafurahi kukukaribisha! Ibada zetu ni Jumapili saa 3:00 Asbh na 5:00 Asbh.
+            Tuambie kama una maswali yoyote. Mahali: 123 Faith Street, Ministry City.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-1">
-              <Label htmlFor="name-visit" className="font-body">Name</Label>
+              <Label htmlFor="name-visit" className="font-body">Jina</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="name-visit"
-                  placeholder="Your Name"
+                  placeholder="Jina lako kamili"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10 font-body"
                   required
-                  aria-label="Your name"
+                  aria-label="Jina lako"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <Label htmlFor="email-visit" className="font-body">Email</Label>
+              <Label htmlFor="email-visit" className="font-body">Barua Pepe</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email-visit"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="barua.pepe@mfano.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 font-body"
                   required
-                  aria-label="Your email address"
+                  aria-label="Anwani yako ya barua pepe"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <Label htmlFor="message-visit" className="font-body">Message (Optional)</Label>
+              <Label htmlFor="message-visit" className="font-body">Ujumbe (Hiari)</Label>
                <div className="relative">
                 <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Textarea
                   id="message-visit"
-                  placeholder="Any questions or specific needs?"
+                  placeholder="Maswali yoyote au mahitaji maalum?"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="pl-10 font-body"
                   rows={3}
-                  aria-label="Your message"
+                  aria-label="Ujumbe wako"
                 />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="font-headline">Send Request</Button>
+            <Button type="submit" className="font-headline w-full">Tuma Ombi</Button>
           </DialogFooter>
         </form>
       </DialogContent>

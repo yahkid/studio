@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -13,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Mail } from 'lucide-react';
+import { Mail, Download } from 'lucide-react';
 
 interface LeadMagnetModalProps {
   open: boolean;
@@ -26,19 +27,18 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic email validation
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Barua Pepe Batili",
+        description: "Tafadhali ingiza anwani sahihi ya barua pepe.",
         variant: "destructive",
       });
       return;
     }
-    console.log("Lead magnet email submitted:", email);
+    console.log("Lead magnet (Hatua za Kwanza) email submitted:", email);
     toast({
-      title: "Thank You!",
-      description: "Your 'First Steps' guide will be sent to your email shortly.",
+      title: "Asante!",
+      description: "Mwongozo wako wa 'Misingi ya Imani' utatumwa kwa barua pepe yako hivi karibuni.",
     });
     setEmail('');
     onOpenChange(false);
@@ -46,36 +46,37 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] rounded-lg shadow-xl">
+      <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">Your First Steps</DialogTitle>
+          <DialogTitle className="font-headline text-2xl flex items-center">
+            <Download className="mr-2 h-6 w-6 text-primary" />
+            Hatua Zako za Kwanza
+          </DialogTitle>
           <DialogDescription className="font-body">
-            Enter your email to receive our exclusive 'First Steps' guide and start your journey with us.
+            Ingiza barua pepe yako kupokea mwongozo wetu maalum wa "Misingi ya Imani" (PDF) na uanze safari yako nasi.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email-lead" className="text-right font-body">
-                Email
-              </Label>
-              <div className="col-span-3 relative">
+            <div className="space-y-1">
+              <Label htmlFor="email-lead" className="font-body sr-only">Barua Pepe</Label>
+              <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email-lead"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Weka barua pepe yako"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 font-body"
                   required
-                  aria-label="Email address for first steps guide"
+                  aria-label="Anwani ya barua pepe kwa mwongozo wa hatua za kwanza"
                 />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="font-headline">Get Your Guide</Button>
+            <Button type="submit" className="font-headline w-full">Pata Mwongozo Wako</Button>
           </DialogFooter>
         </form>
       </DialogContent>

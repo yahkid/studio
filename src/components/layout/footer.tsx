@@ -1,5 +1,6 @@
+
 import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, /* For TikTok, consider Music2 or MessageCircle */ Command } from 'lucide-react'; // Command as placeholder for TikTok
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film } from 'lucide-react'; // Added Users, HandHeart, Film for Swahili links
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -17,39 +18,39 @@ export function Footer() {
               <ul className="space-y-3 font-body text-sm" style={{ listStyle: 'none', padding: 0 }}>
                 <li className="flex items-start space-x-3">
                   <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" style={{ width: '20px' }} />
-                  <span>123 Faith Street, Ministry City, MC 12345</span>
+                  <span>123 Mtaa wa Imani, Jiji la Huduma, JH 12345</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Phone className="h-5 w-5 text-hscm-green flex-shrink-0" style={{ width: '20px' }} />
-                  <a href="tel:+15551234673" className="hover:text-white transition-colors">(555) 123-HOPE</a>
+                  <a href="tel:+15551234673" className="hover:text-white transition-colors">(555) 123-TUMAINI</a>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-hscm-green flex-shrink-0" style={{ width: '20px' }} />
-                  <a href="mailto:connect@holyspiritconnect.org" className="hover:text-white transition-colors">connect@holyspiritconnect.org</a>
+                  <a href="mailto:ungana@holyspiritconnect.org" className="hover:text-white transition-colors">ungana@holyspiritconnect.org</a>
                 </li>
               </ul>
             </div>
 
-            {/* Column 2: Quick Links */}
+            {/* Column 2: Quick Links (Viungo vya Haraka) */}
             <div>
               <h4 className="font-headline text-xl font-semibold text-white mb-6">
-                Quick Links
+                Viungo vya Haraka
               </h4>
               <ul className="space-y-2 font-body text-sm">
-                <li><Link href="/#mission" className="hover:text-white transition-colors">Our Mission</Link></li>
-                <li><Link href="/beliefs" className="hover:text-white transition-colors">Our Beliefs</Link></li>
-                <li><Link href="/new" className="hover:text-white transition-colors">I'm New</Link></li>
-                <li><Link href="/#watch" className="hover:text-white transition-colors">Watch Messages</Link></li>
-                <li><Link href="/#events" className="hover:text-white transition-colors">Events</Link></li>
-                <li><Link href="/#partnership" className="hover:text-white transition-colors">Partnership</Link></li>
-                <li><Link href="/decision" className="hover:text-white transition-colors">I've Raised My Hand</Link></li>
+                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Dhamira Yetu</Link></li>
+                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4"/>Imani Yetu</Link></li>
+                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Mimi Mgeni</Link></li>
+                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4"/>Tazama Ujumbe</Link></li>
+                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Matukio</Link></li>
+                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4"/>Ushirika</Link></li>
+                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4"/>Nimeamua Leo</Link></li>
               </ul>
             </div>
 
-            {/* Column 3: Connect With Us */}
+            {/* Column 3: Connect With Us (Ungana Nasi) */}
             <div>
               <h4 className="font-headline text-xl font-semibold text-white mb-6">
-                Connect With Us
+                Ungana Nasi
               </h4>
               <ul className="space-y-3 font-body text-sm">
                 <li>
@@ -71,10 +72,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  {/* The text should still say 'YouTube'. */}
                   <a href="#" className="flex items-center space-x-2 hover:text-white transition-colors">
                     <Youtube className="h-5 w-5 text-hscm-green" />
-                    <span>YouTube</span> {/* YouTube link is # for now */}
+                    <span>YouTube</span>
                   </a>
                 </li>
               </ul>
@@ -85,9 +85,9 @@ export function Footer() {
 
           <div className="text-center font-body text-muted-foreground" style={{ fontSize: '0.85rem', color: 'var(--neutral-medium)' }}>
             <p>
-              © {currentYear} HSCM Connect Ministry. All rights reserved.
+              © {currentYear} Huduma ya HSCM Connect. Haki zote zimehifadhiwa.
               <span className="mx-2">•</span>
-              Built with faith and purpose.
+              Imejengwa kwa imani na kusudi.
             </p>
           </div>
         </div>
@@ -95,3 +95,4 @@ export function Footer() {
     </footer>
   );
 }
+

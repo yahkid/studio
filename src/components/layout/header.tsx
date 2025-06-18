@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { User, Sparkles, LogIn, LogOut, Loader2 } from "lucide-react";
+import { User, Sparkles, LogIn, LogOut, Loader2, Languages } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
@@ -19,14 +19,9 @@ export function Header() {
     setIsSigningOut(true);
     await supabase.auth.signOut();
     router.push('/');
-    router.refresh(); // Important to update server components if any
+    router.refresh(); 
     setIsSigningOut(false);
   };
-
-  // The useSession() hook doesn't provide an explicit loading state.
-  // Session being null means no user, non-null means user.
-  // We can infer loading if session is initially undefined, but SessionContextProvider aims to resolve this.
-  // For simplicity, we'll directly use the session object.
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background dark:bg-neutral-dark dark:border-neutral-medium">
@@ -37,13 +32,13 @@ export function Header() {
             HOLY SPIRIT CONNECT
           </span>
         </Link>
-        <nav className="flex items-center space-x-4">
-          <Link
-            href="/decision"
-            className="font-body font-semibold py-2 px-4 border border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground"
+        <nav className="flex items-center space-x-2 sm:space-x-4">
+          <Button asChild
+            variant="outline"
+            className="font-body font-semibold py-2 px-3 sm:px-4 border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground text-xs sm:text-sm"
           >
-            I've Raised My Hand
-          </Link>
+            <Link href="/decision">Nimeamua Leo</Link>
+          </Button>
           
           {isSigningOut ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
@@ -51,28 +46,33 @@ export function Header() {
             </Button>
           ) : session?.user ? (
             <>
-              <span className="font-body text-sm text-muted-foreground hidden sm:inline">
+              <span className="font-body text-xs sm:text-sm text-muted-foreground hidden md:inline">
                 {session.user.email}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleSignOut}
-                className="font-body"
+                className="font-body text-xs sm:text-sm"
                 aria-label="Logout"
                 disabled={isSigningOut}
               >
                 {isSigningOut ? <Loader2 className="mr-0 sm:mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-0 sm:mr-2 h-4 w-4" />}
-                <span className="hidden sm:inline">{isSigningOut ? 'Logging out...' : 'Logout'}</span>
+                <span className="hidden sm:inline">{isSigningOut ? 'Inatoka...' : 'Toka'}</span>
+                 <span className="sm:hidden">Toka</span>
               </Button>
             </>
           ) : (
-            <Button asChild variant="ghost" className="font-body" size="sm">
+            <Button asChild variant="ghost" className="font-body text-xs sm:text-sm" size="sm">
               <Link href="/auth">
-                <LogIn className="mr-2 h-4 w-4" /> Login
+                <LogIn className="mr-2 h-4 w-4" /> Ingia
               </Link>
             </Button>
           )}
+          <Button variant="ghost" size="icon" className="rounded-full text-xs sm:text-sm" title="Badilisha Lugha (Switch Language)">
+            <Languages className="h-5 w-5" />
+            <span className="ml-1 hidden sm:inline">SW/EN</span>
+          </Button>
           <ThemeToggle />
         </nav>
       </div>
