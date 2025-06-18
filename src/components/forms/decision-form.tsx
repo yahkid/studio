@@ -74,7 +74,6 @@ export function DecisionForm() {
       if (caughtError) {
         console.error('Caught Error Object:', caughtError);
         
-        // Attempt to extract a meaningful message for the toast
         if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
           description = caughtError.message;
           console.error('Message property:', caughtError.message);
@@ -86,8 +85,7 @@ export function DecisionForm() {
         }
 
 
-        // Log known Supabase error properties
-        if (caughtError.details) { // Check if property exists before logging
+        if (caughtError.details) { 
           console.error('Details:', caughtError.details);
         }
         if (caughtError.code) {
@@ -97,7 +95,6 @@ export function DecisionForm() {
             console.error('Hint:', caughtError.hint);
         }
         
-        // Attempt to stringify
         try {
           console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
         } catch (e_stringify) {
@@ -220,4 +217,3 @@ export function DecisionForm() {
     </Card>
   );
 }
-
