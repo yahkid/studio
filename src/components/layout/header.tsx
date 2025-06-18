@@ -45,6 +45,7 @@ export function Header() {
             variant="outline"
             size="sm"
             className="font-body font-semibold py-2 px-2 sm:px-3 border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground text-xs sm:text-sm"
+            suppressHydrationWarning={true}
           >
             <Link href="/decision">Nimeamua Leo</Link>
           </Button>
@@ -65,6 +66,7 @@ export function Header() {
                 className="font-body text-xs sm:text-sm"
                 aria-label="Logout"
                 disabled={isSigningOut}
+                suppressHydrationWarning={true}
               >
                 {isSigningOut ? <Loader2 className="mr-0 sm:mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-0 sm:mr-2 h-4 w-4" />}
                 <span className="hidden sm:inline">{isSigningOut ? 'Inatoka...' : 'Toka'}</span>
@@ -72,7 +74,7 @@ export function Header() {
               </Button>
             </>
           ) : (
-            <Button asChild variant="ghost" className="font-body text-xs sm:text-sm" size="sm">
+            <Button asChild variant="ghost" className="font-body text-xs sm:text-sm" size="sm" suppressHydrationWarning={true}>
               <Link href="/auth">
                 <LogIn className="mr-2 h-4 w-4" /> Ingia
               </Link>
