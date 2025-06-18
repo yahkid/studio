@@ -12,6 +12,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import type { Database } from '@/types/supabase';
 
+const videoThumbnails = [
+  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 1' },
+  { id: '7Ja9JmMign0', alt: 'Video thumbnail 2' },
+  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 3' },
+];
+
 export function WatchAndGrowSectionSw() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -108,9 +114,15 @@ export function WatchAndGrowSectionSw() {
             ></iframe>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
-                <Image src={`https://placehold.co/300x169.png`} alt={`Video ndogo ${item}`} width={300} height={169} className="w-full h-auto object-cover rounded-md" data-ai-hint="sermon video thumbnail" />
+            {videoThumbnails.map((thumb) => (
+              <div key={thumb.id} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
+                <Image 
+                  src={`https://img.youtube.com/vi/${thumb.id}/mqdefault.jpg`} 
+                  alt={thumb.alt} 
+                  width={300} 
+                  height={169} 
+                  className="w-full h-auto object-cover rounded-md" 
+                  data-ai-hint="video sermon" />
               </div>
             ))}
           </div>
