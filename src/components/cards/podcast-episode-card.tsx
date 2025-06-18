@@ -65,7 +65,13 @@ export function PodcastEpisodeCard({ episode, layout = 'default' }: PodcastEpiso
         </CardContent>
       )}
       <CardFooter className={layout === 'compact' ? "pt-2 pb-4 px-4" : ""}>
-        <Button onClick={handleListenNow} className="w-full font-headline" variant="outline" size={layout === 'compact' ? 'sm' : 'default'}>
+        <Button
+          onClick={handleListenNow}
+          className="w-full font-headline"
+          variant="outline"
+          size={layout === 'compact' ? 'sm' : 'default'}
+          suppressHydrationWarning={true}
+        >
           <PlayCircle className="mr-2 h-4 w-4" />
           Sikiliza Sasa
         </Button>
