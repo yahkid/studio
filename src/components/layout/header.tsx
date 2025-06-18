@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { User, Sparkles, LogIn, LogOut, Loader2, Languages } from "lucide-react";
+import Image from "next/image";
+import { User, LogIn, LogOut, Loader2, Languages } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
@@ -25,17 +26,25 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background dark:bg-neutral-dark dark:border-neutral-medium">
-      <div className="container flex items-center justify-between py-6">
+      <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
-          <Sparkles className="h-7 w-7 text-primary" />
-          <span className="font-headline font-bold text-2xl text-primary">
+          <Image
+            src="/hscm-logo.png" 
+            alt="Holy Spirit Connect Ministry Logo"
+            width={40} 
+            height={40}
+            className="h-10 w-10 md:h-12 md:w-12" 
+            priority
+          />
+          <span className="font-headline font-bold text-xl sm:text-2xl text-primary whitespace-nowrap">
             HOLY SPIRIT CONNECT
           </span>
         </Link>
-        <nav className="flex items-center space-x-2 sm:space-x-4">
+        <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
           <Button asChild
             variant="outline"
-            className="font-body font-semibold py-2 px-3 sm:px-4 border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground text-xs sm:text-sm"
+            size="sm"
+            className="font-body font-semibold py-2 px-2 sm:px-3 border-primary text-primary rounded-md transition-all duration-300 ease-in-out hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary/80 dark:hover:text-primary-foreground text-xs sm:text-sm"
           >
             <Link href="/decision">Nimeamua Leo</Link>
           </Button>
