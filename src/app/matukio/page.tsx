@@ -9,114 +9,16 @@ import { Calendar as CalendarIcon, List, Filter } from "lucide-react";
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, isValid } from "date-fns";
-import { sw } from 'date-fns/locale'; // For Swahili month names if needed, or can format manually
+import { sw } from 'date-fns/locale'; 
+import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
 
-export interface MinistryEvent {
-  id: number;
-  title: string;
-  description: string;
-  date: string; // YYYY-MM-DD
-  startTime: string; // HH:MM
-  endTime: string; // HH:MM
-  eventType: 'weekly' | 'monthly' | 'special' | 'all';
-  platform: string;
-  streamUrl: string;
-  audience: string;
-}
-
-const initialEventsData: MinistryEvent[] = [
-  {
-    "id": 2025060101,
-    "title": "Maombi ya Kufungua Mwezi",
-    "description": "Join Rev. Innocent Morris live as we dedicate the month of June to the Lord, declaring blessings and breakthrough for your life, family, and work.",
-    "date": "2025-06-01",
-    "startTime": "10:00",
-    "endTime": "11:30",
-    "eventType": "monthly",
-    "platform": "YouTube Live, Facebook Live",
-    "streamUrl": "#",
-    "audience": "All"
-  },
-  {
-    "id": 2025060102,
-    "title": "Sunday Night Service",
-    "description": "A powerful time of worship with the HSCM Worship team and a life-changing message from the Word to start your week strong and centered on Christ.",
-    "date": "2025-06-01",
-    "startTime": "20:00",
-    "endTime": "21:30",
-    "eventType": "weekly",
-    "platform": "YouTube Live",
-    "streamUrl": "#",
-    "audience": "All"
-  },
-  {
-    "id": 2025060301,
-    "title": "Mafundisho ya Biblia (Bible Study)",
-    "description": "Deep dive into the scriptures. This month's series: Foundations of Faith. Tonight's topic: The Role of the Holy Spirit in a Believer's Life.",
-    "date": "2025-06-03",
-    "startTime": "20:00",
-    "endTime": "21:30",
-    "eventType": "weekly",
-    "platform": "YouTube Live, Zoom",
-    "streamUrl": "#",
-    "audience": "All (Live), Members (Interactive Q&A)"
-  },
-  {
-    "id": 2025060601,
-    "title": "Usiku wa Maombi (All-Night Prayer Vigil)",
-    "description": "Join us for a night of powerful intercession, worship, and spiritual warfare. Submit your prayer requests live in the chat.",
-    "date": "2025-06-06",
-    "startTime": "22:00",
-    "endTime": "01:00", // Assuming next day, handle display carefully
-    "eventType": "weekly",
-    "platform": "YouTube Live",
-    "streamUrl": "#",
-    "audience": "All"
-  },
-  {
-    "id": 2025060801,
-    "title": "Sunday Night Service",
-    "description": "A powerful time of worship and Word.",
-    "date": "2025-06-08",
-    "startTime": "20:00",
-    "endTime": "21:30",
-    "eventType": "weekly",
-    "platform": "YouTube Live",
-    "streamUrl": "#",
-    "audience": "All"
-  },
-  {
-    "id": 2025061001,
-    "title": "Mafundisho ya Biblia (Bible Study)",
-    "description": "Foundations of Faith series continues.",
-    "date": "2025-06-10",
-    "startTime": "20:00",
-    "endTime": "21:30",
-    "eventType": "weekly",
-    "platform": "YouTube Live, Zoom",
-    "streamUrl": "#",
-    "audience": "All (Live), Members (Interactive Q&A)"
-  },
-   {
-    "id": 2025061501,
-    "title": "Sunday Night Service - Special Guest",
-    "description": "Join us for a special Sunday Night Service with a guest speaker.",
-    "date": "2025-06-15",
-    "startTime": "20:00",
-    "endTime": "21:30",
-    "eventType": "special",
-    "platform": "YouTube Live",
-    "streamUrl": "#",
-    "audience": "All"
-  },
-];
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
   const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2025, 5, 1)); // June 2025
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2025, 5, 1));
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined); 
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2025, 5, 1)); // Default to June 2025
 
 
   const filteredAndSortedEvents = useMemo(() => {
@@ -133,17 +35,22 @@ export default function MatukioPage() {
 
     if (viewMode === 'month' && selectedDate) {
       processedEvents = processedEvents.filter(event => isSameDay(event.parsedDate, selectedDate));
+    } else if (viewMode === 'month' && !selectedDate) { // Show all events for the current month if no specific date is selected
+        processedEvents = processedEvents.filter(event => {
+            const eventDate = event.parsedDate;
+            return eventDate.getFullYear() === currentMonth.getFullYear() && eventDate.getMonth() === currentMonth.getMonth();
+        });
     }
     
-    // Sort by date, then by start time
     return processedEvents.sort((a, b) => {
       const dateComparison = a.parsedDate.getTime() - b.parsedDate.getTime();
       if (dateComparison !== 0) {
         return dateComparison;
       }
+      // If dates are the same, sort by start time
       return a.startTime.localeCompare(b.startTime);
     });
-  }, [events, filterType, viewMode, selectedDate]);
+  }, [events, filterType, viewMode, selectedDate, currentMonth]);
 
   const eventDaysInCurrentMonth = useMemo(() => {
     const daysWithEvents = new Map<string, MinistryEvent['eventType'][]>();
@@ -173,10 +80,10 @@ export default function MatukioPage() {
         {eventTypesOnDay && eventTypesOnDay.length > 0 && (
           <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-0.5">
             {eventTypesOnDay.slice(0,3).map((type, index) => {
-               let bgColor = "bg-gray-400";
-               if (type === 'weekly') bgColor = "bg-primary";
-               else if (type === 'monthly') bgColor = "bg-secondary";
-               else if (type === 'special') bgColor = "bg-destructive";
+               let bgColor = "bg-gray-400"; // Default or for 'other'
+               if (type === 'weekly') bgColor = "bg-primary"; // Green
+               else if (type === 'monthly') bgColor = "bg-secondary"; // Gold
+               else if (type === 'special') bgColor = "bg-destructive"; // Red
                return <div key={index} className={`h-1.5 w-1.5 rounded-full ${bgColor}`}></div>;
             })}
           </div>
@@ -239,34 +146,41 @@ export default function MatukioPage() {
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => {
-                  setSelectedDate(date);
-                  if (date) setCurrentMonth(startOfMonth(date));
+                  setSelectedDate(date); // Keep the selected date
+                  if (date) setCurrentMonth(startOfMonth(date)); // Update month if a date is picked
                 }}
                 month={currentMonth}
                 onMonthChange={setCurrentMonth}
-                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12"
+                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12" // Adjusted for cell size
                 classNames={{
-                  day: "w-full h-full",
+                  day: "w-full h-full", // Ensure day cell takes full space for content
                   day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90",
                   day_today: "bg-accent text-accent-foreground",
                 }}
                 components={{
-                    DayContent: DayContent
+                    DayContent: DayContent // Custom day cell content
                 }}
-                locale={sw} 
-                captionLayout="dropdown-buttons" 
-                fromYear={2024} toYear={2030}
+                locale={sw} // Swahili locale
+                captionLayout="dropdown-buttons" // Enable month/year dropdowns
+                fromYear={2024} toYear={2030} // Year range for dropdowns
             />
         </div>
       )}
 
-      {viewMode === 'list' || (viewMode === 'month' && selectedDate) ? (
+      {/* List View or Filtered Month View (events below calendar) */}
+      {/* This section will show if in 'list' mode OR if in 'month' mode (selectedDate or not) */}
+      {viewMode === 'list' || viewMode === 'month' ? (
         filteredAndSortedEvents.length > 0 ? (
           <div className="space-y-6">
             {viewMode === 'month' && selectedDate && (
               <h2 className="font-headline text-2xl text-foreground mb-4">
                 Matukio ya {format(selectedDate, "MMMM d, yyyy", { locale: sw })}
               </h2>
+            )}
+            {viewMode === 'month' && !selectedDate && (
+                 <h2 className="font-headline text-2xl text-foreground mb-4">
+                    Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy", { locale: sw })} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
+                </h2>
             )}
             {filteredAndSortedEvents.map(event => (
               <EventCard key={event.id} event={event} />
@@ -275,25 +189,14 @@ export default function MatukioPage() {
         ) : (
           <div className="text-center py-12">
             <p className="font-body text-muted-foreground text-lg">
-              {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 'Hakuna matukio yanayolingana na kichujio chako.'}
+              {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 
+               viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy", { locale: sw })}.` :
+               'Hakuna matukio yanayolingana na kichujio chako.'}
             </p>
           </div>
         )
       ) : null}
-       {viewMode === 'month' && !selectedDate && filteredAndSortedEvents.length > 0 && (
-         <div className="space-y-6 mt-8">
-            <h2 className="font-headline text-2xl text-foreground mb-4">
-                Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy", { locale: sw })} (kichujio: {filterType})
-            </h2>
-            {filteredAndSortedEvents.map(event => (
-              <EventCard key={event.id} event={event} />
-            ))}
-        </div>
-      )}
-
 
     </div>
   );
 }
-
-    

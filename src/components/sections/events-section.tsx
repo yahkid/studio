@@ -2,15 +2,27 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-// import { GradientButton } from '@/components/ui/gradient-button'; // Removed
-import { Card } from '@/components/ui/card'; // Import Card
+import { Card } from '@/components/ui/card';
 import { Calendar, Clock, MapPin } from 'lucide-react';
+import { initialEventsData } from '@/lib/events-data';
+import { format, parseISO, isValid } from 'date-fns';
+import { sw } from 'date-fns/locale';
+import Link from 'next/link';
 
 interface EventsSectionSwProps {
   onOpenVisitPlanner: () => void;
 }
 
 export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
+  const upcomingEvents = initialEventsData
+    .map(event => ({
+      ...event,
+      parsedDate: parseISO(event.date)
+    }))
+    .filter(event => isValid(event.parsedDate))
+    .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime())
+    .slice(0, 3);
+
   return (
     <section id="matukio" className="py-16 md:py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -29,8 +41,8 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
           <div className="grid lg:grid-cols-2 gap-10 md:gap-12 mb-12 md:mb-16 items-start">
             {/* Left Column */}
             <div className="space-y-6 md:space-y-8">
-              <Card className="p-0 overflow-hidden"> {/* Removed custom padding and shadow-lg, using Card defaults */}
-                <div className="p-6 md:p-8"> {/* Added inner div for padding control */}
+              <Card className="p-0 overflow-hidden">
+                <div className="p-6 md:p-8">
                   <div className="flex items-start space-x-4 mb-6">
                     <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Calendar className="w-6 h-6 text-primary" />
@@ -65,8 +77,8 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                 </div>
               </Card>
 
-              <Card className="p-0 overflow-hidden"> {/* Removed custom padding and shadow-lg */}
-                <div className="p-6 md:p-8"> {/* Added inner div for padding control */}
+              <Card className="p-0 overflow-hidden">
+                <div className="p-6 md:p-8">
                   <div className="flex items-start space-x-4 mb-6">
                     <div className="w-12 h-12 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
                       <span className="text-2xl">🙏</span>
@@ -90,7 +102,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                   <Button 
                     variant="outline" 
                     onClick={onOpenVisitPlanner}
-                    className="w-full font-headline" // Outline variant provides secondary styling
+                    className="w-full font-headline"
                     suppressHydrationWarning={true}
                   >
                     Jiunge na Kikundi
@@ -101,42 +113,41 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
 
             {/* Right Column */}
             <div className="space-y-6 md:space-y-8">
-              <Card className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/10 dark:via-card dark:to-secondary/10 rounded-2xl text-center p-0 overflow-hidden"> {/* Removed shadow-lg and custom padding */}
-                <div className="p-6 md:p-8"> {/* Added inner div for padding control */}
+              <Card className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/10 dark:via-card dark:to-secondary/10 rounded-2xl text-center p-0 overflow-hidden">
+                <div className="p-6 md:p-8">
                   <h3 className="font-headline font-bold text-2xl text-foreground mb-6">
                     Matukio Yajayo
                   </h3>
                   
                   <div className="space-y-4 text-left font-body">
-                    <div className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Crusade ya Matumaini</h4>
-                        <p className="text-sm text-muted-foreground">Juni 25, 2025</p>
-                      </div>
-                      <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Semina ya Vijana</h4>
-                        <p className="text-sm text-muted-foreground">Julai 10, 2025</p>
-                      </div>
-                      <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between py-3">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Mkutano wa Familia</h4>
-                        <p className="text-sm text-muted-foreground">Agosti 15, 2025</p>
-                      </div>
-                      <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
-                    </div>
+                    {upcomingEvents.length > 0 ? (
+                      upcomingEvents.map(event => (
+                        <div key={event.id} className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
+                          <div>
+                            <h4 className="font-semibold text-foreground">{event.title}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {isValid(event.parsedDate) ? format(event.parsedDate, "MMMM d, yyyy", { locale: sw }) : 'Tarehe Batili'}
+                            </p>
+                          </div>
+                          <Button asChild size="sm" variant="outline" suppressHydrationWarning={true}>
+                            <Link href="/matukio">Pata Taarifa</Link>
+                          </Button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground text-center">Hakuna matukio yajayo kwa sasa.</p>
+                    )}
                   </div>
+                  {upcomingEvents.length > 0 && (
+                     <Button asChild variant="link" className="mt-6 font-body" suppressHydrationWarning={true}>
+                       <Link href="/matukio">Tazama Kalenda Kamili &rarr;</Link>
+                     </Button>
+                  )}
                 </div>
               </Card>
 
-              <Card className="text-center p-0 overflow-hidden"> {/* Removed shadow-xl and custom padding */}
-                 <div className="p-6 md:p-8"> {/* Added inner div for padding control */}
+              <Card className="text-center p-0 overflow-hidden">
+                 <div className="p-6 md:p-8">
                   <h3 className="font-headline font-semibold text-xl text-foreground mb-4">
                     Mpya katika HSCM?
                   </h3>
