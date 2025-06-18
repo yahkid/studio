@@ -11,6 +11,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { TestimonialCard } from "@/components/cards/testimonial-card";
+import { cn } from "@/lib/utils"; // Added this import
 
 const testimonials = [
   {
