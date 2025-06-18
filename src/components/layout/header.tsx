@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import { GradientButton } from "@/components/ui/gradient-button";
+// import { GradientButton } from '@/components/ui/gradient-button'; // Removed
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,13 +51,14 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
-          <GradientButton
+          <Button
             asChild
-            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3"
+            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3" // Using default variant which is now primary
+            size="sm" // Applied size sm for consistency with other header buttons
             suppressHydrationWarning={true}
           >
             <Link href="/decision">Nimeamua Leo</Link>
-          </GradientButton>
+          </Button>
 
           {isSigningOut ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">

@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { GradientButton } from "@/components/ui/gradient-button";
+// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -116,7 +116,7 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogStateChange}>
-      <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
+      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <Download className="mr-2 h-6 w-6 text-primary" />
@@ -152,10 +152,10 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
                 Ghairi
               </Button>
             </DialogClose>
-            <GradientButton type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? 'Inatuma...' : 'Pata Mwongozo Wako'}
-            </GradientButton>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

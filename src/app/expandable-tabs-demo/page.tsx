@@ -3,8 +3,9 @@
 
 import * as React from "react";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
+import { Card } from "@/components/ui/card"; // Import Card
 import { Bell, Home, HelpCircle, Settings, Shield, Mail, User, FileText, Lock, TrendingUp } from "lucide-react";
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next'; // Removed
 
 // Client components cannot export metadata directly.
 // If metadata is needed, it should be in a parent Server Component or layout.
@@ -17,7 +18,7 @@ function DefaultDemo() {
   const tabs = [
     { title: "Dashboard", icon: Home },
     { title: "Notifications", icon: Bell },
-    { type: "separator" as const }, // Ensure type is correctly inferred
+    { type: "separator" as const }, 
     { title: "Settings", icon: Settings },
     { title: "Support", icon: HelpCircle },
     { title: "Security", icon: Shield },
@@ -34,7 +35,7 @@ function CustomColorDemo() {
   const tabs = [
     { title: "Profile", icon: User },
     { title: "Messages", icon: Mail },
-    { type: "separator" as const }, // Ensure type is correctly inferred
+    { type: "separator" as const }, 
     { title: "Documents", icon: FileText },
     { title: "Privacy", icon: Lock },
   ];
@@ -64,15 +65,19 @@ export default function ExpandableTabsDemoPage() {
       <div className="space-y-12">
         <div>
           <h2 className="font-headline text-2xl text-foreground mb-4">Default Style</h2>
-          <div className="p-8 bg-card rounded-lg shadow-xl border flex justify-center">
-            <DefaultDemo />
-          </div>
+          <Card> {/* Use Card component */}
+            <div className="flex justify-center p-8"> {/* Padding moved to inner div */}
+              <DefaultDemo />
+            </div>
+          </Card>
         </div>
         <div>
           <h2 className="font-headline text-2xl text-foreground mb-4">Custom Color Style</h2>
-           <div className="p-8 bg-card rounded-lg shadow-xl border flex justify-center">
-            <CustomColorDemo />
-          </div>
+           <Card> {/* Use Card component */}
+            <div className="flex justify-center p-8"> {/* Padding moved to inner div */}
+              <CustomColorDemo />
+            </div>
+          </Card>
         </div>
       </div>
     </div>

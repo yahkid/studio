@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { GradientButton } from "@/components/ui/gradient-button";
+// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -148,7 +148,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
 
   return (
     <Dialog open={open} onOpenChange={handleDialogStateChange}>
-      <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
+      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <HandCoins className="mr-2 h-6 w-6 text-primary"/>
@@ -248,10 +248,10 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
                   Ghairi
                 </Button>
               </DialogClose>
-              <GradientButton type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Inatuma...' : 'Endelea kwa Hatua Inayofuata'}
-              </GradientButton>
+              </Button>
             </DialogFooter>
           </form>
         )}
@@ -264,9 +264,9 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             </p>
             <DialogFooter className="mt-6">
                <DialogClose asChild>
-                <GradientButton className="font-headline w-full" type="button" suppressHydrationWarning={true}>
+                <Button className="font-headline w-full" type="button" suppressHydrationWarning={true}>
                   Funga
-                </GradientButton>
+                </Button>
               </DialogClose>
             </DialogFooter>
           </div>

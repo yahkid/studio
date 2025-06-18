@@ -4,7 +4,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
-import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
+import { Button } from '@/components/ui/button'; // Changed from GradientButton
 
 export function DecisionPathwaySectionSw() {
   return (
@@ -14,7 +14,7 @@ export function DecisionPathwaySectionSw() {
         alt="Mkutano wa jamii kwa ajili ya njia ya uamuzi"
         width={1200}
         height={400}
-        className="rounded-lg shadow-md object-cover w-full"
+        className="rounded-lg border object-cover w-full" // Removed shadow-md, added border
         data-ai-hint="spiritual decision community"
       />
       <h2 className="font-headline text-4xl md:text-5xl text-foreground mt-10 mb-4">
@@ -23,11 +23,11 @@ export function DecisionPathwaySectionSw() {
       <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
         Huu ndio uamuzi mkuu kuliko yote uliyowahi kufanya! Tunataka kusherehekea nawe na kukuongoza katika hatua zako zinazofuata.
       </p>
-      <GradientButton asChild className="text-lg" suppressHydrationWarning={true}>
+      <Button asChild size="lg" className="text-lg font-headline" suppressHydrationWarning={true}>
         <Link href="/decision">
           Nimeamua Leo <Users className="ml-2 h-5 w-5" />
         </Link>
-      </GradientButton>
+      </Button>
     </section>
   );
 }

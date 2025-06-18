@@ -29,7 +29,7 @@ function AuthPageContent() {
     // This helps avoid rendering the form on the server if it's causing hydration issues
     // A simple loading div or null can be returned.
     // Matching the Suspense fallback can also be an option for consistency.
-    return <div>Loading auth form...</div>; 
+    return <div className="flex justify-center items-center min-h-[calc(100vh-200px)]"><div>Loading auth form...</div></div>; 
   }
 
   return (
@@ -45,7 +45,7 @@ function AuthPageContent() {
 
 export default function AuthPage() {
   return (
-    <Suspense fallback={<div>Loading page...</div>}>
+    <Suspense fallback={<div className="flex justify-center items-center min-h-[calc(100vh-200px)]"><div>Loading page...</div></div>}>
       <AuthPageContent />
     </Suspense>
   );

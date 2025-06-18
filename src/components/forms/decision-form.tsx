@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { GradientButton } from "@/components/ui/gradient-button";
+// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -125,7 +125,7 @@ export function DecisionForm() {
   ];
 
   return (
-    <Card className="w-full max-w-lg mx-auto shadow-xl my-8">
+    <Card className="w-full max-w-lg mx-auto my-8"> {/* Removed shadow-xl */}
       <CardHeader>
         <CardTitle className="font-headline text-3xl text-center">Nimeinua Mkono Wangu</CardTitle>
         <CardDescription className="font-body text-center">
@@ -209,10 +209,10 @@ export function DecisionForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <GradientButton type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+          <Button type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Inawasilisha...' : 'Wasilisha Uamuzi Wangu'}
-          </GradientButton>
+          </Button>
         </CardFooter>
       </form>
     </Card>

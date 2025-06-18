@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card"; // Import Card
 import {
   ContextMenu,
   ContextMenuContent,
@@ -24,7 +25,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next'; // Removed as client components can't export metadata
 
 // Client components cannot export metadata directly. 
 // If metadata is needed, it should be in a parent Server Component or layout.
@@ -36,7 +37,7 @@ import type { Metadata } from 'next';
 function WithAvatar() {
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex cursor-pointer items-center gap-2 p-4 text-xs rounded-md border shadow-md hover:shadow-lg transition-shadow">
+      <ContextMenuTrigger className="flex cursor-pointer items-center gap-2 p-4 text-xs rounded-md border shadow-sm hover:shadow-md transition-shadow"> {/* Added shadow-sm for subtle depth */}
         <Avatar className="size-8">
           <AvatarFallback>PJ</AvatarFallback>
         </Avatar>
@@ -110,9 +111,11 @@ export default function ContextMenuDemoPage() {
         This page demonstrates the usage of the <code>ContextMenu</code> component. 
         Right-click on the "PJ" avatar and text below to see it in action.
       </p>
-      <div className="flex justify-center items-center min-h-[200px] bg-card p-8 rounded-lg shadow-xl border">
-        <WithAvatar />
-      </div>
+      <Card className="min-h-[200px]"> {/* Use Card component, removed custom styling */}
+        <div className="flex justify-center items-center h-full"> {/* Ensure content is centered within card */}
+          <WithAvatar />
+        </div>
+      </Card>
     </div>
   );
 }

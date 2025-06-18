@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ProfilePage() {
   return (
     <div className="container mx-auto py-12 px-4 max-w-2xl">
-      <Card className="shadow-xl">
+      <Card> {/* Removed shadow-xl */}
         <CardHeader>
           <div className="flex items-center space-x-3 mb-4">
             <User className="h-8 w-8 text-primary" />

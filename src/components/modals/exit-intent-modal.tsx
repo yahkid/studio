@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { GradientButton } from "@/components/ui/gradient-button";
+// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -152,7 +152,7 @@ export function ExitIntentModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogClose}>
-      <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
+      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <MessageCircleHeart className="mr-2 h-6 w-6 text-primary" />
@@ -196,19 +196,19 @@ export function ExitIntentModal() {
             <div className="flex flex-col sm:flex-row gap-2">
               <Button
                 type="button"
-                variant="outline"
+                variant="outline" 
                 onClick={handleJustPray}
-                className="font-headline text-secondary border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-secondary"
+                className="font-headline" // Secondary style applied via variant="outline"
                 disabled={isLoading}
                 suppressHydrationWarning={true}
               >
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Niombee Tu
               </Button>
-              <GradientButton type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
-              </GradientButton>
+              </Button>
             </div>
           </DialogFooter>
         </form>

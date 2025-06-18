@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
+import { Button } from '@/components/ui/button'; // Changed from GradientButton
 
 interface HeroSectionSwProps {
   onOpenLeadMagnet: () => void;
@@ -37,9 +37,9 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <GradientButton asChild suppressHydrationWarning={true}>
+            <Button asChild suppressHydrationWarning={true} size="lg" className="font-body font-semibold">
               <Link href="/#tazama-na-ukue">Tazama Ujumbe wa Karibuni</Link>
-            </GradientButton>
+            </Button>
           </div>
 
           <div className="mt-8">

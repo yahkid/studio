@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MapPin, Clock, Smile, Users, Baby, Coffee } from 'lucide-react';
 import { VisitPlannerModal } from '@/components/modals/visit-planner-modal';
-import { GradientButton } from '@/components/ui/gradient-button'; // Import GradientButton
+import { Button } from '@/components/ui/button'; // Changed from GradientButton
 
 export default function MimiMgeniPage() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
@@ -25,13 +25,14 @@ export default function MimiMgeniPage() {
               Tunafurahi kuwa uko hapa na unafikiria kututembelea. Tunajua kutembelea kanisa jipya kunaweza kuwa tukio la kusisimua,
               na tunataka kufanya uzoefu wako wa kwanza nasi uwe wa kukaribisha na kustarehesha iwezekanavyo.
             </p>
-            <GradientButton 
+            <Button 
               onClick={() => setIsVisitPlannerOpen(true)}
               suppressHydrationWarning={true}
-              className="text-lg" // GradientButton applies its own padding, so size="lg" is not directly applicable
+              size="lg" 
+              className="font-headline text-lg"
             >
               Panga Ujio Wako Leo
-            </GradientButton>
+            </Button>
           </div>
         </section>
 
@@ -59,7 +60,7 @@ export default function MimiMgeniPage() {
                   <p>Tuna maegesho ya kutosha yanayopatikana eneo letu.</p>
                 </div>
               </div>
-              <div className="rounded-lg overflow-hidden shadow-xl">
+              <div className="rounded-lg overflow-hidden border">
                 <Image
                   src="https://placehold.co/600x400.png"
                   alt="Ramani ikionyesha eneo la HSCM Connect"
@@ -129,13 +130,14 @@ export default function MimiMgeniPage() {
             <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Tunatarajia kukutana nawe! Bofya kitufe hapa chini kutujulisha unakuja au kama una maswali yoyote.
             </p>
-            <GradientButton
+            <Button
               onClick={() => setIsVisitPlannerOpen(true)}
               suppressHydrationWarning={true}
-              className="text-lg" // GradientButton applies its own padding
+              size="lg"
+              className="text-lg font-headline"
             >
               Tujulishe Unakuja
-            </GradientButton>
+            </Button>
           </div>
         </section>
       </div>
