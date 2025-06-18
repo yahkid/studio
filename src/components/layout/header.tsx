@@ -69,7 +69,13 @@ export function Header() {
               </Link>
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="rounded-full text-xs sm:text-sm" title="Badilisha Lugha (Switch Language)">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full text-xs sm:text-sm" 
+            title="Badilisha Lugha (Switch Language)"
+            suppressHydrationWarning={true}
+          >
             <Languages className="h-5 w-5" />
             <span className="ml-1 hidden sm:inline">SW/EN</span>
           </Button>
