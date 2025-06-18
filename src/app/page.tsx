@@ -26,7 +26,7 @@ export default function HomePageSwahili() {
         <WatchAndGrowSectionSw />
         <DecisionPathwaySectionSw />
         <EventsSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
-        <PartnershipSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
+        <PartnershipSectionSw />
       </div>
 
       <LeadMagnetModal open={isLeadMagnetOpen} onOpenChange={setIsLeadMagnetOpen} />
