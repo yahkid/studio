@@ -52,7 +52,7 @@ export default function ProfilePage() {
             console.warn("ProfilePage: Supabase returned an error object with no enumerable properties while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible as expected. User progress will be shown as empty.", error);
             toast({
               title: 'Progress Unavailable',
-              description: 'We could not retrieve your learning progress at this time. Please check your access permissions or try again later.',
+              description: 'We could not retrieve your learning progress at this time. This might be due to access permissions or the necessary data table not being set up. Please try again later or contact support if the issue persists.',
               variant: 'default', 
             });
             setUserProgress([]); // Explicitly set progress to empty
@@ -176,4 +176,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-

@@ -272,14 +272,14 @@ export interface Database {
           progress_percentage?: number
         }
         Relationships: [
-          // If you have a public.users table, a relationship would look like:
-          // {
-          //   foreignKeyName: "UserCourseProgress_user_id_fkey"
-          //   columns: ["user_id"]
-          //   referencedRelation: "users"
-          //   referencedColumns: ["id"]
-          // }
           // Assuming user_id references auth.users.id, which is handled by Supabase auth.
+          // Example if you had a public users table and user_id referenced that:
+          // {
+          //   foreignKeyName: "usercourseprogress_user_id_fkey",
+          //   columns: ["user_id"],
+          //   referencedRelation: "users",
+          //   referencedColumns: ["id"],
+          // }
         ]
       }
     }
