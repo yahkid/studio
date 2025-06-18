@@ -84,6 +84,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                 </div>
                 <Button 
                   variant="outline"
+                  onClick={onOpenVisitPlanner}
                   className="w-full font-headline border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground"
                   suppressHydrationWarning={true}
                 >
@@ -105,7 +106,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                       <h4 className="font-semibold text-foreground">Crusade ya Matumaini</h4>
                       <p className="text-sm text-muted-foreground">Juni 25, 2025</p>
                     </div>
-                    <Button size="sm" variant="outline" suppressHydrationWarning={true}>Pata Taarifa</Button>
+                    <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
                   </div>
                   
                   <div className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
@@ -113,7 +114,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                       <h4 className="font-semibold text-foreground">Semina ya Vijana</h4>
                       <p className="text-sm text-muted-foreground">Julai 10, 2025</p>
                     </div>
-                    <Button size="sm" variant="outline" suppressHydrationWarning={true}>Pata Taarifa</Button>
+                    <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
                   </div>
                   
                   <div className="flex items-center justify-between py-3">
@@ -121,7 +122,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                       <h4 className="font-semibold text-foreground">Mkutano wa Familia</h4>
                       <p className="text-sm text-muted-foreground">Agosti 15, 2025</p>
                     </div>
-                    <Button size="sm" variant="outline" suppressHydrationWarning={true}>Pata Taarifa</Button>
+                    <Button size="sm" variant="outline" onClick={onOpenVisitPlanner} suppressHydrationWarning={true}>Pata Taarifa</Button>
                   </div>
                 </div>
               </div>
