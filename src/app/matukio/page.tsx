@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar as CalendarIcon, List, Filter } from "lucide-react";
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
-import { format, parseISO, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, isValid } from "date-fns";
-import { sw } from 'date-fns/locale'; 
+import { format, parseISO, isSameDay, startOfMonth, isValid } from "date-fns";
+// import { sw } from 'date-fns/locale'; // Removed problematic import
 import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
 
 
@@ -17,7 +17,7 @@ export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
   const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined); 
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2025, 5, 1)); // Default to June 2025
 
 
@@ -146,40 +146,38 @@ export default function MatukioPage() {
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => {
-                  setSelectedDate(date); // Keep the selected date
-                  if (date) setCurrentMonth(startOfMonth(date)); // Update month if a date is picked
+                  setSelectedDate(date); 
+                  if (date) setCurrentMonth(startOfMonth(date)); 
                 }}
                 month={currentMonth}
                 onMonthChange={setCurrentMonth}
-                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12" // Adjusted for cell size
+                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12"
                 classNames={{
-                  day: "w-full h-full", // Ensure day cell takes full space for content
+                  day: "w-full h-full",
                   day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90",
                   day_today: "bg-accent text-accent-foreground",
                 }}
                 components={{
-                    DayContent: DayContent // Custom day cell content
+                    DayContent: DayContent 
                 }}
-                locale={sw} // Swahili locale
-                captionLayout="dropdown-buttons" // Enable month/year dropdowns
-                fromYear={2024} toYear={2030} // Year range for dropdowns
+                // locale={sw} // Removed Swahili locale
+                captionLayout="dropdown-buttons" 
+                fromYear={2024} toYear={2030} 
             />
         </div>
       )}
 
-      {/* List View or Filtered Month View (events below calendar) */}
-      {/* This section will show if in 'list' mode OR if in 'month' mode (selectedDate or not) */}
       {viewMode === 'list' || viewMode === 'month' ? (
         filteredAndSortedEvents.length > 0 ? (
           <div className="space-y-6">
             {viewMode === 'month' && selectedDate && (
               <h2 className="font-headline text-2xl text-foreground mb-4">
-                Matukio ya {format(selectedDate, "MMMM d, yyyy", { locale: sw })}
+                Matukio ya {format(selectedDate, "MMMM d, yyyy")} 
               </h2>
             )}
             {viewMode === 'month' && !selectedDate && (
                  <h2 className="font-headline text-2xl text-foreground mb-4">
-                    Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy", { locale: sw })} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
+                    Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy")} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
                 </h2>
             )}
             {filteredAndSortedEvents.map(event => (
@@ -190,7 +188,7 @@ export default function MatukioPage() {
           <div className="text-center py-12">
             <p className="font-body text-muted-foreground text-lg">
               {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 
-               viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy", { locale: sw })}.` :
+               viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy")}.` :
                'Hakuna matukio yanayolingana na kichujio chako.'}
             </p>
           </div>

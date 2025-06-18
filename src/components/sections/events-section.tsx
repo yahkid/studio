@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { initialEventsData } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
-import { sw } from 'date-fns/locale';
+// import { sw } from 'date-fns/locale'; // Removed problematic import
 import Link from 'next/link';
 
 interface EventsSectionSwProps {
@@ -19,7 +19,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
       ...event,
       parsedDate: parseISO(event.date)
     }))
-    .filter(event => isValid(event.parsedDate))
+    .filter(event => isValid(event.parsedDate) && event.parsedDate.getTime() >= new Date().setHours(0,0,0,0)) // Filter for today or future
     .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime())
     .slice(0, 3);
 
@@ -126,7 +126,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                           <div>
                             <h4 className="font-semibold text-foreground">{event.title}</h4>
                             <p className="text-sm text-muted-foreground">
-                              {isValid(event.parsedDate) ? format(event.parsedDate, "MMMM d, yyyy", { locale: sw }) : 'Tarehe Batili'}
+                              {isValid(event.parsedDate) ? format(event.parsedDate, "MMMM d, yyyy") : 'Tarehe Batili'}
                             </p>
                           </div>
                           <Button asChild size="sm" variant="outline" suppressHydrationWarning={true}>
