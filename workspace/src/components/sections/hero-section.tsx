@@ -14,13 +14,13 @@ export function HeroSectionSw(/*{ onOpenLeadMagnet }: HeroSectionSwProps*/) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
-        alt="Joyful congregation celebrating at HSCM Connect."
+        src="https://placehold.co/1920x1080.png" // Changed image source
+        alt="HSCM Connect hero background image" // Changed alt text
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="church congregation"
+        data-ai-hint="community faith" // Changed AI hint
         priority
         suppressHydrationWarning={true}
       />
