@@ -65,10 +65,20 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         router.refresh();
       }
     } catch (error: any) {
-      console.error(`Supabase auth error (${mode}):`, error);
+      console.error(`Supabase auth error (${mode}):`, error); // Log the raw error object
+
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error) {
+        if (typeof error.error_description === 'string' && error.error_description.trim() !== '') {
+          description = error.error_description;
+        } else if (typeof error.message === 'string' && error.message.trim() !== '') {
+          description = error.message;
+        }
+      }
+
       toast({
         title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
-        description: error.message || 'An unexpected error occurred. Please try again.',
+        description: description,
         variant: 'destructive',
       });
     } finally {
