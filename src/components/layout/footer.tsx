@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake } from 'lucide-react'; // Added Users, HandHeart, Film, Handshake for Swahili links
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,25 +10,48 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-10">
-            {/* Column 1: Brand & Contact */}
+            {/* Column 1: Contact Info */}
             <div>
               <h3 className="font-headline text-2xl font-bold text-white mb-6">
-                HSCM Connect
+                Mawasiliano
               </h3>
-              <ul className="space-y-3 font-body text-sm" style={{ listStyle: 'none', padding: 0 }}>
-                <li className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" style={{ width: '20px' }} />
-                  <span>123 Mtaa wa Imani, Jiji la Huduma, JH 12345</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <Phone className="h-5 w-5 text-hscm-green flex-shrink-0" style={{ width: '20px' }} />
-                  <a href="tel:+15551234673" className="hover:text-white transition-colors">(555) 123-TUMAINI</a>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5 text-hscm-green flex-shrink-0" style={{ width: '20px' }} />
-                  <a href="mailto:ungana@holyspiritconnect.org" className="hover:text-white transition-colors">ungana@holyspiritconnect.org</a>
-                </li>
-              </ul>
+              <div className="space-y-3 font-body text-sm text-[#D3D3D3]">
+                <p className="flex items-start space-x-3">
+                  <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" />
+                  <span>
+                    P.O. Box 65409, Ilala<br />
+                    Dar es Salaam, Tanzania
+                  </span>
+                </p>
+                <p className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-hscm-green flex-shrink-0" />
+                  <span>Simu: </span>
+                  <a href="tel:+255652796450" className="hover:text-white transition-colors">
+                    +255 652 796 450
+                  </a>
+                </p>
+                <p className="flex items-center space-x-3">
+                  <Mail className="h-5 w-5 text-hscm-green flex-shrink-0" />
+                  <span>Barua Pepe: </span>
+                  <a href="mailto:info@holyspiritconnect.org" className="hover:text-white transition-colors">
+                    info@holyspiritconnect.org
+                  </a>
+                </p>
+                <p className="flex items-start space-x-3">
+                  <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" />
+                  <span>
+                    Mahali: Barabara ya Nyerere, DSM <br />
+                    <a 
+                      href="https://maps.app.goo.gl/5z3dGxia6ZDKoiMo7" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-primary hover:text-primary/80 transition-colors"
+                    >
+                      Tazama Kwenye Ramani &rarr;
+                    </a>
+                  </span>
+                </p>
+              </div>
             </div>
 
             {/* Column 2: Quick Links (Viungo vya Haraka) */}
