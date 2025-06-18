@@ -27,10 +27,10 @@ export default function InvitationInfoPageSw() {
           </p>
           <div className="bg-muted p-4 rounded-md my-4">
             <p className="font-semibold">Mfano wa Maudhui ya Barua Pepe:</p>
-            <p>Umealikwa kuunda mtumiaji kwenye {{ .SiteURL }}. Fuata kiungo hiki ili kukubali mwaliko:</p>
-            <p><a href="#" className="text-primary hover:underline">Kubali mwaliko ({{ .ConfirmationURL }})</a></p>
+            <p>Umealikwa kuunda mtumiaji kwenye {"{{ .SiteURL }}"}. Fuata kiungo hiki ili kukubali mwaliko:</p>
+            <p><a href="#" className="text-primary hover:underline">Kubali mwaliko ({"{{ .ConfirmationURL }}"})</a></p>
             <p className="text-sm mt-2">
-              (Kumbuka: Vishika nafasi kama "{{ .SiteURL }}" na "{{ .ConfirmationURL }}" vitabadilishwa na maelezo mahususi katika barua pepe halisi.)
+              (Kumbuka: Vishika nafasi kama "{"{{ .SiteURL }}"}" na "{"{{ .ConfirmationURL }}"}" vitabadilishwa na maelezo mahususi katika barua pepe halisi.)
             </p>
           </div>
           <p>

@@ -23,9 +23,9 @@ export default function ReauthenticationInfoPageSw() {
           </p>
           <div className="bg-muted p-4 rounded-md my-4">
             <p className="font-semibold">Mfano wa Kidokezo:</p>
-            <p>Ingiza nambari: {{ .Token }}</p>
+            <p>Ingiza nambari: {"{{ .Token }}"}</p>
             <p className="text-sm mt-2">
-              (Kumbuka: "{{ .Token }}" ni kishika nafasi ambacho kitabadilishwa na nambari yako ya kipekee katika kidokezo halisi au barua pepe.)
+              (Kumbuka: "{"{{ .Token }}"}" ni kishika nafasi ambacho kitabadilishwa na nambari yako ya kipekee katika kidokezo halisi au barua pepe.)
             </p>
           </div>
           <p>

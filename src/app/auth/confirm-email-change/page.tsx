@@ -27,10 +27,10 @@ export default function ConfirmEmailChangePageSw() {
           </p>
           <div className="bg-muted p-4 rounded-md my-4">
             <p className="font-semibold">Mfano wa Maudhui ya Barua Pepe (kwa anwani mpya ya barua pepe):</p>
-            <p>Fuata kiungo hiki ili kuthibitisha sasisho la barua pepe yako kutoka {{ .Email }} kwenda {{ .NewEmail }}:</p>
-            <p><a href="#" className="text-primary hover:underline">Badilisha Barua Pepe ({{ .ConfirmationURL }})</a></p>
+            <p>Fuata kiungo hiki ili kuthibitisha sasisho la barua pepe yako kutoka {"{{ .Email }}"} kwenda {"{{ .NewEmail }}"}:</p>
+            <p><a href="#" className="text-primary hover:underline">Badilisha Barua Pepe ({"{{ .ConfirmationURL }}"})</a></p>
             <p className="text-sm mt-2">
-              (Kumbuka: Vishika nafasi kama "{{ .Email }}", "{{ .NewEmail }}", na "{{ .ConfirmationURL }}" vitabadilishwa na maelezo yako mahususi katika barua pepe halisi.)
+              (Kumbuka: Vishika nafasi kama "{"{{ .Email }}"}", "{"{{ .NewEmail }}"}", na "{"{{ .ConfirmationURL }}"}" vitabadilishwa na maelezo yako mahususi katika barua pepe halisi.)
             </p>
           </div>
           <p>

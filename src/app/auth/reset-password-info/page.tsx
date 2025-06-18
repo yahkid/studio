@@ -28,9 +28,9 @@ export default function ResetPasswordInfoPageSw() {
           <div className="bg-muted p-4 rounded-md my-4">
             <p className="font-semibold">Mfano wa Maudhui ya Barua Pepe:</p>
             <p>Fuata kiungo hiki ili kuweka upya nenosiri kwa mtumiaji wako:</p>
-            <p><a href="#" className="text-primary hover:underline">Weka Upya Nenosiri ({{ .ConfirmationURL }})</a></p>
+            <p><a href="#" className="text-primary hover:underline">Weka Upya Nenosiri ({"{{ .ConfirmationURL }}"})</a></p>
             <p className="text-sm mt-2">
-              (Kumbuka: "{{ .ConfirmationURL }}" ni kishika nafasi ambacho kitabadilishwa na kiungo chako cha kipekee cha kuweka upya katika barua pepe halisi.)
+              (Kumbuka: "{"{{ .ConfirmationURL }}"}" ni kishika nafasi ambacho kitabadilishwa na kiungo chako cha kipekee cha kuweka upya katika barua pepe halisi.)
             </p>
           </div>
           <p>
