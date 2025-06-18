@@ -91,16 +91,10 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       });
       setCurrentStep(2); 
     } catch (error: any) {
-      console.error(
-        'Supabase insert error in FinancialPartnerModal (Step 1):',
-        'Message:', error?.message,
-        'Details:', error?.details,
-        'Code:', error?.code,
-        'Full Error Object:', error
-      );
+      console.error('Supabase insert error in FinancialPartnerModal (Step 1):', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: error?.message || "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.",
+        description: (error && error.message) || "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.",
         variant: "destructive",
       });
     } finally {
