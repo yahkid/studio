@@ -11,7 +11,7 @@ import { Loader2, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
-type UserProgressRecord = Database['public']['Tables']['UserCourseProgress']['Row'];
+type UserProgressRecord = Database['public']['Tables']['user_course_progress']['Row'];
 interface EnrichedProgress extends UserProgressRecord {
   courseDetails?: Course;
 }
@@ -29,82 +29,74 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    if (!mounted || !session?.user) {
+    if (!mounted) {
       setIsLoading(false);
-      setUserProgress([]); 
       return;
     }
 
     const fetchProgress = async () => {
       setIsLoading(true);
-      console.log("ProfilePage: Attempting to fetch progress for user:", session.user.id);
+      console.log("ProfilePage: fetchProgress initiated.");
+
+      if (!session?.user) {
+        console.log("ProfilePage: No user session found. Cannot fetch progress.");
+        setUserProgress([]);
+        setIsLoading(false);
+        return;
+      }
+      console.log("ProfilePage: User session found, attempting to fetch progress for user:", session.user.id);
+
       try {
-        const { data, error } = await supabase
-          .from('UserCourseProgress')
-          .select('*')
+        // Using the correct snake_case table name
+        const { data: progressData, error: progressError } = await supabase
+          .from('user_course_progress') // CORRECT snake_case name
+          .select('id, course_id, completed_lessons, progress_percentage') // Select necessary columns
           .eq('user_id', session.user.id);
 
-        console.log("ProfilePage: Fetched UserCourseProgress data from Supabase (raw):", { data, error });
+        console.log("ProfilePage: Supabase query executed. Error:", progressError, "Data:", progressData);
 
-        if (error) {
-          const isNonDescriptiveError = typeof error === 'object' && error !== null &&
-                                        (!error.message || (typeof error.message === 'string' && error.message.trim() === ''));
+        if (progressError) {
+          // Throw the actual error object if it exists.
+          console.error("ProfilePage: Supabase returned an error:", progressError);
+          throw progressError;
+        }
 
-          if (isNonDescriptiveError) {
-            console.warn("ProfilePage: Supabase returned an error without a meaningful message (or an empty/whitespace one) while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible. User progress will be shown as empty. Raw error object:", error);
-            toast({
-              title: 'Progress Unavailable',
-              description: 'We could not retrieve your learning progress at this time. This might be due to access permissions or if the necessary data table is not set up. Please try again later or contact support if the issue persists.',
-              variant: 'default', 
-            });
-            setUserProgress([]);
-          } else {
-            // Handle other, more specific errors that have a message
-            console.error("ProfilePage: Error fetching UserCourseProgress (with details). Raw error object:", error);
-            console.log("ProfilePage: Error object keys:", Object.keys(error));
-            console.log("ProfilePage: Error message property:", error.message);
-            console.log("ProfilePage: Error details property:", error.details);
-            console.log("ProfilePage: Error hint property:", error.hint);
-            console.log("ProfilePage: Error code property:", error.code);
-            
-            const errorMessageContent = typeof error.message === 'string' && error.message.trim() !== ''
-                                      ? error.message.trim()
-                                      : 'An unexpected error occurred while fetching your learning journey.';
-            toast({
-              title: 'Error Fetching Progress',
-              description: errorMessageContent,
-              variant: 'destructive',
-            });
-            setUserProgress([]);
-          }
-        } else if (data) {
-          const enrichedData = data.map(progressRecord => {
+        if (progressData) {
+          console.log("ProfilePage: Successfully fetched user course progress (raw):", progressData);
+          const enrichedData = progressData.map(progressRecord => {
             const courseDetails = getCourseById(progressRecord.course_id);
             console.log(`ProfilePage: Enriching course_id: ${progressRecord.course_id}. Found course details?`, !!courseDetails, courseDetails?.title);
             return { ...progressRecord, courseDetails };
-          }).filter(record => record.courseDetails); 
-          
+          }).filter(record => record.courseDetails); // Ensure only records with valid course details are kept
+
           console.log("ProfilePage: Enriched and filtered user progress for display:", enrichedData);
           setUserProgress(enrichedData as EnrichedProgress[]);
         } else {
           // No error, but data is null or undefined (e.g. RLS returns nothing without error)
-          console.log("ProfilePage: No error, but no data returned for UserCourseProgress.");
+          console.log("ProfilePage: No error, but no data returned for UserCourseProgress. Setting progress to empty.");
           setUserProgress([]);
         }
-      } catch (outerError: any) {
-        // This catch block handles errors from the data processing part (e.g., getCourseById) or other unexpected errors
-        console.error("ProfilePage: Error in fetchProgress function (outer catch):", outerError);
-        toast({ 
-          title: 'Error Processing Data', 
-          description: 'An unexpected error occurred while processing your progress.', 
-          variant: 'destructive' 
+      } catch (error: any) {
+        // Log the entire error object for detailed debugging.
+        console.error('ProfilePage: Error fetching or processing UserCourseProgress (with details):', error);
+        
+        let errorMessage = 'An unexpected error occurred while fetching your learning journey.';
+        if (error && typeof error.message === 'string' && error.message.trim() !== '') {
+          errorMessage = error.message.trim();
+        }
+        
+        toast({
+          title: 'Error Fetching Progress',
+          description: errorMessage,
+          variant: 'destructive',
         });
-        setUserProgress([]);
+        setUserProgress([]); // Ensure progress is cleared on error
       } finally {
         setIsLoading(false);
         console.log("ProfilePage: Finished fetching progress, isLoading set to false.");
       }
     };
+
     fetchProgress();
   }, [session, supabase, mounted, toast]);
 
@@ -154,7 +146,7 @@ export default function ProfilePage() {
           ) : userProgress.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {userProgress.map((progress) => (
-                progress.courseDetails && ( 
+                progress.courseDetails && progress.id && ( 
                   <ProgressCourseCard
                     key={progress.id} 
                     course={progress.courseDetails}
