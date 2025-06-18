@@ -1,9 +1,11 @@
 
 // @/app/podcast/page.tsx
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { podcastEpisodes, type PodcastEpisode } from '@/lib/podcast-data';
 import { PodcastEpisodeCard } from '@/components/cards/podcast-episode-card';
-import { MicVocal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MicVocal, ExternalLink } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Podikasti ya HSCM Connect | Mafundisho na Mahojiano',
@@ -23,6 +25,11 @@ export default function PodcastPage() {
         <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
           Karibu kwenye podikasti yetu ambapo tunashiriki mafundisho ya Neno la Mungu, mahojiano yenye kuvutia, na jumbe za kukujenga katika imani yako. Sikiliza wakati wowote, mahali popote.
         </p>
+        <Button asChild size="lg" className="mt-6 font-headline" suppressHydrationWarning={true}>
+          <Link href="https://innocentmorris.buzzsprout.com" target="_blank" rel="noopener noreferrer">
+            Sikiliza Zaidi Kwenye Buzzsprout <ExternalLink className="ml-2 h-5 w-5" />
+          </Link>
+        </Button>
       </header>
 
       {episodes.length > 0 ? (

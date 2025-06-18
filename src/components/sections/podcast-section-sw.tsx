@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PodcastEpisodeCard } from '@/components/cards/podcast-episode-card';
 import { getLatestPodcastEpisodes, type PodcastEpisode } from '@/lib/podcast-data';
-import { MicVocal, ChevronRight } from 'lucide-react';
+import { MicVocal, ChevronRight, ExternalLink } from 'lucide-react';
 
 export function PodcastSectionSw() {
   const latestEpisodes = getLatestPodcastEpisodes(3); // Get latest 3 episodes
@@ -37,10 +37,15 @@ export function PodcastSectionSw() {
             </p>
           )}
 
-          <div className="text-center">
-            <Button asChild size="lg" className="font-headline text-lg" suppressHydrationWarning={true}>
+          <div className="text-center space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:justify-center sm:items-center sm:gap-4">
+            <Button asChild size="lg" className="font-headline text-lg w-full sm:w-auto" suppressHydrationWarning={true}>
               <Link href="/podcast">
-                Vipindi Vyote vya Podikasti <ChevronRight className="ml-2 h-5 w-5" />
+                Vipindi Vyote Hapa Kwenye Tovuti <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="font-headline text-lg w-full sm:w-auto" suppressHydrationWarning={true}>
+              <Link href="https://innocentmorris.buzzsprout.com" target="_blank" rel="noopener noreferrer">
+                Sikiliza Kwenye Buzzsprout <ExternalLink className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>
