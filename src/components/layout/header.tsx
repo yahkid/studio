@@ -35,7 +35,7 @@ export function Header() {
   const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background dark:bg-neutral-dark dark:border-neutral-medium">
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
           <Image
