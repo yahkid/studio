@@ -33,7 +33,7 @@ export function ExitIntentModal() {
         if (!exitIntentShown) {
           setIsOpen(true);
           sessionStorage.setItem('exitIntentPrayerShown', 'true');
-          setShowOnExit(false); 
+          setShowOnExit(false);
         }
       }
     };
@@ -59,15 +59,15 @@ export function ExitIntentModal() {
       });
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const { error } = await supabase
-        .from('exit_intent_offers') // Using existing table for email capture
+        .from('exit_intent_offers')
         .insert({ email: email });
 
       if (error) throw error;
-      
+
       toast({
         title: "Ombi Limepokelewa",
         description: "Tutakuombea. Asante kwa kushiriki nasi.",
@@ -85,17 +85,15 @@ export function ExitIntentModal() {
       setIsLoading(false);
     }
   };
-  
+
   const handleJustPray = () => {
-    // This action doesn't submit data, just provides comfort.
-    // If tracking desired, could submit an anonymous record to a different table.
     console.log("Exit intent prayer requested (no email).");
     toast({
       title: "Ombi Limepokelewa",
       description: "Tutakuombea. Asante kwa kushiriki nasi.",
     });
     setIsOpen(false);
-    setShowOnExit(false); 
+    setShowOnExit(false);
   };
 
   if (!isOpen) {
@@ -105,7 +103,7 @@ export function ExitIntentModal() {
   return (
     <Dialog open={isOpen} onOpenChange={(openStatus) => {
       setIsOpen(openStatus);
-      if (!openStatus) setShowOnExit(false); 
+      if (!openStatus) setShowOnExit(false);
     }}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
@@ -137,9 +135,9 @@ export function ExitIntentModal() {
             </div>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => { setIsOpen(false); setShowOnExit(false);}} 
+            <Button
+              variant="outline"
+              onClick={() => { setIsOpen(false); setShowOnExit(false);}}
               className="font-headline"
               disabled={isLoading}
               type="button"
@@ -147,10 +145,11 @@ export function ExitIntentModal() {
             >
               Hapana Asante
             </Button>
-            <Button 
-              type="button" 
-              onClick={handleJustPray} 
-              className="font-headline bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleJustPray}
+              className="font-headline text-secondary border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-secondary"
               disabled={isLoading}
               suppressHydrationWarning={true}
             >
