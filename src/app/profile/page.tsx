@@ -9,6 +9,7 @@ import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
 import { Loader2, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 
 type UserProgressRecord = Database['public']['Tables']['UserCourseProgress']['Row'];
 interface EnrichedProgress extends UserProgressRecord {
@@ -18,6 +19,7 @@ interface EnrichedProgress extends UserProgressRecord {
 export default function ProfilePage() {
   const session = useSession();
   const supabase = useSupabaseClient<Database>();
+  const { toast } = useToast();
   const [userProgress, setUserProgress] = useState<EnrichedProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -29,7 +31,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!mounted || !session?.user) {
       setIsLoading(false);
-      setUserProgress([]); // Clear progress if no session or not mounted
+      setUserProgress([]); 
       return;
     }
 
@@ -42,35 +44,55 @@ export default function ProfilePage() {
           .select('*')
           .eq('user_id', session.user.id);
 
-        console.log("ProfilePage: Fetched UserCourseProgress data from Supabase:", data);
-        if (error) {
-          console.error("ProfilePage: Error fetching UserCourseProgress raw data:", error);
-          throw error;
-        }
+        console.log("ProfilePage: Fetched UserCourseProgress data from Supabase (raw):", { data, error });
 
-        if (data) {
+        if (error) {
+          if (typeof error === 'object' && error !== null && Object.keys(error).length === 0 && error.constructor === Object) {
+            console.warn("ProfilePage: Supabase returned an empty error object while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible as expected. User progress will be shown as empty.", error);
+            toast({
+              title: 'Progress Unavailable',
+              description: 'We could not retrieve your learning progress at this time. Please check your access permissions or try again later.',
+              variant: 'default', 
+            });
+          } else {
+            console.error("ProfilePage: Error fetching UserCourseProgress raw data:", error);
+            toast({
+              title: 'Error Fetching Progress',
+              description: error.message || 'An unexpected error occurred while fetching your learning journey.',
+              variant: 'destructive',
+            });
+          }
+          setUserProgress([]);
+        } else if (data) {
           const enrichedData = data.map(progressRecord => {
             const courseDetails = getCourseById(progressRecord.course_id);
-            console.log(`ProfilePage: Enriching ${progressRecord.course_id}. Found course details?`, !!courseDetails, courseDetails?.title);
+            console.log(`ProfilePage: Enriching course_id: ${progressRecord.course_id}. Found course details?`, !!courseDetails, courseDetails?.title);
             return { ...progressRecord, courseDetails };
-          }).filter(record => record.courseDetails); // Filter out any progress for courses not found (courseDetails will be undefined)
+          }).filter(record => record.courseDetails); 
           
           console.log("ProfilePage: Enriched and filtered user progress for display:", enrichedData);
           setUserProgress(enrichedData as EnrichedProgress[]);
         } else {
+          // No error, but data is null or undefined (e.g. RLS returns nothing without error)
+          console.log("ProfilePage: No error, but no data returned for UserCourseProgress.");
           setUserProgress([]);
         }
-      } catch (error: any) {
-        console.error("ProfilePage: Error in fetchProgress function:", error);
-        // Consider adding a toast notification for the user here
-        setUserProgress([]); // Clear progress on error
+      } catch (outerError: any) {
+        // This catch block handles errors from the data processing part (e.g., getCourseById) or other unexpected errors
+        console.error("ProfilePage: Error in fetchProgress function (outer catch):", outerError);
+        toast({ 
+          title: 'Error Processing Data', 
+          description: 'An unexpected error occurred while processing your progress.', 
+          variant: 'destructive' 
+        });
+        setUserProgress([]);
       } finally {
         setIsLoading(false);
         console.log("ProfilePage: Finished fetching progress, isLoading set to false.");
       }
     };
     fetchProgress();
-  }, [session, supabase, mounted]); // Dependencies for fetching progress
+  }, [session, supabase, mounted, toast]);
 
   const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
 
@@ -118,7 +140,6 @@ export default function ProfilePage() {
           ) : userProgress.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {userProgress.map((progress) => (
-                // courseDetails should always exist here due to the filter
                 progress.courseDetails && ( 
                   <ProgressCourseCard
                     key={progress.id} 
