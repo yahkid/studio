@@ -9,7 +9,6 @@ import { Calendar as CalendarIcon, List, Filter } from "lucide-react";
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO, isSameDay, startOfMonth, isValid } from "date-fns";
-// import { sw } from 'date-fns/locale'; // Removed problematic import
 import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
 
 
@@ -18,7 +17,7 @@ export default function MatukioPage() {
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
   const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2025, 5, 1)); // Default to June 2025
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1))); // Default to June 2025, start of month
 
 
   const filteredAndSortedEvents = useMemo(() => {
@@ -35,7 +34,7 @@ export default function MatukioPage() {
 
     if (viewMode === 'month' && selectedDate) {
       processedEvents = processedEvents.filter(event => isSameDay(event.parsedDate, selectedDate));
-    } else if (viewMode === 'month' && !selectedDate) { // Show all events for the current month if no specific date is selected
+    } else if (viewMode === 'month' && !selectedDate) { 
         processedEvents = processedEvents.filter(event => {
             const eventDate = event.parsedDate;
             return eventDate.getFullYear() === currentMonth.getFullYear() && eventDate.getMonth() === currentMonth.getMonth();
@@ -47,7 +46,6 @@ export default function MatukioPage() {
       if (dateComparison !== 0) {
         return dateComparison;
       }
-      // If dates are the same, sort by start time
       return a.startTime.localeCompare(b.startTime);
     });
   }, [events, filterType, viewMode, selectedDate, currentMonth]);
@@ -80,7 +78,7 @@ export default function MatukioPage() {
         {eventTypesOnDay && eventTypesOnDay.length > 0 && (
           <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-0.5">
             {eventTypesOnDay.slice(0,3).map((type, index) => {
-               let bgColor = "bg-gray-400"; // Default or for 'other'
+               let bgColor = "bg-gray-400"; // Default
                if (type === 'weekly') bgColor = "bg-primary"; // Green
                else if (type === 'monthly') bgColor = "bg-secondary"; // Gold
                else if (type === 'special') bgColor = "bg-destructive"; // Red
@@ -116,7 +114,10 @@ export default function MatukioPage() {
           </Button>
           <Button
             variant={viewMode === 'month' ? 'default' : 'outline'}
-            onClick={() => setViewMode('month')}
+            onClick={() => {
+              setViewMode('month');
+              // setSelectedDate(undefined); // Optionally reset selected date when switching to month view
+            }}
             className="font-body"
             aria-pressed={viewMode === 'month'}
           >
@@ -151,49 +152,47 @@ export default function MatukioPage() {
                 }}
                 month={currentMonth}
                 onMonthChange={setCurrentMonth}
-                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12"
+                className="p-0 [&_td]:w-12 [&_td]:h-12 [&_th]:w-12 sm:[&_td]:w-16 sm:[&_td]:h-16 sm:[&_th]:w-16"
                 classNames={{
-                  day: "w-full h-full",
                   day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90",
                   day_today: "bg-accent text-accent-foreground",
                 }}
                 components={{
                     DayContent: DayContent 
                 }}
-                // locale={sw} // Removed Swahili locale
                 captionLayout="dropdown-buttons" 
-                fromYear={2024} toYear={2030} 
+                fromYear={new Date().getFullYear() -1} toYear={new Date().getFullYear() + 5} 
             />
         </div>
       )}
 
-      {viewMode === 'list' || viewMode === 'month' ? (
-        filteredAndSortedEvents.length > 0 ? (
-          <div className="space-y-6">
-            {viewMode === 'month' && selectedDate && (
-              <h2 className="font-headline text-2xl text-foreground mb-4">
-                Matukio ya {format(selectedDate, "MMMM d, yyyy")} 
+      {/* Event List - always rendered but content depends on viewMode */}
+      {filteredAndSortedEvents.length > 0 ? (
+        <div className="space-y-6">
+          {viewMode === 'month' && selectedDate && (
+            <h2 className="font-headline text-2xl text-foreground mb-4">
+              Matukio ya {format(selectedDate, "MMMM d, yyyy")}
+            </h2>
+          )}
+          {viewMode === 'month' && !selectedDate && (
+               <h2 className="font-headline text-2xl text-foreground mb-4">
+                  Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy")} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
               </h2>
-            )}
-            {viewMode === 'month' && !selectedDate && (
-                 <h2 className="font-headline text-2xl text-foreground mb-4">
-                    Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy")} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
-                </h2>
-            )}
-            {filteredAndSortedEvents.map(event => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="font-body text-muted-foreground text-lg">
-              {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 
-               viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy")}.` :
-               'Hakuna matukio yanayolingana na kichujio chako.'}
-            </p>
-          </div>
-        )
-      ) : null}
+          )}
+          {/* In list view, or in month view (either specific day or whole month), show filtered events */}
+          {filteredAndSortedEvents.map(event => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="font-body text-muted-foreground text-lg">
+            {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 
+             viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy")}.` :
+             'Hakuna matukio yanayolingana na kichujio chako.'}
+          </p>
+        </div>
+      )}
 
     </div>
   );

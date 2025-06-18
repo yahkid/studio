@@ -1,7 +1,7 @@
 
 "use client";
 
-import type { MinistryEvent } from "@/app/matukio/page";
+import type { MinistryEvent } from "@/lib/events-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { format, parseISO } from "date-fns";
@@ -11,15 +11,19 @@ interface EventCardProps {
   event: MinistryEvent;
 }
 
+function isValidDate(date: Date | undefined): date is Date {
+  return date instanceof Date && !isNaN(date.getTime());
+}
+
 export function EventCard({ event }: EventCardProps) {
-  const parsedDate = parseISO(event.date);
+  const parsedDate = event.parsedDate || parseISO(event.date);
 
   const getBorderColorClass = () => {
     switch (event.eventType) {
       case 'weekly':
         return 'border-primary'; // Green
       case 'monthly':
-        return 'border-secondary'; // Gold
+        return 'border-secondary'; // Gold - Mapped to secondary in theme
       case 'special':
         return 'border-destructive'; // Red
       default:
@@ -37,12 +41,12 @@ export function EventCard({ event }: EventCardProps) {
     <Card className="overflow-hidden">
       <CardContent className="p-0 flex">
         {/* Date Block */}
-        <div className="w-24 flex-shrink-0 bg-muted/50 p-4 flex flex-col items-center justify-center text-center border-r">
+        <div className="w-24 flex-shrink-0 bg-muted/30 p-4 flex flex-col items-center justify-center text-center border-r">
           <span className="font-headline text-4xl font-bold text-primary">
-            {isValid(parsedDate) ? format(parsedDate, "dd") : '??'}
+            {isValidDate(parsedDate) ? format(parsedDate, "dd") : '??'}
           </span>
           <span className="font-body text-sm uppercase text-muted-foreground">
-            {isValid(parsedDate) ? format(parsedDate, "MMM") : '---'}
+            {isValidDate(parsedDate) ? format(parsedDate, "MMM") : '---'}
           </span>
         </div>
 
@@ -54,7 +58,7 @@ export function EventCard({ event }: EventCardProps) {
               {event.title}
             </h2>
             <p className="font-body text-sm text-muted-foreground mb-2 sm:mb-3">
-              {isValid(parsedDate) ? format(parsedDate, "eeee, MMMM d, yyyy") : 'Tarehe Batili'} | {event.startTime} - {event.endTime} EAT
+              {isValidDate(parsedDate) ? format(parsedDate, "eeee, MMMM d, yyyy") : 'Tarehe Batili'} | {event.startTime} - {event.endTime} EAT
             </p>
             <p className="font-body text-muted-foreground mb-3 sm:mb-4 text-sm leading-relaxed">
               {event.description}
@@ -67,7 +71,7 @@ export function EventCard({ event }: EventCardProps) {
               <Button 
                 asChild 
                 className="font-body w-full sm:w-auto"
-                disabled={event.streamUrl === "#"}
+                disabled={!event.streamUrl || event.streamUrl === "#"}
               >
                 <a href={event.streamUrl} target="_blank" rel="noopener noreferrer">
                   <PlayCircle className="mr-2 h-4 w-4" /> Tazama Moja kwa Moja
@@ -87,9 +91,3 @@ export function EventCard({ event }: EventCardProps) {
     </Card>
   );
 }
-
-function isValid(date: Date) {
-  return date instanceof Date && !isNaN(date.getTime());
-}
-
-    
