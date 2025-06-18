@@ -64,23 +64,39 @@ export function DecisionForm() {
       setEmail('');
       setDecisionType('');
       setComments('');
-    } catch (error: any) {
+    } catch (caughtError: any) {
       const defaultMessage = `Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena.`;
       let description = defaultMessage;
       
-      console.error('Error in DecisionForm:', error);
-      
-      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message;
-      }
-      
-      if (typeof error === 'object' && error !== null) {
-        try {
-          console.error('Error in DecisionForm (JSON):', JSON.stringify(error, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify error in DecisionForm:', e_stringify);
+      console.error('--- Supabase Insert Error Details (DecisionForm) ---');
+      if (caughtError) {
+        console.error('Caught Error Object:', caughtError);
+        // Log known Supabase error properties
+        if ('message' in caughtError) {
+          console.error('Message:', caughtError.message);
+          if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+            description = caughtError.message;
+          }
         }
+        if ('details' in caughtError) {
+          console.error('Details:', caughtError.details);
+        }
+        if ('code' in caughtError) {
+          console.error('Code:', caughtError.code);
+        }
+        if ('hint' in caughtError) {
+            console.error('Hint:', caughtError.hint);
+        }
+        // Attempt to stringify
+        try {
+          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+        } catch (e) {
+          console.error('Could not stringify caughtError:', e);
+        }
+      } else {
+        console.error('Caught error is undefined or null.');
       }
+      console.error('--- End Supabase Error Details (DecisionForm) ---');
       
       toast({
         title: "Hitilafu Imetokea",
