@@ -47,8 +47,6 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) {
       resetForm();
-      // Only reset to step 1 if the dialog is being closed,
-      // not when it's just re-rendering while open.
       if (open) { 
          setCurrentStep(1);
       }
@@ -100,7 +98,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       const defaultMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
       let description = defaultMessage;
       
-      console.error('--- Supabase Insert Error Details (FinancialPartnerModal) ---');
+      console.error('--- Supabase Insert Error Details (FinancialPartnerModal Step 1) ---');
       console.error('Type of caughtError:', typeof caughtError);
 
       if (caughtError) {
@@ -115,6 +113,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         } else if (typeof caughtError === 'string') {
           description = caughtError;
         }
+
 
         if (caughtError.details) { 
           console.error('Details:', caughtError.details);
@@ -134,7 +133,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       } else {
         console.error('Caught error is undefined or null.');
       }
-      console.error('--- End Supabase Error Details (FinancialPartnerModal) ---');
+      console.error('--- End Supabase Error Details (FinancialPartnerModal Step 1) ---');
 
       toast({
         title: "Hitilafu Imetokea",
@@ -275,3 +274,4 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     </Dialog>
   );
 }
+
