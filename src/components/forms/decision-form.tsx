@@ -69,29 +69,39 @@ export function DecisionForm() {
       let description = defaultMessage;
       
       console.error('--- Supabase Insert Error Details (DecisionForm) ---');
+      console.error('Type of caughtError:', typeof caughtError);
+
       if (caughtError) {
         console.error('Caught Error Object:', caughtError);
-        // Log known Supabase error properties
-        if ('message' in caughtError) {
-          console.error('Message:', caughtError.message);
-          if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-            description = caughtError.message;
-          }
+        
+        // Attempt to extract a meaningful message for the toast
+        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+          description = caughtError.message;
+          console.error('Message property:', caughtError.message);
+        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
+          description = caughtError.error_description;
+          console.error('Error Description property:', caughtError.error_description);
+        } else if (typeof caughtError === 'string') {
+          description = caughtError;
         }
-        if ('details' in caughtError) {
+
+
+        // Log known Supabase error properties
+        if (caughtError.details) { // Check if property exists before logging
           console.error('Details:', caughtError.details);
         }
-        if ('code' in caughtError) {
+        if (caughtError.code) {
           console.error('Code:', caughtError.code);
         }
-        if ('hint' in caughtError) {
+        if (caughtError.hint) {
             console.error('Hint:', caughtError.hint);
         }
+        
         // Attempt to stringify
         try {
           console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-        } catch (e) {
-          console.error('Could not stringify caughtError:', e);
+        } catch (e_stringify) {
+          console.error('Could not stringify caughtError:', e_stringify);
         }
       } else {
         console.error('Caught error is undefined or null.');
@@ -210,3 +220,4 @@ export function DecisionForm() {
     </Card>
   );
 }
+
