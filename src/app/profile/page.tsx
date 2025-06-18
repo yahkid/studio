@@ -47,22 +47,25 @@ export default function ProfilePage() {
         console.log("ProfilePage: Fetched UserCourseProgress data from Supabase (raw):", { data, error });
 
         if (error) {
-          if (typeof error === 'object' && error !== null && Object.keys(error).length === 0 && error.constructor === Object) {
-            console.warn("ProfilePage: Supabase returned an empty error object while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible as expected. User progress will be shown as empty.", error);
+          // Check for the "empty-ish" error object scenario (often RLS or permissions)
+          if (typeof error === 'object' && error !== null && Object.keys(error).length === 0) {
+            console.warn("ProfilePage: Supabase returned an error object with no enumerable properties while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible as expected. User progress will be shown as empty.", error);
             toast({
               title: 'Progress Unavailable',
               description: 'We could not retrieve your learning progress at this time. Please check your access permissions or try again later.',
               variant: 'default', 
             });
+            setUserProgress([]); // Explicitly set progress to empty
           } else {
-            console.error("ProfilePage: Error fetching UserCourseProgress raw data:", error);
+            // Handle other, more specific errors
+            console.error("ProfilePage: Error fetching UserCourseProgress raw data (with details):", error);
             toast({
               title: 'Error Fetching Progress',
               description: error.message || 'An unexpected error occurred while fetching your learning journey.',
               variant: 'destructive',
             });
+            setUserProgress([]); // Explicitly set progress to empty
           }
-          setUserProgress([]);
         } else if (data) {
           const enrichedData = data.map(progressRecord => {
             const courseDetails = getCourseById(progressRecord.course_id);
@@ -173,3 +176,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
