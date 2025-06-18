@@ -12,6 +12,8 @@ import { supabase } from '@/lib/supabaseClient';
 import { useState, useEffect, Suspense } from 'react'; 
 import type { Session } from '@supabase/supabase-js';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { PodcastPlayerProvider } from '@/contexts/PodcastPlayerContext';
+import { SitePlayer } from '@/components/podcast/SitePlayer';
 
 
 export default function RootLayout({
@@ -54,17 +56,20 @@ export default function RootLayout({
           supabaseClient={supabase}
           initialSession={initialSession === undefined ? null : initialSession} 
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Header />
-            <main className="flex-grow container py-8">{children}</main>
-            <Footer />
-            <Toaster />
-          </ThemeProvider>
+          <PodcastPlayerProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              <main className="flex-grow container py-8 pb-28">{/* Added pb-28 for player clearance */}</main>
+              <Footer />
+              <Toaster />
+              <SitePlayer />
+            </ThemeProvider>
+          </PodcastPlayerProvider>
         </SessionContextProvider>
       </body>
     </html>
