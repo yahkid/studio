@@ -1,13 +1,13 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { FinancialPartnerModal } from '@/components/modals/financial-partner-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
-import { ExpandableTabs } from '@/components/ui/expandable-tabs'; // Import ExpandableTabs
-import { HandCoins, Sparkles, HandHeart } from 'lucide-react'; // Import icons
+import { ExpandableTabs } from '@/components/ui/expandable-tabs';
+import { HandCoins, Sparkles, HandHeart } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface PartnershipOption {
@@ -25,6 +25,11 @@ export function PartnershipSectionSw() {
   const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const partnershipOptions: PartnershipOption[] = [
     { 
@@ -59,15 +64,22 @@ export function PartnershipSectionSw() {
     }
   ];
 
-  const [selectedPartnership, setSelectedPartnership] = useState<PartnershipOption | null>(partnershipOptions[0]); // Default to first option selected
+  const [selectedPartnership, setSelectedPartnership] = useState<PartnershipOption | null>(null);
+
+  useEffect(() => {
+    // Set default selected partnership only on the client after mount
+    if (mounted && partnershipOptions.length > 0) {
+      setSelectedPartnership(partnershipOptions[0]);
+    }
+  }, [mounted]);
+
 
   const expandableTabsItems = partnershipOptions.map(p => ({ title: p.title, icon: p.icon }));
 
   const handleTabChange = (index: number | null) => {
-    if (index !== null) {
+    if (index !== null && index >= 0 && index < partnershipOptions.length) {
       setSelectedPartnership(partnershipOptions[index]);
     } else {
-      // Optionally, clear selection or default to first if clicks outside deselect
       setSelectedPartnership(null); 
     }
   };
@@ -89,40 +101,49 @@ export function PartnershipSectionSw() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 mb-12 md:mb-16 items-start">
-              {/* Left Column: Expandable Tabs and Selected Partnership Details */}
               <div className="space-y-8">
-                <div className="flex justify-center lg:justify-start">
-                  <ExpandableTabs tabs={expandableTabsItems} onChange={handleTabChange} />
-                </div>
-
-                {selectedPartnership && (
-                  <div className="mt-6 bg-card rounded-xl p-6 md:p-8 border shadow-lg animate-fadeIn">
-                    <div className="flex items-start space-x-4">
-                      <div className={`w-12 h-12 ${selectedPartnership.id === 'financial' ? 'bg-hscm-red/10 dark:bg-hscm-red/20' : 'bg-primary/10 dark:bg-primary/20'} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                        <selectedPartnership.icon className={`w-6 h-6 ${selectedPartnership.id === 'financial' ? 'text-hscm-red' : 'text-primary'}`} />
-                      </div>
-                      <div>
-                        <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
-                          {selectedPartnership.title}
-                        </h3>
-                        <p className="font-body text-muted-foreground mb-4 leading-relaxed">
-                          {selectedPartnership.description}
-                        </p>
-                        <Button 
-                          onClick={selectedPartnership.action}
-                          variant={selectedPartnership.buttonVariant || 'default'}
-                          className={selectedPartnership.buttonClass}
-                          suppressHydrationWarning={true}
-                        >
-                          {selectedPartnership.buttonText}
-                        </Button>
-                      </div>
-                    </div>
+                {!mounted ? (
+                  <div className="flex justify-center lg:justify-start">
+                    <div className="h-12 w-64 bg-muted rounded-2xl animate-pulse" />
                   </div>
+                ) : (
+                  <>
+                    <div className="flex justify-center lg:justify-start">
+                      <ExpandableTabs 
+                        tabs={expandableTabsItems} 
+                        onChange={handleTabChange} 
+                      />
+                    </div>
+
+                    {selectedPartnership && (
+                      <div className="mt-6 bg-card rounded-xl p-6 md:p-8 border shadow-lg animate-fadeIn">
+                        <div className="flex items-start space-x-4">
+                          <div className={`w-12 h-12 ${selectedPartnership.id === 'financial' ? 'bg-hscm-red/10 dark:bg-hscm-red/20' : 'bg-primary/10 dark:bg-primary/20'} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                            <selectedPartnership.icon className={`w-6 h-6 ${selectedPartnership.id === 'financial' ? 'text-hscm-red' : 'text-primary'}`} />
+                          </div>
+                          <div>
+                            <h3 className="font-headline font-semibold text-xl text-foreground mb-3">
+                              {selectedPartnership.title}
+                            </h3>
+                            <p className="font-body text-muted-foreground mb-4 leading-relaxed">
+                              {selectedPartnership.description}
+                            </p>
+                            <Button 
+                              onClick={selectedPartnership.action}
+                              variant={selectedPartnership.buttonVariant || 'default'}
+                              className={selectedPartnership.buttonClass}
+                              suppressHydrationWarning={true}
+                            >
+                              {selectedPartnership.buttonText}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
-              {/* Right Column: Impact Stats and Final CTA (remains largely unchanged) */}
               <div className="space-y-8">
                 <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/10 dark:via-card dark:to-secondary/10 rounded-2xl p-8 border shadow-lg">
                   <h3 className="font-headline font-bold text-2xl text-foreground mb-6 text-center">
@@ -186,7 +207,7 @@ export function PartnershipSectionSw() {
                   </div>
                   
                   <Button 
-                    onClick={() => setIsFinancialModalOpen(true)} // Opens Financial Partner modal as primary CTA
+                    onClick={() => setIsFinancialModalOpen(true)}
                     size="lg"
                     className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-headline font-semibold"
                     suppressHydrationWarning={true}
@@ -206,27 +227,4 @@ export function PartnershipSectionSw() {
   );
 }
 
-// Basic fade-in animation for the selected partnership details
-// Add this to your globals.css or a relevant CSS file if you want a smoother transition
-// @keyframes fadeIn {
-//   from { opacity: 0; transform: translateY(10px); }
-//   to { opacity: 1; transform: translateY(0); }
-// }
-// .animate-fadeIn {
-//   animation: fadeIn 0.3s ease-out forwards;
-// }
-// For Tailwind, you can define it in tailwind.config.js
-// theme: {
-//   extend: {
-//     keyframes: {
-//       fadeIn: {
-//         '0%': { opacity: '0', transform: 'translateY(10px)' },
-//         '100%': { opacity: '1', transform: 'translateY(0)' },
-//       },
-//     },
-//     animation: {
-//       fadeIn: 'fadeIn 0.3s ease-out forwards',
-//     },
-//   },
-// },
-
+    
