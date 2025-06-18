@@ -243,6 +243,45 @@ export interface Database {
         }
         Relationships: []
       }
+      UserCourseProgress: {
+        Row: {
+          id: string // UUID, Primary Key
+          created_at: string // TIMESTAMPTZ, Default: now()
+          user_id: string // UUID, Foreign Key (e.g., to auth.users.id)
+          course_id: string // TEXT
+          completed_lessons: number[] // ARRAY of INT
+          last_accessed: string // TIMESTAMPTZ
+          progress_percentage: number // INT (0-100)
+        }
+        Insert: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          user_id: string
+          course_id: string
+          completed_lessons?: number[]
+          last_accessed?: string // TIMESTAMPTZ
+          progress_percentage?: number
+        }
+        Update: {
+          id?: string // UUID
+          created_at?: string // TIMESTAMPTZ
+          user_id?: string
+          course_id?: string
+          completed_lessons?: number[]
+          last_accessed?: string // TIMESTAMPTZ
+          progress_percentage?: number
+        }
+        Relationships: [
+          // If you have a public.users table, a relationship would look like:
+          // {
+          //   foreignKeyName: "UserCourseProgress_user_id_fkey"
+          //   columns: ["user_id"]
+          //   referencedRelation: "users"
+          //   referencedColumns: ["id"]
+          // }
+          // Assuming user_id references auth.users.id, which is handled by Supabase auth.
+        ]
+      }
     }
     Views: {
       [_ in never]: never
