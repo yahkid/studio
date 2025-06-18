@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film } from 'lucide-react'; // Added Users, HandHeart, Film for Swahili links
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake } from 'lucide-react'; // Added Users, HandHeart, Film, Handshake for Swahili links
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -95,4 +95,3 @@ export function Footer() {
     </footer>
   );
 }
-
