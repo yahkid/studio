@@ -6,46 +6,46 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-background-dark text-[#D3D3D3]" style={{ padding: "5rem 2rem 2rem" }}> {/* Using new background-dark from Tailwind config */}
+    <footer className="bg-background-dark text-[#D3D3D3]" style={{ padding: "5rem 2rem 2rem" }}>
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-10">
             {/* Column 1: Contact Info */}
             <div>
-              <h3 className="font-headline text-2xl font-bold text-white mb-6">
+              <h3 className="font-headline text-xl font-semibold text-white mb-6">
                 Mawasiliano
               </h3>
               <div className="space-y-3 font-body text-sm text-[#D3D3D3]">
                 <p className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" />
+                  <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                   <span>
                     P.O. Box 65409, Ilala<br />
                     Dar es Salaam, Tanzania
                   </span>
                 </p>
                 <p className="flex items-center space-x-3">
-                  <Phone className="h-5 w-5 text-hscm-green flex-shrink-0" />
+                  <Phone className="h-5 w-5 text-primary flex-shrink-0" />
                   <span>Simu: </span>
                   <a href="tel:+255652796450" className="hover:text-white transition-colors">
                     +255 652 796 450
                   </a>
                 </p>
                 <p className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5 text-hscm-green flex-shrink-0" />
+                  <Mail className="h-5 w-5 text-primary flex-shrink-0" />
                   <span>Barua Pepe: </span>
                   <a href="mailto:info@holyspiritconnect.org" className="hover:text-white transition-colors">
                     info@holyspiritconnect.org
                   </a>
                 </p>
                 <p className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-hscm-green flex-shrink-0 mt-0.5" />
+                  <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                   <span>
                     Mahali: Barabara ya Nyerere, DSM <br />
-                    <a 
-                      href="https://maps.app.goo.gl/5z3dGxia6ZDKoiMo7" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-primary hover:text-primary/80 transition-colors"
+                    <a
+                      href="https://maps.app.goo.gl/5z3dGxia6ZDKoiMo7"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-hscm-gold hover:text-hscm-gold/80 transition-colors"
                     >
                       Tazama Kwenye Ramani &rarr;
                     </a>
@@ -54,52 +54,40 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Column 2: Quick Links (Viungo vya Haraka) */}
-            <div>
-              <h4 className="font-headline text-xl font-semibold text-white mb-6">
-                Viungo vya Haraka
-              </h4>
-              <ul className="space-y-2 font-body text-sm">
-                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Dhamira Yetu</Link></li>
-                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-hscm-green"/>Imani Yetu</Link></li>
-                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Mimi Mgeni</Link></li>
-                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-hscm-green"/>Tazama Ujumbe</Link></li>
-                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Matukio</Link></li>
-                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-hscm-green"/>Ushirika</Link></li>
-                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-hscm-green"/>Nimeamua Leo</Link></li>
-              </ul>
+            {/* Column 2: Connect With Us (Central Focus) */}
+            <div className="md:text-center">
+              <h3 className="font-headline text-xl font-semibold text-white mb-6">
+                Ungana Nasi
+              </h3>
+              <div className="flex md:justify-center space-x-5">
+                <a href="https://facebook.com/@holyspiritconnect" target="_blank" rel="noopener noreferrer" aria-label="HSCM Facebook" className="text-[#D3D3D3] hover:text-white transition-colors">
+                  <Facebook className="h-8 w-8" />
+                </a>
+                <a href="https://instagram.com/holyspiritconnect" target="_blank" rel="noopener noreferrer" aria-label="HSCM Instagram" className="text-[#D3D3D3] hover:text-white transition-colors">
+                  <Instagram className="h-8 w-8" />
+                </a>
+                <a href="https://tiktok.com/@hscworship" target="_blank" rel="noopener noreferrer" aria-label="HSCM TikTok" className="text-[#D3D3D3] hover:text-white transition-colors">
+                  <Command className="h-8 w-8" /> {/* Placeholder for TikTok */}
+                </a>
+                <a href="#" aria-label="HSCM YouTube" className="text-[#D3D3D3] hover:text-white transition-colors">
+                  <Youtube className="h-8 w-8" />
+                </a>
+              </div>
             </div>
 
-            {/* Column 3: Connect With Us (Ungana Nasi) */}
+            {/* Column 3: Quick Links */}
             <div>
-              <h4 className="font-headline text-xl font-semibold text-white mb-6">
-                Ungana Nasi
-              </h4>
-              <ul className="space-y-3 font-body text-sm">
-                <li>
-                  <a href="https://facebook.com/@holyspiritconnect" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white transition-colors">
-                    <Facebook className="h-5 w-5 text-hscm-green" /> 
-                    <span>Facebook</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://instagram.com/holyspiritconnect" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white transition-colors">
-                    <Instagram className="h-5 w-5 text-hscm-green" />
-                    <span>Instagram</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://tiktok.com/@hscworship" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white transition-colors">
-                    <Command className="h-5 w-5 text-hscm-green" /> {/* Placeholder for TikTok */}
-                    <span>TikTok</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center space-x-2 hover:text-white transition-colors">
-                    <Youtube className="h-5 w-5 text-hscm-green" />
-                    <span>YouTube</span>
-                  </a>
-                </li>
+              <h3 className="font-headline text-xl font-semibold text-white mb-6">
+                Viungo vya Haraka
+              </h3>
+              <ul className="space-y-2 font-body text-sm">
+                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Dhamira Yetu</Link></li>
+                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Imani Yetu</Link></li>
+                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Mimi Mgeni</Link></li>
+                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Tazama Ujumbe</Link></li>
+                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
+                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
+                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>
               </ul>
             </div>
           </div>
