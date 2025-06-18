@@ -5,22 +5,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button'; 
 
-// The onOpenLeadMagnet prop is no longer needed
-// interface HeroSectionSwProps {
-//   onOpenLeadMagnet: () => void;
-// }
-
-export function HeroSectionSw(/*{ onOpenLeadMagnet }: HeroSectionSwProps*/) {
+export function HeroSectionSw() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="https://placehold.co/1920x1080.png" // Changed image source
-        alt="HSCM Connect hero background image" // Changed alt text
+        src="/hscm-logo.png.PNG" 
+        alt="HSCM Connect Logo hero background" 
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="community faith" // Changed AI hint
+        data-ai-hint="logo brand" 
         priority
         suppressHydrationWarning={true}
       />
@@ -42,7 +37,7 @@ export function HeroSectionSw(/*{ onOpenLeadMagnet }: HeroSectionSwProps*/) {
             <Button
               asChild
               size="lg"
-              className="font-headline font-semibold text-lg px-8 py-3" // Ensure primary button styles are applied via default variant
+              className="font-headline font-semibold text-lg px-8 py-3"
               suppressHydrationWarning={true}
             >
               <Link href="/#tazama-na-ukue">Tazama Ujumbe Mpya</Link>
@@ -53,3 +48,4 @@ export function HeroSectionSw(/*{ onOpenLeadMagnet }: HeroSectionSwProps*/) {
     </section>
   );
 }
+
