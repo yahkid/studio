@@ -1,22 +1,22 @@
 
 "use client";
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Changed from GradientButton
+import { Button } from '@/components/ui/button';
 
 export function DecisionPathwaySectionSw() {
   return (
     <section id="njia-ya-uamuzi" className="w-full max-w-5xl mx-auto text-center py-16 md:py-24 space-y-6 px-4">
-      <Image
-        src="https://placehold.co/1200x400.png"
-        alt="Mkutano wa jamii kwa ajili ya njia ya uamuzi"
-        width={1200}
-        height={400}
-        className="rounded-lg border object-cover w-full" // Removed shadow-md, added border
-        data-ai-hint="spiritual decision community"
-      />
+      <div className="aspect-video w-full rounded-lg border overflow-hidden">
+        <iframe
+          className="w-full h-full"
+          src="https://www.youtube.com/embed/zqZlRS_v4z8"
+          title="Ujumbe Kuhusu Kufanya Uamuzi"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+      </div>
       <h2 className="font-headline text-4xl md:text-5xl text-foreground mt-10 mb-4">
         UMEFANYA UAMUZI LEO?
       </h2>
