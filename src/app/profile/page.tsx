@@ -30,12 +30,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!mounted) {
-      setIsLoading(false);
+      // isLoading should ideally remain true until data is fetched or an error occurs
       return;
     }
 
     const fetchProgress = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // Ensure loading is true when fetching starts
       console.log("ProfilePage: fetchProgress initiated.");
 
       if (!session?.user) {
@@ -47,16 +47,14 @@ export default function ProfilePage() {
       console.log("ProfilePage: User session found, attempting to fetch progress for user:", session.user.id);
 
       try {
-        // Using the correct snake_case table name
         const { data: progressData, error: progressError } = await supabase
-          .from('user_course_progress') // CORRECT snake_case name
-          .select('id, course_id, completed_lessons, progress_percentage') // Select necessary columns
+          .from('user_course_progress')
+          .select('id, course_id, completed_lessons, progress_percentage')
           .eq('user_id', session.user.id);
 
         console.log("ProfilePage: Supabase query executed. Error:", progressError, "Data:", progressData);
 
         if (progressError) {
-          // Throw the actual error object if it exists.
           console.error("ProfilePage: Supabase returned an error:", progressError);
           throw progressError;
         }
@@ -67,18 +65,16 @@ export default function ProfilePage() {
             const courseDetails = getCourseById(progressRecord.course_id);
             console.log(`ProfilePage: Enriching course_id: ${progressRecord.course_id}. Found course details?`, !!courseDetails, courseDetails?.title);
             return { ...progressRecord, courseDetails };
-          }).filter(record => record.courseDetails); // Ensure only records with valid course details are kept
+          }).filter(record => record.courseDetails);
 
           console.log("ProfilePage: Enriched and filtered user progress for display:", enrichedData);
           setUserProgress(enrichedData as EnrichedProgress[]);
         } else {
-          // No error, but data is null or undefined (e.g. RLS returns nothing without error)
-          console.log("ProfilePage: No error, but no data returned for UserCourseProgress. Setting progress to empty.");
+          console.log("ProfilePage: No error, but no data returned for user_course_progress. Setting progress to empty.");
           setUserProgress([]);
         }
       } catch (error: any) {
-        // Log the entire error object for detailed debugging.
-        console.error('ProfilePage: Error fetching or processing UserCourseProgress (with details):', error);
+        console.error('ProfilePage: Error fetching or processing user_course_progress (with details):', error);
         
         let errorMessage = 'An unexpected error occurred while fetching your learning journey.';
         if (error && typeof error.message === 'string' && error.message.trim() !== '') {
@@ -90,7 +86,7 @@ export default function ProfilePage() {
           description: errorMessage,
           variant: 'destructive',
         });
-        setUserProgress([]); // Ensure progress is cleared on error
+        setUserProgress([]);
       } finally {
         setIsLoading(false);
         console.log("ProfilePage: Finished fetching progress, isLoading set to false.");
@@ -105,8 +101,8 @@ export default function ProfilePage() {
   if (!mounted) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="ml-4 font-body">Loading profile...</p>
+        {/* Simplified loading state - removed Loader2 icon */}
+        <p className="font-body text-lg">Loading profile...</p>
       </div>
     );
   }
