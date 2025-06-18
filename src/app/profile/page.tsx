@@ -47,22 +47,32 @@ export default function ProfilePage() {
         console.log("ProfilePage: Fetched UserCourseProgress data from Supabase (raw):", { data, error });
 
         if (error) {
-          const isNonDescriptiveError = typeof error === 'object' && error !== null && !error.message;
+          const isNonDescriptiveError = typeof error === 'object' && error !== null &&
+                                        (!error.message || (typeof error.message === 'string' && error.message.trim() === ''));
 
           if (isNonDescriptiveError) {
-            console.warn("ProfilePage: Supabase returned an error without a message while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible. User progress will be shown as empty. Raw error:", error);
+            console.warn("ProfilePage: Supabase returned an error without a meaningful message (or an empty/whitespace one) while fetching UserCourseProgress. This might indicate an RLS configuration issue or the table is not accessible. User progress will be shown as empty. Raw error object:", error);
             toast({
               title: 'Progress Unavailable',
               description: 'We could not retrieve your learning progress at this time. This might be due to access permissions or if the necessary data table is not set up. Please try again later or contact support if the issue persists.',
-              variant: 'default',
+              variant: 'default', 
             });
             setUserProgress([]);
           } else {
-            // Handle errors that have a message (more specific Supabase errors)
-            console.error("ProfilePage: Error fetching UserCourseProgress (with details):", error);
+            // Handle other, more specific errors that have a message
+            console.error("ProfilePage: Error fetching UserCourseProgress (with details). Raw error object:", error);
+            console.log("ProfilePage: Error object keys:", Object.keys(error));
+            console.log("ProfilePage: Error message property:", error.message);
+            console.log("ProfilePage: Error details property:", error.details);
+            console.log("ProfilePage: Error hint property:", error.hint);
+            console.log("ProfilePage: Error code property:", error.code);
+            
+            const errorMessageContent = typeof error.message === 'string' && error.message.trim() !== ''
+                                      ? error.message.trim()
+                                      : 'An unexpected error occurred while fetching your learning journey.';
             toast({
               title: 'Error Fetching Progress',
-              description: error.message || 'An unexpected error occurred while fetching your learning journey.',
+              description: errorMessageContent,
               variant: 'destructive',
             });
             setUserProgress([]);
@@ -177,4 +187,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
