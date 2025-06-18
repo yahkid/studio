@@ -38,7 +38,7 @@ export function Header() {
       <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/hscm-logo.png"
+            src="/hscm-logo.png.PNG"
             alt="Holy Spirit Connect Ministry Logo"
             width={40}
             height={40}
