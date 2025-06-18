@@ -9,13 +9,13 @@ export function HeroSectionSw() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/hscm-logo.png.PNG" 
-        alt="HSCM Connect Logo hero background" 
+        src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png" 
+        alt="Joyful congregation celebrating at HSCM Connect." 
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="logo brand" 
+        data-ai-hint="church congregation" 
         priority
         suppressHydrationWarning={true}
       />
@@ -48,4 +48,3 @@ export function HeroSectionSw() {
     </section>
   );
 }
-
