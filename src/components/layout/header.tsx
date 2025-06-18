@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon } from "lucide-react";
+import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
@@ -90,6 +90,12 @@ export function Header() {
                   <Link href="/settings" className="flex items-center cursor-pointer">
                     <SettingsIcon className="mr-2 h-4 w-4" />
                     <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                 <DropdownMenuItem asChild>
+                  <Link href="/context-menu-demo" className="flex items-center cursor-pointer">
+                    <MenuSquare className="mr-2 h-4 w-4" />
+                    <span>ContextMenu Demo</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
