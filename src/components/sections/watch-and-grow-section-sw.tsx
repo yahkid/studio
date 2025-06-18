@@ -2,11 +2,10 @@
 "use client";
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-// import { GradientButton } from '@/components/ui/gradient-button'; // Removed
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { PlayCircle, Mail, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -99,7 +98,7 @@ export function WatchAndGrowSectionSw() {
         </h2>
         
         <div className="max-w-4xl mx-auto mb-12">
-          <div className="aspect-video bg-slate-300 dark:bg-slate-700 rounded-lg border overflow-hidden mb-6 flex items-center justify-center"> {/* Removed shadow-xl, added border */}
+          <div className="aspect-video bg-slate-300 dark:bg-slate-700 rounded-lg border overflow-hidden mb-6 flex items-center justify-center">
              <iframe
               className="w-full h-full"
               src="https://www.youtube.com/embed/KMj5hG0FpEE" 
@@ -110,16 +109,16 @@ export function WatchAndGrowSectionSw() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((item) => (
-              <div key={item} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground"> {/* Removed shadow-lg, added border */}
+              <div key={item} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
                 <Image src={`https://placehold.co/300x169.png`} alt={`Video ndogo ${item}`} width={300} height={169} className="w-full h-auto object-cover rounded-md" data-ai-hint="sermon video thumbnail" />
               </div>
             ))}
           </div>
         </div>
 
-        <Card className="max-w-xl mx-auto mt-12"> {/* Removed p-6 sm:p-8, bg-card, border, shadow-xl. Default Card styling will apply. */}
+        <Card className="max-w-xl mx-auto mt-12 p-6 sm:p-8">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl text-foreground"> {/* Removed mb-4 */}
+            <CardTitle className="font-headline text-2xl text-foreground mb-4">
               Pata Ujumbe na Taarifa za Kila Wiki
             </CardTitle>
           </CardHeader>
