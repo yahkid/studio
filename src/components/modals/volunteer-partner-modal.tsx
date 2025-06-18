@@ -85,9 +85,10 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
         title: "Asante kwa Kujitolea!",
         description: "Tumepokea ombi lako la kujitolea. Tutawasiliana nawe hivi karibuni na fursa zilizopo.",
       });
-      onOpenChange(false); // Close modal on success
-      resetForm(); // Reset form fields
+      onOpenChange(false); 
+      resetForm(); 
     } catch (error: any) {
+      console.error('Supabase insert error in VolunteerPartnerModal:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
@@ -178,7 +179,7 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button variant="outline" className="font-headline" type="button" disabled={isLoading} suppressHydrationWarning={true}>
                 Ghairi
               </Button>
             </DialogClose>

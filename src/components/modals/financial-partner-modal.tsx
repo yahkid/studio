@@ -91,6 +91,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       });
       setCurrentStep(2); 
     } catch (error: any) {
+      console.error('Supabase insert error in FinancialPartnerModal (Step 1):', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.",
@@ -199,7 +200,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             </div>
             <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
               <DialogClose asChild>
-                <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+                <Button variant="outline" className="font-headline" type="button" disabled={isLoading} suppressHydrationWarning={true}>
                   Ghairi
                 </Button>
               </DialogClose>
@@ -219,7 +220,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             </p>
             <DialogFooter className="mt-6">
                <DialogClose asChild>
-                <Button className="font-headline w-full" suppressHydrationWarning={true}>
+                <Button className="font-headline w-full" type="button" suppressHydrationWarning={true}>
                   Funga
                 </Button>
               </DialogClose>

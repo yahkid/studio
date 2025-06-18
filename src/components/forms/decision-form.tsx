@@ -65,6 +65,7 @@ export function DecisionForm() {
       setDecisionType('');
       setComments('');
     } catch (error: any) {
+      console.error('Supabase insert error in DecisionForm:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: `Imeshindwa kuwasilisha uamuzi wako. ${error.message || 'Tafadhali jaribu tena.'}`,
@@ -137,7 +138,6 @@ export function DecisionForm() {
               onValueChange={setDecisionType}
               className="space-y-2"
               aria-label="Aina ya uamuzi"
-              // RadioGroup itself doesn't directly take disabled, individual items would if needed
             >
               {decisionOptions.map(option => (
                 <div key={option.id} className={`flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>

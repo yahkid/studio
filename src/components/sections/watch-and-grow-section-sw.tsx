@@ -42,6 +42,7 @@ export function WatchAndGrowSectionSw() {
       });
       setEmail('');
     } catch (error: any) {
+      console.error('Supabase insert error in WatchAndGrowSectionSw:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.",

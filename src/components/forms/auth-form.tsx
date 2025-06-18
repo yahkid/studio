@@ -53,19 +53,19 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         if (error) throw error;
         toast({ title: 'Login Successful', description: "Welcome back!" });
         router.push('/');
-        router.refresh(); // Important to update server components if any
+        router.refresh();
       } else {
         const { error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
         });
         if (error) throw error;
-        // Supabase sends a confirmation email by default.
         toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
         router.push('/auth?message=check-email');
         router.refresh();
       }
     } catch (error: any) {
+      console.error(`Supabase auth error (${mode}):`, error);
       toast({
         title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`,
         description: error.message || 'An unexpected error occurred. Please try again.',

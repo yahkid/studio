@@ -77,6 +77,7 @@ export function ExitIntentModal() {
       setIsOpen(false);
       setShowOnExit(false);
     } catch (error: any) {
+      console.error('Supabase insert error in ExitIntentModal:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
@@ -88,7 +89,6 @@ export function ExitIntentModal() {
   };
 
   const handleJustPray = () => {
-    console.log("Exit intent prayer requested (no email).");
     toast({
       title: "Ombi Limepokelewa",
       description: "Tutakuombea. Asante kwa kushiriki nasi.",
@@ -101,6 +101,8 @@ export function ExitIntentModal() {
     setIsOpen(openStatus);
     if (!openStatus) {
       setShowOnExit(false); 
+      setEmail('');
+      setIsLoading(false);
     }
   };
 
@@ -146,7 +148,7 @@ export function ExitIntentModal() {
                 variant="outline"
                 className="font-headline"
                 disabled={isLoading}
-                type="button"
+                type="button" // Ensure it's not submitting the form
                 suppressHydrationWarning={true}
               >
                 Hapana Asante

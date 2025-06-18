@@ -78,9 +78,10 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
         title: "Tutawasiliana Nawe!",
         description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
       });
-      onOpenChange(false); // Close modal on success
-      resetForm(); // Reset form fields
+      onOpenChange(false); 
+      resetForm(); 
     } catch (error: any) {
+      console.error('Supabase insert error in VisitPlannerModal:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
@@ -158,7 +159,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button variant="outline" className="font-headline" type="button" disabled={isLoading} suppressHydrationWarning={true}>
                 Ghairi
               </Button>
             </DialogClose>

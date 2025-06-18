@@ -54,8 +54,9 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
         description: "Mwongozo wako wa 'Misingi ya Imani' utatumwa kwa barua pepe yako hivi karibuni.",
       });
       setEmail('');
-      onOpenChange(false); // Close modal on success
+      onOpenChange(false); 
     } catch (error: any) {
+      console.error('Supabase insert error in LeadMagnetModal:', error);
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.",
@@ -68,8 +69,8 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) {
-      setEmail(''); // Reset email if modal is closed
-      setIsLoading(false); // Reset loading state
+      setEmail(''); 
+      setIsLoading(false); 
     }
     onOpenChange(isOpen);
   };
@@ -108,7 +109,7 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button variant="outline" className="font-headline" type="button" disabled={isLoading} suppressHydrationWarning={true}>
                 Ghairi
               </Button>
             </DialogClose>
