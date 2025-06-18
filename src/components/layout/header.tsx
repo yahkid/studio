@@ -35,6 +35,7 @@ export function Header() {
             height={40}
             className="h-10 w-10 md:h-12 md:w-12" 
             priority
+            style={{ objectFit: 'contain' }}
           />
           <span className="font-headline font-bold text-xl sm:text-2xl text-primary whitespace-nowrap">
             HOLY SPIRIT CONNECT
