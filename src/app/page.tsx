@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { HeroSectionSw } from "@/components/sections/hero-section";
 import { MissionSectionSw } from "@/components/sections/mission-section-sw";
 import { WatchAndGrowSectionSw } from "@/components/sections/watch-and-grow-section-sw";
+import { PodcastSectionSw } from "@/components/sections/podcast-section-sw"; // Import new section
 import { DecisionPathwaySectionSw } from "@/components/sections/decision-pathway-section-sw";
 import { TestimonialsSectionSw } from "@/components/sections/testimonials-section";
 import { EventsSectionSw } from "@/components/sections/events-section";
@@ -25,6 +26,7 @@ export default function HomePageSwahili() {
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
         <MissionSectionSw />
         <WatchAndGrowSectionSw />
+        <PodcastSectionSw /> {/* Add new podcast section here */}
         <DecisionPathwaySectionSw />
         <TestimonialsSectionSw />
         <EventsSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />

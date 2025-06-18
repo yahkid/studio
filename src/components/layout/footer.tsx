@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -85,6 +85,7 @@ export function Footer() {
                 <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Imani Yetu</Link></li>
                 <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Mimi Mgeni</Link></li>
                 <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Tazama Ujumbe</Link></li>
+                <li><Link href="/podcast" className="hover:text-white transition-colors flex items-center"><MicVocal className="mr-2 h-4 w-4 text-primary"/>Podikasti</Link></li>
                 <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
                 <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
                 <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>

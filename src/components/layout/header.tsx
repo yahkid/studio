@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp } from "lucide-react";
+import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
@@ -39,7 +39,7 @@ export function Header() {
       <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/hscm-logo.png.PNG"
+            src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
             alt="Holy Spirit Connect Ministry Logo"
             width={40}
             height={40}
@@ -94,6 +94,12 @@ export function Header() {
                   <Link href="/settings" className="flex items-center cursor-pointer">
                     <SettingsIcon className="mr-2 h-4 w-4" />
                     <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/podcast" className="flex items-center cursor-pointer">
+                    <MicVocal className="mr-2 h-4 w-4" />
+                    <span>Podcast</span>
                   </Link>
                 </DropdownMenuItem>
                  <DropdownMenuItem asChild>
