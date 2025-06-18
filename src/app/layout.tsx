@@ -64,11 +64,11 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <Header />
-              <main className="flex-grow container py-8 pb-28">{/* Added pb-28 for player clearance */}</main>
+              <main className="flex-grow container py-8 pb-28">{children}</main>
               <Footer />
               <Toaster />
-              <SitePlayer />
             </ThemeProvider>
+            <SitePlayer /> {/* SitePlayer moved here, as a direct child of PodcastPlayerProvider */}
           </PodcastPlayerProvider>
         </SessionContextProvider>
       </body>
