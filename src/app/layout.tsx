@@ -9,8 +9,9 @@ import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabaseClient'; 
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect, Suspense } from 'react'; 
 import type { Session } from '@supabase/supabase-js';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 
 
 export default function RootLayout({
@@ -46,6 +47,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-background text-foreground font-body" style={{ fontFamily: "'Lato', sans-serif" }}>
+        <Suspense>
+          <GoogleAnalytics />
+        </Suspense>
         <SessionContextProvider
           supabaseClient={supabase}
           initialSession={initialSession === undefined ? null : initialSession} 
