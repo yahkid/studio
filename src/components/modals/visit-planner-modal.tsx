@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +32,20 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const supabase = useSupabaseClient<Database>();
+
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setMessage('');
+    setIsLoading(false);
+  };
+
+  const handleDialogStateChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      resetForm();
+    }
+    onOpenChange(isOpen);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,10 +78,8 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
         title: "Tutawasiliana Nawe!",
         description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
       });
-      setName('');
-      setEmail('');
-      setMessage('');
-      onOpenChange(false);
+      onOpenChange(false); // Close modal on success
+      resetForm(); // Reset form fields
     } catch (error: any) {
       toast({
         title: "Hitilafu Imetokea",
@@ -79,7 +92,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogStateChange}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
@@ -143,8 +156,13 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="submit" className="font-headline w-full" disabled={isLoading} suppressHydrationWarning={true}>
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+                Ghairi
+              </Button>
+            </DialogClose>
+            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? 'Inatuma...' : 'Tuma Ombi'}
             </Button>

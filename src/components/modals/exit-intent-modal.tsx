@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -96,15 +97,20 @@ export function ExitIntentModal() {
     setShowOnExit(false);
   };
 
+  const handleDialogClose = (openStatus: boolean) => {
+    setIsOpen(openStatus);
+    if (!openStatus) {
+      setShowOnExit(false); 
+    }
+  };
+
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(openStatus) => {
-      setIsOpen(openStatus);
-      if (!openStatus) setShowOnExit(false);
-    }}>
+    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
@@ -135,31 +141,34 @@ export function ExitIntentModal() {
             </div>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
-            <Button
-              variant="outline"
-              onClick={() => { setIsOpen(false); setShowOnExit(false);}}
-              className="font-headline"
-              disabled={isLoading}
-              type="button"
-              suppressHydrationWarning={true}
-            >
-              Hapana Asante
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleJustPray}
-              className="font-headline text-secondary border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-secondary"
-              disabled={isLoading}
-              suppressHydrationWarning={true}
-            >
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Niombee Tu
-            </Button>
-            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
-            </Button>
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                className="font-headline"
+                disabled={isLoading}
+                type="button"
+                suppressHydrationWarning={true}
+              >
+                Hapana Asante
+              </Button>
+            </DialogClose>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleJustPray}
+                className="font-headline text-secondary border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-secondary"
+                disabled={isLoading}
+                suppressHydrationWarning={true}
+              >
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Niombee Tu
+              </Button>
+              <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -41,16 +41,15 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     setEmail('');
     setPhoneNumber('');
     setCountry('');
-    // isLoading is reset in the finally block of handleSubmitStep1
+    setIsLoading(false); 
   };
 
-  // This handler is now used by the Dialog's onOpenChange
   const handleDialogStateChange = (isOpen: boolean) => {
-    if (!isOpen) { // Only reset if the dialog is being closed
+    if (!isOpen) { 
       resetForm();
-      setCurrentStep(1);
+      setCurrentStep(1); 
     }
-    onOpenChange(isOpen); // Propagate to parent
+    onOpenChange(isOpen); 
   };
 
   const handleSubmitStep1 = async (e: React.FormEvent) => {
@@ -90,7 +89,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         title: "Hatua ya 1 Imekamilika!",
         description: "Taarifa zako zimepokelewa.",
       });
-      setCurrentStep(2); // Move to step 2
+      setCurrentStep(2); 
     } catch (error: any) {
       toast({
         title: "Hitilafu Imetokea",
@@ -198,8 +197,13 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
                 </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button type="submit" className="font-headline w-full" disabled={isLoading} suppressHydrationWarning={true}>
+            <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+              <DialogClose asChild>
+                <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+                  Ghairi
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Inatuma...' : 'Endelea kwa Hatua Inayofuata'}
               </Button>
@@ -215,7 +219,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             </p>
             <DialogFooter className="mt-6">
                <DialogClose asChild>
-                <Button className="font-headline w-full" suppressHydrationWarning={true}> {/* onClick is not needed here, DialogClose handles it */}
+                <Button className="font-headline w-full" suppressHydrationWarning={true}>
                   Funga
                 </Button>
               </DialogClose>

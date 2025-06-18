@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,13 +34,19 @@ export function PrayerPartnerModal({ open, onOpenChange }: PrayerPartnerModalPro
   const { toast } = useToast();
   const supabase = useSupabaseClient<Database>();
 
-  const resetFormAndClose = () => {
+  const resetForm = () => {
     setFirstName('');
     setLastName('');
     setEmail('');
     setCommittedToPray(false);
     setIsLoading(false);
-    onOpenChange(false);
+  };
+
+  const handleDialogStateChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      resetForm();
+    }
+    onOpenChange(isOpen);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,22 +85,21 @@ export function PrayerPartnerModal({ open, onOpenChange }: PrayerPartnerModalPro
         title: "Asante kwa Kujiunga!",
         description: "Umefanikiwa kujiunga na timu ya maombi. Tutawasiliana nawe na maelezo zaidi.",
       });
-      resetFormAndClose();
+      onOpenChange(false); // Close modal on success
+      resetForm(); // Reset form fields
     } catch (error: any) {
       toast({
         title: "Hitilafu Imetokea",
         description: error.message || "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.",
         variant: "destructive",
       });
-      setIsLoading(false); // Keep form open on error
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) resetFormAndClose();
-      else onOpenChange(true);
-    }}>
+    <Dialog open={open} onOpenChange={handleDialogStateChange}>
       <DialogContent className="sm:max-w-md rounded-lg shadow-xl">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
@@ -167,8 +173,13 @@ export function PrayerPartnerModal({ open, onOpenChange }: PrayerPartnerModalPro
               </Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="submit" className="font-headline w-full" disabled={isLoading} suppressHydrationWarning={true}>
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+                Ghairi
+              </Button>
+            </DialogClose>
+            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? 'Inatuma...' : 'Jiunge Sasa'}
             </Button>
