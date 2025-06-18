@@ -2,11 +2,12 @@
 // @/components/cards/podcast-episode-card.tsx
 "use client";
 
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import type { PodcastEpisode } from '@/lib/podcast-data';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlayCircle, CalendarDays, Clock } from 'lucide-react';
+import { PlayCircle, CalendarDays, Clock, ChevronUpCircle, ChevronDownCircle } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 
@@ -17,9 +18,18 @@ interface PodcastEpisodeCardProps {
 
 export function PodcastEpisodeCard({ episode, layout = 'default' }: PodcastEpisodeCardProps) {
   const parsedDate = parseISO(episode.publishDate);
+  const [showPlayer, setShowPlayer] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  const handleListenNow = () => {
-    window.open(episode.audioUrl, '_blank');
+  const handleTogglePlayer = () => {
+    const newShowPlayerState = !showPlayer;
+    setShowPlayer(newShowPlayerState);
+    if (newShowPlayerState && audioRef.current) {
+      // Optional: Attempt to play. Browsers might block autoplay without user interaction.
+      // audioRef.current.play().catch(error => console.log("Autoplay prevented:", error));
+    } else if (!newShowPlayerState && audioRef.current) {
+      audioRef.current.pause();
+    }
   };
 
   return (
@@ -64,17 +74,24 @@ export function PodcastEpisodeCard({ episode, layout = 'default' }: PodcastEpiso
           </p>
         </CardContent>
       )}
-      <CardFooter className={layout === 'compact' ? "pt-2 pb-4 px-4" : ""}>
+      <CardFooter className={`flex flex-col items-stretch ${layout === 'compact' ? "pt-2 pb-4 px-4" : "pt-4"}`}>
         <Button
-          onClick={handleListenNow}
+          onClick={handleTogglePlayer}
           className="w-full font-headline"
           variant="outline"
           size={layout === 'compact' ? 'sm' : 'default'}
           suppressHydrationWarning={true}
         >
-          <PlayCircle className="mr-2 h-4 w-4" />
-          Sikiliza Sasa
+          {showPlayer ? <ChevronUpCircle className="mr-2 h-4 w-4" /> : <PlayCircle className="mr-2 h-4 w-4" />}
+          {showPlayer ? 'Ficha Kicheza Sauti' : 'Sikiliza Hapa'}
         </Button>
+        {showPlayer && (
+          <div className="mt-4">
+            <audio ref={audioRef} controls src={episode.audioUrl} className="w-full h-10">
+              Tarjuma yako haikubali kicheza sauti.
+            </audio>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
