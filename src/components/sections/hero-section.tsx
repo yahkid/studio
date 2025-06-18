@@ -13,7 +13,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/Gemini_Generated_Image_asrt4uasrt4uasrt"
+        src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
         alt="Joyful congregation celebrating at HSCM Connect."
         fill
         style={{ objectFit: 'cover' }}
@@ -29,11 +29,11 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
         <div className="max-w-3xl mx-auto">
           <h1 className="font-headline font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-8 tracking-tight">
             PATA MATUMAINI.
-            <span className="block text-hscm-gold drop-shadow-md">GUNDUA KUSUDI LAKO.</span>
+            <span className="block text-hscm-gold drop-shadow-md">GUNDUA KUSUDI LAKO KUU.</span>
           </h1>
 
           <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed">
-            Holy Spirit Connect: Familia ya kimataifa inayokuletea ujumbe wa Yesu Kristo unaobadilisha maisha yako na kukupa mwelekeo mpya.
+            Holy Spirit Connect: Familia ya kimataifa inayokuletea ujumbe wa Yesu Kristo unaobadilisha maisha yako, kukupa mwelekeo mpya, na kukujaza tumaini lisilokwisha.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
