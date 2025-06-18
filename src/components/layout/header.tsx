@@ -133,6 +133,7 @@ export function Header() {
             size="icon"
             className="rounded-full text-xs sm:text-sm"
             title="Badilisha Lugha (Switch Language)"
+            aria-label="Switch language between Swahili and English"
             suppressHydrationWarning={true}
           >
             <Languages className="h-5 w-5" />

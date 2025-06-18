@@ -158,13 +158,13 @@ export function SitePlayer() {
             />
         </div>
 
-        {/* Close button - Functionality to be fully implemented in context */}
+        {/* Close button */}
          <Button 
             variant="ghost" 
             size="icon" 
             onClick={handleClosePlayer} 
             className="rounded-full w-8 h-8 md:w-10 md:h-10"
-            title="Close player"
+            aria-label="Close podcast player"
             suppressHydrationWarning={true}
         >
             <XCircle className="h-5 w-5 text-muted-foreground hover:text-foreground" />
