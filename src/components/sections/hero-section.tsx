@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button'; // Changed from GradientButton
+import { Button } from '@/components/ui/button'; 
 
 interface HeroSectionSwProps {
   onOpenLeadMagnet: () => void;
@@ -13,13 +13,13 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/DSC00243.png"
-        alt="Washirika wa Holy Spirit Connect Ministry wamesimama pamoja nje - Holy Spirit Connect Ministry members standing together outdoors"
+        src="https://placehold.co/1920x1080.png"
+        alt="Washirika wa Holy Spirit Connect Ministry wakiabudu pamoja kwa furaha - Hopeful scene of HSCM congregation or landscape"
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="group people"
+        data-ai-hint="congregation worship landscape"
         priority
         suppressHydrationWarning={true}
       />
@@ -27,9 +27,9 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
 
       <div className="container mx-auto px-4 relative z-20">
         <div className="max-w-3xl mx-auto">
-          <h1 className="font-headline font-bold text-5xl md:text-7xl lg:text-8xl text-white mb-8 tracking-tight">
+          <h1 className="font-headline font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-8 tracking-tight">
             PATA MATUMAINI.
-            <span className="block text-hscm-gold-dark-theme drop-shadow-md">GUNDUA KUSUDI.</span>
+            <span className="block text-hscm-gold drop-shadow-md">GUNDUA KUSUDI.</span>
           </h1>
 
           <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed">
@@ -37,15 +37,15 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button asChild suppressHydrationWarning={true} size="lg" className="font-body font-semibold">
+            <Button asChild size="lg" className="font-body font-semibold" suppressHydrationWarning={true}>
               <Link href="/#tazama-na-ukue">Tazama Ujumbe wa Karibuni</Link>
             </Button>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-12">
             <button
               onClick={onOpenLeadMagnet}
-              className="font-body text-slate-200 hover:text-white underline transition-colors text-lg"
+              className="font-body text-lg text-white hover:text-hscm-gold underline underline-offset-4 transition-colors duration-300"
               suppressHydrationWarning={true}
             >
               Mgeni katika imani? Anza safari yako hapa.
@@ -56,3 +56,4 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     </section>
   );
 }
+
