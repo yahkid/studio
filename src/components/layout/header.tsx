@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { User, LogIn, LogOut, Loader2, Languages } from "lucide-react";
+import { LogIn, LogOut, Loader2, Languages } from "lucide-react"; // Removed unused User icon
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
