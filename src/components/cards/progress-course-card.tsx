@@ -23,7 +23,7 @@ export function ProgressCourseCard({
 
   return (
     <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg transition-shadow duration-300">
-      <CardHeader className="p-0 relative">
+      <CardHeader className="p-0 relative group">
         <Link href={`/kozi/${course.id}`} aria-label={`Endelea na kozi ${course.title}`}>
           <div className="aspect-[16/9] w-full overflow-hidden">
             <Image
