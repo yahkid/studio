@@ -8,12 +8,12 @@ import type { Database } from '@/types/supabase';
 import type { Course } from '@/lib/courses-data';
 import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
-import { Loader2, User, Edit, KeyRound } from 'lucide-react'; // Added Edit, KeyRound
+import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare } from 'lucide-react'; // Added BookOpen, CheckSquare
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Label } from '@/components/ui/label'; // Added Label
+import { Label } from '@/components/ui/label';
 
 type UserProgressRecord = Database['public']['Tables']['user_course_progress']['Row'];
 interface EnrichedProgress extends UserProgressRecord {
@@ -98,6 +98,8 @@ export default function ProfilePage() {
     fetchProgress();
   }, [session, supabase, mounted, toast]);
 
+  const totalCoursesStarted = userProgress.length;
+  const totalLessonsCompleted = userProgress.reduce((sum, p) => sum + (p.completed_lessons?.length || 0), 0);
 
   if (!mounted || isLoading) {
     return (
@@ -172,7 +174,7 @@ export default function ProfilePage() {
                      </Link>
                    </Button>
                    <Button asChild variant="outline" size="sm" className="font-body justify-start">
-                     <Link href="/settings#password"> {/* Consider a more direct link if available later */}
+                     <Link href="/settings#password">
                        <KeyRound className="mr-2 h-4 w-4" /> Badilisha Nenosiri
                      </Link>
                    </Button>
@@ -181,38 +183,68 @@ export default function ProfilePage() {
             </Card>
           </div>
 
-          {/* Learning Journey Section */}
-          <div className="md:col-span-2">
-            <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6">
-              Safari Yangu ya Kujifunza
-            </h2>
-            {isProgressLoading ? (
-              <div className="flex justify-center items-center py-10">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
-              </div>
-            ) : userProgress.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {userProgress.map((progress) => (
-                  progress.courseDetails && progress.id && (
-                    <ProgressCourseCard
-                      key={progress.id}
-                      course={progress.courseDetails}
-                      progressPercentage={progress.progress_percentage ?? 0}
-                      completedLessonsCount={progress.completed_lessons?.length ?? 0}
-                    />
-                  )
-                ))}
-              </div>
-            ) : (
+          {/* Learning Journey & Stats Section */}
+          <div className="md:col-span-2 space-y-8">
+            {/* Learning Stats Card */}
+            {!isProgressLoading && (
               <Card>
-                <CardContent className="pt-6">
-                  <p className="font-body text-muted-foreground text-center py-8">
-                    Bado haujaanza kozi yoyote au hakuna maendeleo yaliyorekodiwa. Tembelea sehemu ya kozi ili kuanza kujifunza!
-                  </p>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Muhtasari wa Mafunzo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex items-center p-4 bg-muted/50 rounded-lg">
+                      <BookOpen className="h-8 w-8 text-primary mr-4" />
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{totalCoursesStarted}</p>
+                        <p className="text-sm text-muted-foreground">Kozi Zilizoanzishwa</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center p-4 bg-muted/50 rounded-lg">
+                      <CheckSquare className="h-8 w-8 text-primary mr-4" />
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{totalLessonsCompleted}</p>
+                        <p className="text-sm text-muted-foreground">Masomo Yaliyokamilika</p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
+
+            {/* Learning Journey Section */}
+            <div>
+              <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6">
+                Safari Yangu ya Kujifunza
+              </h2>
+              {isProgressLoading ? (
+                <div className="flex justify-center items-center py-10">
+                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
+                </div>
+              ) : userProgress.length > 0 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {userProgress.map((progress) => (
+                    progress.courseDetails && progress.id && (
+                      <ProgressCourseCard
+                        key={progress.id}
+                        course={progress.courseDetails}
+                        progressPercentage={progress.progress_percentage ?? 0}
+                        completedLessonsCount={progress.completed_lessons?.length ?? 0}
+                      />
+                    )
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="font-body text-muted-foreground text-center py-8">
+                      Bado haujaanza kozi yoyote au hakuna maendeleo yaliyorekodiwa. Tembelea sehemu ya kozi ili kuanza kujifunza!
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
       )}
