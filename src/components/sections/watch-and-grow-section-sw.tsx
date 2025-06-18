@@ -41,23 +41,45 @@ export function WatchAndGrowSectionSw() {
         description: "Utapokea ujumbe na taarifa zetu za kila wiki.",
       });
       setEmail('');
-    } catch (error: any) {
+    } catch (caughtError: any) {
       const defaultMessage = "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.";
       let description = defaultMessage;
       
-      console.error('Error in WatchAndGrowSectionSw:', error);
-      
-      if (error && typeof error.message === 'string' && error.message.trim() !== '') {
-        description = error.message;
-      }
-      
-      if (typeof error === 'object' && error !== null) {
-        try {
-          console.error('Error in WatchAndGrowSectionSw (JSON):', JSON.stringify(error, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify error in WatchAndGrowSectionSw:', e_stringify);
+      console.error('--- Supabase Insert Error Details (WatchAndGrowSectionSw) ---');
+      if (caughtError) {
+        console.error('Caught Error Object:', caughtError);
+        if (typeof caughtError === 'object' && caughtError !== null) {
+          if ('message' in caughtError) {
+            console.error('Message:', caughtError.message);
+            if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
+              description = caughtError.message;
+            }
+          }
+          if ('details' in caughtError) {
+            console.error('Details:', caughtError.details);
+          }
+          if ('code' in caughtError) {
+            console.error('Code:', caughtError.code);
+          }
+          if ('hint' in caughtError) {
+            console.error('Hint:', caughtError.hint);
+          }
+          try {
+            console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
+          } catch (e_stringify) {
+            console.error('Could not stringify caughtError:', e_stringify);
+          }
+        } else {
+          console.error('Caught Error Type:', typeof caughtError);
+          console.error('Caught Error Value:', String(caughtError));
+          if (typeof caughtError === 'string' && caughtError.trim() !== '') {
+            description = caughtError;
+          }
         }
+      } else {
+        console.error('Caught error is undefined or null.');
       }
+      console.error('--- End Supabase Error Details (WatchAndGrowSectionSw) ---');
       
       toast({
         title: "Hitilafu Imetokea",
@@ -128,3 +150,4 @@ export function WatchAndGrowSectionSw() {
     </section>
   );
 }
+
