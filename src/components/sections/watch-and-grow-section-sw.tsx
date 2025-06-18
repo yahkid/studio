@@ -101,7 +101,7 @@ export function WatchAndGrowSectionSw() {
           <div className="aspect-video bg-slate-300 dark:bg-slate-700 rounded-lg border overflow-hidden mb-6 flex items-center justify-center">
              <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/KMj5hG0FpEE" 
+              src="https://www.youtube.com/embed/7Ja9JmMign0" 
               title="Ujumbe Maalum wa Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
