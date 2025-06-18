@@ -6,7 +6,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-neutral-dark text-[#D3D3D3]" style={{ padding: "5rem 2rem 2rem" }}>
+    <footer className="bg-zinc-900 text-[#D3D3D3]" style={{ padding: "5rem 2rem 2rem" }}>
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-10">
@@ -37,13 +37,13 @@ export function Footer() {
                 Viungo vya Haraka
               </h4>
               <ul className="space-y-2 font-body text-sm">
-                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Dhamira Yetu</Link></li>
-                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4"/>Imani Yetu</Link></li>
-                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Mimi Mgeni</Link></li>
-                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4"/>Tazama Ujumbe</Link></li>
-                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4"/>Matukio</Link></li>
-                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4"/>Ushirika</Link></li>
-                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4"/>Nimeamua Leo</Link></li>
+                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Dhamira Yetu</Link></li>
+                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-hscm-green"/>Imani Yetu</Link></li>
+                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Mimi Mgeni</Link></li>
+                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-hscm-green"/>Tazama Ujumbe</Link></li>
+                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-hscm-green"/>Matukio</Link></li>
+                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-hscm-green"/>Ushirika</Link></li>
+                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-hscm-green"/>Nimeamua Leo</Link></li>
               </ul>
             </div>
 
@@ -81,9 +81,9 @@ export function Footer() {
             </div>
           </div>
 
-          <hr className="border-[#555555] my-8" />
+          <hr className="border-zinc-700 my-8" />
 
-          <div className="text-center font-body text-muted-foreground" style={{ fontSize: '0.85rem', color: 'var(--neutral-medium)' }}>
+          <div className="text-center font-body text-zinc-400 text-sm">
             <p>
               © {currentYear} Huduma ya HSCM Connect. Haki zote zimehifadhiwa.
               <span className="mx-2">•</span>
