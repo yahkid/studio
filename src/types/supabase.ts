@@ -163,20 +163,29 @@ export interface Database {
         Row: {
           id: string // UUID
           created_at: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
+          phone_number: string | null
+          country: string | null
         }
         Insert: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
+          phone_number?: string | null
+          country?: string | null
         }
         Update: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name?: string
+          first_name?: string
+          last_name?: string
           email?: string
+          phone_number?: string | null
+          country?: string | null
         }
         Relationships: []
       }
@@ -184,21 +193,24 @@ export interface Database {
         Row: {
           id: string // UUID
           created_at: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
           committed_to_pray: boolean | null
         }
         Insert: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
           committed_to_pray?: boolean | null
         }
         Update: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name?: string
+          first_name?: string
+          last_name?: string
           email?: string
           committed_to_pray?: boolean | null
         }
@@ -208,21 +220,24 @@ export interface Database {
         Row: {
           id: string // UUID
           created_at: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
           interests_skills: string | null
         }
         Insert: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name: string
+          first_name: string
+          last_name: string
           email: string
           interests_skills?: string | null
         }
         Update: {
           id?: string // UUID
           created_at?: string // TIMESTAMPTZ
-          name?: string
+          first_name?: string
+          last_name?: string
           email?: string
           interests_skills?: string | null
         }
