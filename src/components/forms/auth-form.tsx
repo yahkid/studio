@@ -1,12 +1,11 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-// import { GradientButton } from '@/components/ui/gradient-button'; // Removed
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,14 +13,20 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, LogIn, UserPlus, Loader2 } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, Loader2, User } from 'lucide-react';
 
-export const AuthFormSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-type AuthFormValues = z.infer<typeof AuthFormSchema>;
+const signupSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Invalid email address.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
+});
+
+type AuthFormValues = z.infer<typeof signupSchema>; // Includes name, email, password
 
 interface AuthFormProps {
   mode?: 'login' | 'signup';
@@ -35,13 +40,22 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
+  const currentSchema = mode === 'signup' ? signupSchema : loginSchema;
+
   const form = useForm<AuthFormValues>({
-    resolver: zodResolver(AuthFormSchema),
+    resolver: zodResolver(currentSchema),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   });
+
+  useEffect(() => {
+    // Reset form validation and values if mode changes, ensuring correct schema is used.
+    form.reset({ email: '', password: '', name: '' });
+  }, [mode, form.reset]);
+
 
   const onSubmit = async (values: AuthFormValues) => {
     setIsLoading(true);
@@ -59,6 +73,11 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         const { error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
+          options: {
+            data: {
+              full_name: values.name, // Store name in user_metadata
+            }
+          }
         });
         if (error) throw error; 
         toast({ title: 'Signup Successful', description: 'Please check your email to verify your account.' });
@@ -116,7 +135,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto"> {/* Removed shadow-xl */}
+    <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="font-headline text-3xl text-center">
           {mode === 'login' ? 'Welcome Back!' : 'Create Your Account'}
@@ -133,6 +152,24 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
+            {mode === 'signup' && (
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-body">Full Name</FormLabel>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <FormControl>
+                        <Input placeholder="Your full name" className="pl-10 font-body" {...field} disabled={isLoading} />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="email"

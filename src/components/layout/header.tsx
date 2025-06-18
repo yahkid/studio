@@ -8,7 +8,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from '@/components/ui/gradient-button'; // Removed
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,9 +28,11 @@ export function Header() {
     setIsSigningOut(true);
     await supabase.auth.signOut();
     router.push('/');
-    router.refresh();
+    router.refresh(); // Ensures the layout re-evaluates session state
     setIsSigningOut(false);
   };
+
+  const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background dark:bg-neutral-dark dark:border-neutral-medium">
@@ -53,8 +54,8 @@ export function Header() {
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
           <Button
             asChild
-            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3" // Using default variant which is now primary
-            size="sm" // Applied size sm for consistency with other header buttons
+            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3"
+            size="sm"
             suppressHydrationWarning={true}
           >
             <Link href="/decision">Nimeamua Leo</Link>
@@ -74,10 +75,12 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Akaunti</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {session.user.email}
-                    </p>
+                    <p className="text-sm font-medium leading-none">{userDisplayName}</p>
+                    {session.user.user_metadata?.full_name && session.user.email && ( // Show email if name is displayed and email exists
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {session.user.email}
+                      </p>
+                    )}
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />

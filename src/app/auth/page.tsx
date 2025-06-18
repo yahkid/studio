@@ -25,16 +25,13 @@ function AuthPageContent() {
   };
 
   if (!mounted) {
-    // Render a placeholder or null while waiting for client-side mount
-    // This helps avoid rendering the form on the server if it's causing hydration issues
-    // A simple loading div or null can be returned.
-    // Matching the Suspense fallback can also be an option for consistency.
     return <div className="flex justify-center items-center min-h-[calc(100vh-200px)]"><div>Loading auth form...</div></div>; 
   }
 
   return (
     <div className="py-12">
       <AuthForm
+        key={mode} // Add key here to re-initialize form on mode change
         mode={mode}
         onSwitchMode={handleSwitchMode}
         initialMessage={message}
