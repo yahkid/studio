@@ -47,7 +47,11 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) { 
       resetForm();
-      setCurrentStep(1); 
+      // Only reset to step 1 if the dialog is being closed,
+      // not when it's just re-rendering while open.
+      if (open) { // Check if it was previously open
+         setCurrentStep(1); 
+      }
     }
     onOpenChange(isOpen); 
   };
@@ -91,10 +95,21 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       });
       setCurrentStep(2); 
     } catch (error: any) {
-      console.error('Supabase insert error in FinancialPartnerModal (Step 1):', error);
+      let errorMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
+      if (error && error.message) {
+        errorMessage = error.message;
+      }
+      
+      console.error(
+        'Supabase insert error in FinancialPartnerModal (Step 1). Raw error object:', 
+        error, 
+        'Error stringified:', 
+        JSON.stringify(error, null, 2)
+      );
+      
       toast({
         title: "Hitilafu Imetokea",
-        description: (error && error.message) || "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
