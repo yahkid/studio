@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -133,15 +132,16 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
 
   return (
     <Dialog open={open} onOpenChange={handleDialogStateChange}>
-      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
+      <DialogContent className="sm:max-w-md rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <CalendarCheck className="mr-2 h-6 w-6 text-primary"/>
             Panga Ujio Wako
           </DialogTitle>
           <DialogDescription className="font-body">
-            Tunafurahi kukukaribisha! Ibada zetu ni Jumapili saa 3:00 Asbh na 5:00 Asbh.
-            Tuambie kama una maswali yoyote. Mahali: 123 Faith Street, Ministry City.
+            Tunafurahi kukukaribisha! Panga ujio wako ili tukupokee vizuri na kukupa maelezo muhimu.
+            Ibada zetu ni Jumapili saa 3:00 Asbh na 5:00 Asbh.
+            Mahali: 123 Faith St, Ministry City. Tuambie kama una maswali yoyote.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -190,11 +190,12 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                   onChange={(e) => setMessage(e.target.value)}
                   className="pl-10 font-body"
                   rows={3}
-                  aria-label="Ujumbe wako"
+                  aria-label="Ujumbe wako (hiari)"
                   disabled={isLoading}
                 />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground mt-1 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>
@@ -204,7 +205,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
             </DialogClose>
             <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Inatuma...' : 'Tuma Ombi'}
+              {isLoading ? 'Inatuma...' : 'Tuma Taarifa za Ujio'}
             </Button>
           </DialogFooter>
         </form>

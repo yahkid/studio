@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -140,7 +139,7 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
 
   return (
     <Dialog open={open} onOpenChange={handleDialogStateChange}>
-      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
+      <DialogContent className="sm:max-w-md rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <HandHeart className="mr-2 h-6 w-6 text-primary"/>
@@ -215,6 +214,7 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
                 />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground mt-1 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>

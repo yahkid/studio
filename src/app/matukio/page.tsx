@@ -5,19 +5,29 @@ import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarIcon, List, Filter } from "lucide-react";
+import { Calendar as CalendarIcon, List, Filter, Mail, Loader2, Newspaper } from "lucide-react";
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO, isSameDay, startOfMonth, isValid } from "date-fns";
 import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
-
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from '@/hooks/use-toast';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { Database } from '@/types/supabase';
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
   const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1))); // Default to June 2025, start of month
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1)));
+
+  const [eventSignupEmail, setEventSignupEmail] = useState('');
+  const [isEventSignupLoading, setIsEventSignupLoading] = useState(false);
+  const { toast } = useToast();
+  const supabase = useSupabaseClient<Database>();
 
 
   const filteredAndSortedEvents = useMemo(() => {
@@ -78,16 +88,57 @@ export default function MatukioPage() {
         {eventTypesOnDay && eventTypesOnDay.length > 0 && (
           <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-0.5">
             {eventTypesOnDay.slice(0,3).map((type, index) => {
-               let bgColor = "bg-gray-400"; // Default
-               if (type === 'weekly') bgColor = "bg-primary"; // Green
-               else if (type === 'monthly') bgColor = "bg-secondary"; // Gold
-               else if (type === 'special') bgColor = "bg-destructive"; // Red
+               let bgColor = "bg-gray-400"; 
+               if (type === 'weekly') bgColor = "bg-primary"; 
+               else if (type === 'monthly') bgColor = "bg-secondary"; 
+               else if (type === 'special') bgColor = "bg-destructive"; 
                return <div key={index} className={`h-1.5 w-1.5 rounded-full ${bgColor}`}></div>;
             })}
           </div>
         )}
       </div>
     );
+  };
+
+  const handleEventSignupSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!eventSignupEmail || !/\S+@\S+\.\S+/.test(eventSignupEmail)) {
+      toast({
+        title: "Barua Pepe Batili",
+        description: "Tafadhali ingiza anwani sahihi ya barua pepe.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsEventSignupLoading(true);
+    try {
+      const { error } = await supabase
+        .from('weekly_updates_signups') // Using existing table for now
+        .insert({ email: eventSignupEmail });
+
+      if (error) throw error;
+
+      toast({
+        title: "Umefanikiwa Kujisajili!",
+        description: "Utapokea taarifa za matukio yetu mapya na ya kipekee.",
+      });
+      setEventSignupEmail('');
+    } catch (caughtError: any) {
+      const defaultMessage = "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.";
+      let description = defaultMessage;
+      
+      console.error('--- Supabase Insert Error Details (Event Signup) ---');
+      if (caughtError && caughtError.message) description = caughtError.message;
+      
+      toast({
+        title: "Hitilafu Imetokea",
+        description: description,
+        variant: "destructive",
+      });
+    } finally {
+      setIsEventSignupLoading(false);
+    }
   };
 
 
@@ -116,7 +167,6 @@ export default function MatukioPage() {
             variant={viewMode === 'month' ? 'default' : 'outline'}
             onClick={() => {
               setViewMode('month');
-              // setSelectedDate(undefined); // Optionally reset selected date when switching to month view
             }}
             className="font-body"
             aria-pressed={viewMode === 'month'}
@@ -166,7 +216,6 @@ export default function MatukioPage() {
         </div>
       )}
 
-      {/* Event List - always rendered but content depends on viewMode */}
       {filteredAndSortedEvents.length > 0 ? (
         <div className="space-y-6">
           {viewMode === 'month' && selectedDate && (
@@ -179,7 +228,6 @@ export default function MatukioPage() {
                   Matukio Yote kwa Mwezi wa {format(currentMonth, "MMMM yyyy")} ({filterType === 'all' ? 'Matukio Yote' : `Kichujio: ${filterType}`})
               </h2>
           )}
-          {/* In list view, or in month view (either specific day or whole month), show filtered events */}
           {filteredAndSortedEvents.map(event => (
             <EventCard key={event.id} event={event} />
           ))}
@@ -193,6 +241,43 @@ export default function MatukioPage() {
           </p>
         </div>
       )}
+
+      <Card className="mt-12 max-w-lg mx-auto">
+        <CardHeader>
+          <div className="flex items-center space-x-3 mb-2">
+            <Newspaper className="h-8 w-8 text-primary" />
+            <CardTitle className="font-headline text-2xl text-foreground">Usikose Tukio!</CardTitle>
+          </div>
+          <CardDescription className="font-body">
+            Jisajili kupokea taarifa za matukio yetu mapya na ya kipekee moja kwa moja kwenye barua pepe yako.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleEventSignupSubmit} className="space-y-3">
+            <div>
+              <Label htmlFor="email-event-signup" className="sr-only">Barua pepe</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input 
+                  id="email-event-signup" 
+                  type="email"
+                  value={eventSignupEmail}
+                  onChange={(e) => setEventSignupEmail(e.target.value)}
+                  placeholder="Weka barua pepe yako" 
+                  required 
+                  className="pl-10 font-body"
+                  disabled={isEventSignupLoading}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
+            <Button type="submit" className="w-full font-headline" disabled={isEventSignupLoading}>
+              {isEventSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isEventSignupLoading ? 'Inasajili...' : 'Nijulishe Kuhusu Matukio'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
     </div>
   );

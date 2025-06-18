@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -152,7 +151,7 @@ export function ExitIntentModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogClose}>
-      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
+      <DialogContent className="sm:max-w-md rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <MessageCircleHeart className="mr-2 h-6 w-6 text-primary" />
@@ -180,6 +179,7 @@ export function ExitIntentModal() {
                 />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground mt-1 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
           </div>
           <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <DialogClose asChild>
@@ -190,7 +190,7 @@ export function ExitIntentModal() {
                 type="button" 
                 suppressHydrationWarning={true}
               >
-                Hapana Asante
+                Funga {/* Changed from Hapana Asante */}
               </Button>
             </DialogClose>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -198,14 +198,14 @@ export function ExitIntentModal() {
                 type="button"
                 variant="outline" 
                 onClick={handleJustPray}
-                className="font-headline" // Secondary style applied via variant="outline"
+                className="font-headline" 
                 disabled={isLoading}
                 suppressHydrationWarning={true}
               >
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Niombee Tu
               </Button>
-              <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
+              <Button type="submit" className="font-headline" disabled={isLoading || !email.trim()} suppressHydrationWarning={true}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
               </Button>

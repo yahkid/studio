@@ -13,9 +13,9 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import type { Database } from '@/types/supabase';
 
 const videoThumbnails = [
-  { id: '7Ja9JmMign0', alt: 'Video thumbnail 1' }, // Previously SP3FVbEP0ps
-  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 2' }, // Previously 7Ja9JmMign0
-  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 3' }, // Previously zqZlRS_v4z8
+  { id: '7Ja9JmMign0', alt: 'Video thumbnail 1' },
+  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 2' },
+  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 3' },
 ];
 
 export function WatchAndGrowSectionSw() {
@@ -45,7 +45,7 @@ export function WatchAndGrowSectionSw() {
 
       toast({
         title: "Umefanikiwa Kujisajili!",
-        description: "Utapokea ujumbe na taarifa zetu za kila wiki.",
+        description: "Utapokea ujumbe na taarifa zetu za kila wiki za kukutia moyo.",
       });
       setEmail('');
     } catch (caughtError: any) {
@@ -130,9 +130,11 @@ export function WatchAndGrowSectionSw() {
 
         <Card className="max-w-xl mx-auto mt-12 p-6 sm:p-8">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl text-foreground mb-4">
-              Pata Ujumbe na Taarifa za Kila Wiki
+            <CardTitle className="font-headline text-2xl text-foreground mb-2"> {/* Reduced mb */}
+              Pata Ujumbe na Taarifa za Kila Wiki za Kukutia Moyo
             </CardTitle>
+            {/* Optional: Add a short description here if needed */}
+            {/* <CardDescription className="font-body">Stay connected with inspiring content.</CardDescription> */}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -153,9 +155,10 @@ export function WatchAndGrowSectionSw() {
                   />
                 </div>
               </div>
+              <p className="text-xs text-muted-foreground text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
               <Button type="submit" className="w-full font-headline text-base" suppressHydrationWarning={true} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLoading ? 'Inasajili...' : 'Jisajili Sasa'}
+                {isLoading ? 'Inasajili...' : 'Pata Taarifa za Wiki'}
               </Button>
             </form>
           </CardContent>
@@ -164,4 +167,3 @@ export function WatchAndGrowSectionSw() {
     </section>
   );
 }
-

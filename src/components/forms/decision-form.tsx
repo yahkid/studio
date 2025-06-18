@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,13 +52,15 @@ export function DecisionForm() {
       }
 
       const { id: toastId } = toast({
-        title: "Asante kwa Kushiriki!",
-        description: "Tumepokea uamuzi wako na tutawasiliana nawe hivi karibuni.",
+        title: "Asante kwa Kushiriki Uamuzi Wako!",
+        description: "Tumefurahi sana na uamuzi wako. Mtu kutoka timu yetu atawasiliana nawe hivi karibuni (ndani ya saa 24-48) ili kukusaidia katika hatua zako zinazofuata. Karibu kwenye familia!",
+        duration: 7000, // Increased duration for better readability
       });
 
-      setTimeout(() => {
-        dismiss(toastId);
-      }, 5000);
+      // No explicit dismiss needed if duration is set, but can be kept if manual dismissal is desired elsewhere
+      // setTimeout(() => {
+      //   dismiss(toastId);
+      // }, 7000);
 
       setName('');
       setEmail('');
@@ -125,7 +126,7 @@ export function DecisionForm() {
   ];
 
   return (
-    <Card className="w-full max-w-lg mx-auto my-8"> {/* Removed shadow-xl */}
+    <Card className="w-full max-w-lg mx-auto my-8">
       <CardHeader>
         <CardTitle className="font-headline text-3xl text-center">Nimeinua Mkono Wangu</CardTitle>
         <CardDescription className="font-body text-center">
@@ -207,6 +208,7 @@ export function DecisionForm() {
               />
             </div>
           </div>
+          <p className="text-xs text-muted-foreground mt-3 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>

@@ -1,9 +1,8 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-// import { GradientButton } from "@/components/ui/gradient-button"; // Removed
 import {
   Dialog,
   DialogContent,
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Download, Loader2 } from 'lucide-react';
+import { Mail, Download, Loader2, FileText } from 'lucide-react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import type { Database } from '@/types/supabase';
 
@@ -30,6 +29,16 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const supabase = useSupabaseClient<Database>();
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open && emailInputRef.current) {
+      // Delay focus slightly to ensure modal is fully rendered and visible
+      setTimeout(() => {
+        emailInputRef.current?.focus();
+      }, 100);
+    }
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,7 +125,7 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogStateChange}>
-      <DialogContent className="sm:max-w-md rounded-lg"> {/* Removed shadow-xl */}
+      <DialogContent className="sm:max-w-md rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl flex items-center">
             <Download className="mr-2 h-6 w-6 text-primary" />
@@ -126,14 +135,18 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
             Ingiza barua pepe yako kupokea mwongozo wetu maalum wa "Misingi ya Imani" (PDF) na uanze safari yako nasi.
           </DialogDescription>
         </DialogHeader>
+        <div className="flex justify-center my-4">
+          <FileText className="h-16 w-16 text-primary/20" />
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-2 py-2"> {/* Reduced gap and padding slightly */}
             <div className="space-y-1">
               <Label htmlFor="email-lead" className="font-body sr-only">Barua Pepe</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email-lead"
+                  ref={emailInputRef}
                   type="email"
                   placeholder="Weka barua pepe yako"
                   value={email}
@@ -145,8 +158,9 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
                 />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground mt-1 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
           </div>
-          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2 mt-4">
             <DialogClose asChild>
               <Button variant="outline" className="font-headline" type="button" disabled={isLoading} suppressHydrationWarning={true}>
                 Ghairi
@@ -154,7 +168,7 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
             </DialogClose>
             <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Inatuma...' : 'Pata Mwongozo Wako'}
+              {isLoading ? 'Inatuma...' : 'Pakua Mwongozo Bure Sasa'}
             </Button>
           </DialogFooter>
         </form>

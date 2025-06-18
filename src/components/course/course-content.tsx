@@ -8,10 +8,12 @@ import type { Database } from '@/types/supabase';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Loader2, PlayCircle, Lock } from 'lucide-react';
+import { CheckCircle, Loader2, PlayCircle, Lock, AlertCircle, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface CourseContentProps {
   course: Course;
@@ -26,6 +28,7 @@ export function CourseContent({ course }: CourseContentProps) {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
   const [isSavingProgress, setIsSavingProgress] = useState(false);
+  const [showGuestSignupPrompt, setShowGuestSignupPrompt] = useState(false);
 
   const currentLesson = useMemo(() => {
     return course.lessons[currentLessonIndex];
@@ -40,9 +43,11 @@ export function CourseContent({ course }: CourseContentProps) {
     const fetchProgress = async () => {
       if (!session?.user) {
         setIsLoadingProgress(false);
-        setCompletedLessons([]); // Reset if user logs out
+        setCompletedLessons([]); 
+        setShowGuestSignupPrompt(true); // Show prompt if not logged in and viewing course
         return;
       }
+      setShowGuestSignupPrompt(false); // Hide if logged in
       setIsLoadingProgress(true);
       try {
         const { data, error } = await supabase
@@ -52,7 +57,7 @@ export function CourseContent({ course }: CourseContentProps) {
           .eq('course_id', course.id)
           .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116: no rows found
+        if (error && error.code !== 'PGRST116') { 
           throw error;
         }
         if (data) {
@@ -75,19 +80,30 @@ export function CourseContent({ course }: CourseContentProps) {
 
     fetchProgress();
   }, [session, course.id, supabase, toast]);
+  
+  useEffect(() => {
+    // If user is not logged in and a lesson is selected, show the prompt.
+    if (!session?.user && currentLesson) {
+      setShowGuestSignupPrompt(true);
+    } else if (session?.user) {
+      setShowGuestSignupPrompt(false);
+    }
+  }, [session, currentLesson]);
+
 
   const handleMarkComplete = async () => {
     if (!session?.user) {
+      setShowGuestSignupPrompt(true); // Reinforce prompt if they try to mark complete
       toast({
         title: 'Unahitaji Kuingia Kwanza',
-        description: 'Tafadhali ingia ili kuhifadhi maendeleo yako.',
-        variant: 'destructive',
+        description: 'Tafadhali ingia au jisajili ili kuhifadhi maendeleo yako.',
+        variant: 'default', 
       });
       return;
     }
 
     if (!currentLesson || completedLessons.includes(currentLesson.id)) {
-      return; // Already completed or no lesson selected
+      return; 
     }
 
     setIsSavingProgress(true);
@@ -150,7 +166,6 @@ export function CourseContent({ course }: CourseContentProps) {
       </Card>
 
       <div className="lg:flex lg:gap-8">
-        {/* Main Content Area (Video + Mark Complete) */}
         <div className="lg:w-2/3 mb-8 lg:mb-0">
           {currentLesson ? (
             <Card>
@@ -190,9 +205,26 @@ export function CourseContent({ course }: CourseContentProps) {
                     )}
                   </Button>
                 ) : (
-                   <Button disabled className="w-full font-headline" size="lg">
+                   <Button onClick={handleMarkComplete} className="w-full font-headline" size="lg">
                      <Lock className="mr-2 h-4 w-4" /> Ingia Ili Kuhifadhi Maendeleo
                    </Button>
+                )}
+
+                {showGuestSignupPrompt && !session?.user && (
+                  <Alert variant="default" className="mt-6 border-primary/50">
+                    <AlertCircle className="h-5 w-5 text-primary" />
+                    <AlertTitle className="font-headline text-primary">Hifadhi Maendeleo Yako!</AlertTitle>
+                    <AlertDescription className="font-body">
+                      Unafurahia kozi hii? Jisajili bure au ingia ili kuhifadhi maendeleo yako na kuendelea wakati mwingine.
+                      <Button asChild variant="link" className="p-0 h-auto ml-1 text-primary hover:underline">
+                        <Link href="/auth?mode=signup">Jisajili Sasa</Link>
+                      </Button>
+                    </AlertDescription>
+                    <button onClick={() => setShowGuestSignupPrompt(false)} className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-foreground">
+                        <X className="h-4 w-4"/>
+                        <span className="sr-only">Funga arifa</span>
+                    </button>
+                  </Alert>
                 )}
               </CardContent>
             </Card>
@@ -201,7 +233,6 @@ export function CourseContent({ course }: CourseContentProps) {
           )}
         </div>
 
-        {/* Lesson Playlist */}
         <div className="lg:w-1/3">
           <Card>
             <CardHeader>
@@ -228,8 +259,6 @@ export function CourseContent({ course }: CourseContentProps) {
                                     aria-label={`Mark lesson ${lesson.title} as ${isLessonCompleted(lesson.id) ? 'incomplete' : 'complete'}`}
                                     onCheckedChange={(checked) => {
                                       if(checked && currentLessonIndex === index) handleMarkComplete();
-                                      // If unchecking, ideally would call a function to unmark, but for now it's handled by "Mark Complete"
-                                      // This checkbox is more for visual indication based on completedLessons state.
                                     }}
                                     disabled={isSavingProgress || (index === currentLessonIndex && completedLessons.includes(lesson.id))}
                                   />
