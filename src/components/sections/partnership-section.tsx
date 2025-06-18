@@ -34,7 +34,7 @@ export function PartnershipSectionSw() {
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
                       Saidia dhamira yetu kupitia utoaji wako. Kila mchango husaidia kupanua ufikiaji wetu.
                     </p>
-                    <Button className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold">
+                    <Button className="bg-hscm-red hover:bg-hscm-red/90 text-white font-body font-semibold" suppressHydrationWarning={true}>
                       Toa Sasa
                     </Button>
                   </div>
@@ -53,7 +53,7 @@ export function PartnershipSectionSw() {
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
                       Jiunge na timu yetu ya maombi kuombea huduma na jamii yetu.
                     </p>
-                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body">
+                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body" suppressHydrationWarning={true}>
                       Jiunge na Timu ya Maombi
                     </Button>
                   </div>
@@ -72,7 +72,7 @@ export function PartnershipSectionSw() {
                     <p className="font-body text-muted-foreground mb-4 leading-relaxed">
                       Tumia vipawa vyako kutumikia katika huduma mbalimbali na kuleta athari.
                     </p>
-                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body">
+                    <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body" suppressHydrationWarning={true}>
                       Jitolee Leo
                     </Button>
                   </div>
@@ -107,6 +107,7 @@ export function PartnershipSectionSw() {
                 <Button
                   size="lg"
                   className="bg-hscm-gold hover:bg-hscm-gold/90 text-black font-body font-bold w-full px-8 py-4 text-lg"
+                  suppressHydrationWarning={true}
                 >
                   <PartnershipIcon className="mr-2 h-5 w-5" />
                   Anza Ushirika Wangu

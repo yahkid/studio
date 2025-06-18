@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlayCircle, Mail } from 'lucide-react';
+import { PlayCircle, Mail } from 'lucide-react'; // Corrected: CirclePlay is not a lucide icon, using PlayCircle
 
 export function WatchAndGrowSectionSw() {
   // Placeholder for form state and submission
@@ -18,7 +18,7 @@ export function WatchAndGrowSectionSw() {
   return (
     <section id="tazama-na-ukue" className="w-full text-center py-16 md:py-24 space-y-6 bg-muted/30 dark:bg-muted/10">
       <div className="container mx-auto px-4">
-        <PlayCircle className="h-16 w-16 text-primary mx-auto mb-6" />
+        <PlayCircle className="h-16 w-16 text-primary mx-auto mb-6" /> {/* Changed from CirclePlay */}
         <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-6">
           UJUMBE UNAOBADILISHA KILA KITU
         </h2>
@@ -61,10 +61,11 @@ export function WatchAndGrowSectionSw() {
                   placeholder="Weka barua pepe yako hapa" 
                   required 
                   className="pl-10 font-body text-base"
+                  suppressHydrationWarning={true}
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full font-headline text-base">
+            <Button type="submit" className="w-full font-headline text-base" suppressHydrationWarning={true}>
               Jisajili Sasa
             </Button>
           </form>

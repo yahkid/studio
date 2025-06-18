@@ -45,6 +45,7 @@ function EventCard({
           size="sm"
           className="card-cta w-full font-body font-bold border-primary text-primary hover:bg-primary hover:text-primary-foreground mt-auto" 
           onClick={onButtonClick}
+          suppressHydrationWarning={true}
         >
           {buttonText}
         </Button>
@@ -112,6 +113,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-headline font-semibold px-10 py-5 text-lg"
               onClick={onOpenVisitPlanner} // CRO #2
+              suppressHydrationWarning={true}
             >
               Panga Ujio Wako
             </Button>

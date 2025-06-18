@@ -42,6 +42,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
               size="lg" 
               className="bg-hscm-green hover:bg-hscm-green/90 text-primary-foreground font-body font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-shadow"
               // onClick={() => { /* Link to watch page or open video modal */ }}
+              suppressHydrationWarning={true}
             >
               Tazama Ujumbe wa Karibuni
             </Button>
@@ -52,6 +53,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
             <button 
               onClick={onOpenLeadMagnet}
               className="font-body text-slate-300 hover:text-white underline transition-colors text-lg"
+              suppressHydrationWarning={true}
             >
               Mgeni katika imani? Anza safari yako hapa.
             </button>
