@@ -14,12 +14,12 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
         src="https://placehold.co/1920x1080.png"
-        alt="Washirika wa Holy Spirit Connect Ministry wakiabudu pamoja kwa furaha - Hopeful scene of HSCM congregation or landscape"
+        alt="Woman reading a book, symbolizing finding knowledge and peace with HSCM Connect"
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="congregation worship landscape"
+        data-ai-hint="woman reading"
         priority
         suppressHydrationWarning={true}
       />
@@ -56,4 +56,3 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     </section>
   );
 }
-
