@@ -14,7 +14,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       {/* Background Image */}
       <Image
-        src="https://placehold.co/1920x1080.png" 
+        src="/DSC00243.png" 
         alt="Abstract sunrise or light rays representing hope and Jesus as the light of the world - Picha ya miale ya nuru au jua linapochomoza kuwakilisha tumaini"
         layout="fill"
         objectFit="cover"
@@ -66,3 +66,4 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
 
 // Renaming the old HeroSection to avoid conflict if it's still imported elsewhere, or it can be deleted.
 export { HeroSectionSw as HeroSection };
+
