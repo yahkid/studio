@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button'; 
 
+// onOpenLeadMagnet prop removed
 export function HeroSectionSw() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">

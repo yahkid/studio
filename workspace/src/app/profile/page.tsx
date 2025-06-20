@@ -3,8 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
-import type { Database } from '@/types/supabase'; // Keep for Supabase specific types if other parts still use it
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import type { Course } from '@/lib/courses-data';
 import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
@@ -13,11 +12,13 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useSupabaseClient } from '@supabase/auth-helpers-react'; // Keep for DB operations for now
+import { db } from '@/lib/firebaseClient'; // Firebase
+import { collection, query, where, getDocs } from 'firebase/firestore'; // Firebase
+import type { FirestoreDocTypes } from '@/types/firestore'; // Updated types
 
-type UserProgressRecord = Database['public']['Tables']['user_course_progress']['Row'];
-interface EnrichedProgress extends UserProgressRecord {
+interface EnrichedProgress extends FirestoreDocTypes['user_course_progress'] {
   courseDetails?: Course;
+  docId: string; // Firestore document ID
 }
 
 const getInitials = (name?: string) => {
@@ -36,7 +37,6 @@ const getInitials = (name?: string) => {
 
 export default function ProfilePage() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
-  const supabase = useSupabaseClient<Database>(); // Still needed for user_course_progress
   const { toast } = useToast();
   const [userProgress, setUserProgress] = useState<EnrichedProgress[]>([]);
   const [isProgressLoading, setIsProgressLoading] = useState(true);
@@ -51,33 +51,31 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!mounted || !initialLoadingComplete || !user) {
       setIsProgressLoading(false);
-      if (initialLoadingComplete && !user) setUserProgress([]); // Clear progress if definitely logged out
+      if (initialLoadingComplete && !user) setUserProgress([]);
       return;
     }
 
     const fetchProgress = async () => {
       setIsProgressLoading(true);
       try {
-        // This part still uses Supabase. We will migrate this DB call later.
-        const { data: progressData, error: progressError } = await supabase
-          .from('user_course_progress')
-          .select('id, course_id, completed_lessons, progress_percentage')
-          .eq('user_id', user.uid); // Use user.uid for Firebase user ID
-
-        if (progressError) {
-          throw progressError;
-        }
-
-        if (progressData) {
-          const enrichedData = progressData.map(progressRecord => {
-            const courseDetails = getCourseById(progressRecord.course_id);
-            return { ...progressRecord, courseDetails };
-          }).filter(record => record.courseDetails);
-          setUserProgress(enrichedData as EnrichedProgress[]);
-        } else {
-          setUserProgress([]);
-        }
+        const progressQuery = query(
+          collection(db, 'user_course_progress'),
+          where('user_id', '==', user.uid)
+        );
+        const querySnapshot = await getDocs(progressQuery);
+        
+        const progressData: EnrichedProgress[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data() as FirestoreDocTypes['user_course_progress'];
+          const courseDetails = getCourseById(data.course_id);
+          if (courseDetails) {
+            progressData.push({ ...data, courseDetails, docId: doc.id });
+          }
+        });
+        
+        setUserProgress(progressData);
       } catch (error: any) {
+        console.error("Error fetching user progress from Firestore:", error);
         toast({
           title: 'Error Fetching Learning Progress',
           description: error.message || 'An unexpected error occurred.',
@@ -90,7 +88,7 @@ export default function ProfilePage() {
     };
 
     fetchProgress();
-  }, [user, initialLoadingComplete, supabase, mounted, toast]);
+  }, [user, initialLoadingComplete, mounted, toast]);
 
   const totalCoursesStarted = userProgress.length;
   const totalLessonsCompleted = userProgress.reduce((sum, p) => sum + (p.completed_lessons?.length || 0), 0);
@@ -209,7 +207,7 @@ export default function ProfilePage() {
                 <BookOpen className="mr-3 h-7 w-7 text-primary" />
                 Safari Yangu ya Kujifunza
               </h2>
-              {isProgressLoading ? (
+              {isProgressLoading || authLoading ? (
                 <div className="flex justify-center items-center py-10">
                   <Loader2 className="h-10 w-10 animate-spin text-primary" />
                   <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
@@ -217,9 +215,9 @@ export default function ProfilePage() {
               ) : userProgress.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {userProgress.map((progress) => (
-                    progress.courseDetails && progress.id && (
+                    progress.courseDetails && progress.docId && (
                       <ProgressCourseCard
-                        key={progress.id}
+                        key={progress.docId}
                         course={progress.courseDetails}
                         progressPercentage={progress.progress_percentage ?? 0}
                         completedLessonsCount={progress.completed_lessons?.length ?? 0}

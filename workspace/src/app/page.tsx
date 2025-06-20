@@ -15,17 +15,17 @@ import { TestimonialsSectionSw } from "@/components/sections/testimonials-sectio
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
 
-import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
+// LeadMagnetModal removed as it's no longer triggered
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 
 export default function HomePageSwahili() {
-  const [isLeadMagnetOpen, setIsLeadMagnetOpen] = useState(false); // This can be removed if no other component uses it
+  // isLeadMagnetOpen state removed
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
 
   return (
     <div className="flex flex-col items-center">
-      <HeroSectionSw /> {/* Removed onOpenLeadMagnet prop */}
+      <HeroSectionSw /> {/* onOpenLeadMagnet prop removed */}
 
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
         <MissionSectionSw />
@@ -53,8 +53,7 @@ export default function HomePageSwahili() {
         <PartnershipSectionSw />
       </div>
 
-      {/* Consider removing LeadMagnetModal if it's no longer triggered from HeroSection */}
-      {/* <LeadMagnetModal open={isLeadMagnetOpen} onOpenChange={setIsLeadMagnetOpen} /> */}
+      {/* LeadMagnetModal removed */}
       <VisitPlannerModal open={isVisitPlannerOpen} onOpenChange={setIsVisitPlannerOpen} />
       <ExitIntentModal />
     </div>

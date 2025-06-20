@@ -3,8 +3,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { Course, Lesson } from '@/lib/courses-data';
-import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
-import type { Database } from '@/types/supabase'; // Keep for Supabase specific types
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
+import type { FirestoreDocTypes } from '@/types/firestore'; // Updated types
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -14,7 +14,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSupabaseClient } from '@supabase/auth-helpers-react'; // Keep for DB operations
+import { db } from '@/lib/firebaseClient';
+import { collection, query, where, getDocs, doc, setDoc, serverTimestamp, updateDoc, Timestamp } from 'firebase/firestore';
 
 interface CourseContentProps {
   course: Course;
@@ -22,7 +23,6 @@ interface CourseContentProps {
 
 export function CourseContent({ course }: CourseContentProps) {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
-  const supabase = useSupabaseClient<Database>(); // Still needed for user_course_progress
   const { toast } = useToast();
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -30,6 +30,7 @@ export function CourseContent({ course }: CourseContentProps) {
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
   const [isSavingProgress, setIsSavingProgress] = useState(false);
   const [showGuestSignupPrompt, setShowGuestSignupPrompt] = useState(false);
+  const [progressDocId, setProgressDocId] = useState<string | null>(null);
 
   const currentLesson = useMemo(() => {
     return course.lessons[currentLessonIndex];
@@ -42,48 +43,50 @@ export function CourseContent({ course }: CourseContentProps) {
 
   useEffect(() => {
     const fetchProgress = async () => {
-      if (!initialLoadingComplete) return; // Wait for Firebase auth to settle
+      if (!initialLoadingComplete) return; 
 
       if (!user) {
         setIsLoadingProgress(false);
         setCompletedLessons([]);
+        setProgressDocId(null);
         setShowGuestSignupPrompt(true); 
         return;
       }
       setShowGuestSignupPrompt(false);
       setIsLoadingProgress(true);
       try {
-        // This part still uses Supabase. We will migrate this DB call later.
-        const { data, error } = await supabase
-          .from('user_course_progress') 
-          .select('completed_lessons')
-          .eq('user_id', user.uid) // Use user.uid for Firebase user ID
-          .eq('course_id', course.id)
-          .single();
+        const progressQuery = query(
+          collection(db, "user_course_progress"),
+          where("user_id", "==", user.uid),
+          where("course_id", "==", course.id)
+        );
+        const querySnapshot = await getDocs(progressQuery);
 
-        if (error && error.code !== 'PGRST116') { 
-          throw error;
-        }
-        if (data) {
+        if (!querySnapshot.empty) {
+          const progressDoc = querySnapshot.docs[0];
+          setProgressDocId(progressDoc.id);
+          const data = progressDoc.data() as FirestoreDocTypes['user_course_progress'];
           setCompletedLessons(data.completed_lessons || []);
         } else {
           setCompletedLessons([]);
+          setProgressDocId(null);
         }
       } catch (error: any) {
-        console.error('Error fetching progress:', error);
+        console.error('Error fetching progress from Firestore:', error);
         toast({
           title: 'Hitilafu ya Kupata Maendeleo',
           description: error.message || 'Imeshindwa kupata maendeleo yako.',
           variant: 'destructive',
         });
         setCompletedLessons([]);
+        setProgressDocId(null);
       } finally {
         setIsLoadingProgress(false);
       }
     };
 
     fetchProgress();
-  }, [user, course.id, supabase, toast, initialLoadingComplete]);
+  }, [user, course.id, toast, initialLoadingComplete]);
   
   useEffect(() => {
     if (initialLoadingComplete && !user && currentLesson) {
@@ -92,7 +95,6 @@ export function CourseContent({ course }: CourseContentProps) {
       setShowGuestSignupPrompt(false);
     }
   }, [user, currentLesson, initialLoadingComplete]);
-
 
   const handleMarkComplete = async () => {
     if (!user) {
@@ -113,17 +115,25 @@ export function CourseContent({ course }: CourseContentProps) {
     const newCompletedLessons = Array.from(new Set([...completedLessons, currentLesson.id]));
     const newProgressPercentage = Math.round((newCompletedLessons.length / course.lessons.length) * 100);
 
-    try {
-      // This part still uses Supabase. We will migrate this DB call later.
-      const { error } = await supabase.from('user_course_progress').upsert({ 
-        user_id: user.uid, // Use user.uid for Firebase user ID
-        course_id: course.id,
-        completed_lessons: newCompletedLessons,
-        last_accessed: new Date().toISOString(),
-        progress_percentage: newProgressPercentage,
-      }, { onConflict: 'user_id, course_id' });
+    const progressData: Partial<FirestoreDocTypes['user_course_progress']> = {
+      user_id: user.uid,
+      course_id: course.id,
+      completed_lessons: newCompletedLessons,
+      last_accessed: serverTimestamp() as Timestamp, // Cast for type compatibility
+      progress_percentage: newProgressPercentage,
+    };
 
-      if (error) throw error;
+    try {
+      if (progressDocId) {
+        // Update existing document
+        const docRef = doc(db, "user_course_progress", progressDocId);
+        await updateDoc(docRef, progressData);
+      } else {
+        // Add new document
+        progressData.created_at = serverTimestamp() as Timestamp; // Add created_at for new docs
+        const newDocRef = await addDoc(collection(db, "user_course_progress"), progressData);
+        setProgressDocId(newDocRef.id); // Store new doc ID for future updates
+      }
 
       setCompletedLessons(newCompletedLessons);
       toast({
@@ -131,7 +141,7 @@ export function CourseContent({ course }: CourseContentProps) {
         description: `Umefanikiwa kumaliza "${currentLesson.title}".`,
       });
     } catch (error: any) {
-      console.error('Error saving progress:', error);
+      console.error('Error saving progress to Firestore:', error);
       toast({
         title: 'Hitilafu Kuhifadhi Maendeleo',
         description: error.message || 'Imeshindwa kuhifadhi maendeleo yako.',
@@ -264,10 +274,7 @@ export function CourseContent({ course }: CourseContentProps) {
                                     checked={isLessonCompleted(lesson.id)}
                                     aria-label={`Mark lesson ${lesson.title} as ${isLessonCompleted(lesson.id) ? 'incomplete' : 'complete'}`}
                                     onCheckedChange={(checked) => {
-                                      // Only call handleMarkComplete if currentLesson is this one and user is checking it
                                       if (checked && currentLesson && currentLesson.id === lesson.id) handleMarkComplete();
-                                      // If unchecking, this would require a different logic path to remove from completed.
-                                      // For simplicity, current logic only handles marking as complete.
                                     }}
                                     disabled={isSavingProgress || (currentLesson && lesson.id === currentLesson.id && completedLessons.includes(lesson.id))}
                                   />
