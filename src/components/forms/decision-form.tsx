@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -9,11 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn } from 'lucide-react';
+import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn, Info } from 'lucide-react';
 import { db } from '@/lib/firebaseClient'; 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
 import Link from 'next/link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export function DecisionForm() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -122,12 +122,19 @@ export function DecisionForm() {
     <Card className="w-full max-w-lg mx-auto my-8">
       <CardHeader>
         <CardTitle className="font-headline text-3xl text-center">Nimeinua Mkono Wangu</CardTitle>
-        <CardDescription className="font-body text-center">
+        <CardDescription className="font-body text-center mb-4">
           Tumefurahi sana umefanya uamuzi! Tafadhali shiriki maelezo machache nasi ili tuweze kukufuatilia.
         </CardDescription>
+        <Alert variant="default" className="border-primary/30 bg-primary/5 dark:bg-primary/10">
+            <Info className="h-5 w-5 text-primary" />
+            <AlertTitle className="font-body text-sm text-foreground">Hatua Zinazofuata</AlertTitle>
+            <AlertDescription className="font-body text-xs text-muted-foreground">
+            Baada ya kuwasilisha, mtu kutoka timu yetu ya huduma atawasiliana nawe ndani ya saa 24-48 kukusaidia na kukuongoza katika hatua zako zinazofuata.
+            </AlertDescription>
+        </Alert>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 pt-6">
           <div className="space-y-2">
             <Label htmlFor="name-decision" className="font-body">Jina Kamili</Label>
             <div className="relative">
@@ -221,5 +228,3 @@ export function DecisionForm() {
     </Card>
   );
 }
-
-    

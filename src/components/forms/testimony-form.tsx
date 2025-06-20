@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -12,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, FileText, User, MailIcon, Send } from 'lucide-react';
+import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper } from 'lucide-react'; // Renamed MailIcon to MailLucide
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { db, storage } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -36,6 +35,7 @@ const testimonyFormSchema = z.object({
   consentToShare: z.boolean().refine(value => value === true, {
     message: "Lazima ukubali kushiriki ushuhuda wako.",
   }),
+  newsletterOptIn: z.boolean().optional(), // Added optional newsletter opt-in
 });
 
 type TestimonyFormValues = z.infer<typeof testimonyFormSchema>;
@@ -56,6 +56,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
     defaultValues: {
       story: '',
       consentToShare: false,
+      newsletterOptIn: false, // Default to false
     },
   });
 
@@ -107,14 +108,12 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
         return;
     }
 
-    // Explicit check for consentToShare, even though Zod validation should ensure it's true.
     if (values.consentToShare !== true) {
       toast({
         title: "Idhini Inahitajika",
         description: "Lazima ukubali kushiriki ushuhuda wako ili kuwasilisha. Tafadhali tia alama kwenye kisanduku cha idhini.",
         variant: "destructive",
       });
-      setIsSubmitting(false); // Reset loading state if it was set
       return;
     }
 
@@ -144,6 +143,30 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
       };
 
       await addDoc(collection(db, 'user_testimonies'), testimonyData);
+
+      if (values.newsletterOptIn && user.email) {
+        try {
+          await addDoc(collection(db, 'weekly_updates_signups'), {
+            email: user.email,
+            created_at: serverTimestamp(),
+            source: 'testimony_form_opt_in'
+          });
+          toast({
+            title: "Umejisajili kwa Taarifa!",
+            description: "Pia umefanikiwa kujiunga na orodha yetu ya barua pepe.",
+            variant: "default" 
+          });
+        } catch (newsletterError: any) {
+          console.error("Error adding to newsletter from testimony form:", newsletterError);
+          // Don't let newsletter error block testimony success message
+          toast({
+            title: "Hitilafu Kwenye Usajili wa Taarifa",
+            description: "Ushuhuda wako umepokelewa, lakini kulikuwa na tatizo la kukuongeza kwenye orodha ya barua pepe.",
+            variant: "destructive"
+          });
+        }
+      }
+
 
       toast({
         title: "Ushuhuda Umewasilishwa!",
@@ -198,7 +221,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
               <p className="text-sm font-medium text-foreground">{user.displayName || "Mtumiaji"}</p>
             </div>
             <div className="flex items-center gap-2">
-              <MailIcon className="h-4 w-4 text-muted-foreground" />
+              <MailLucide className="h-4 w-4 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
           </div>
@@ -253,7 +276,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
           control={form.control}
           name="consentToShare"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background dark:bg-muted/20">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -271,6 +294,30 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
             </FormItem>
           )}
         />
+        
+        <FormField
+          control={form.control}
+          name="newsletterOptIn"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background dark:bg-muted/20">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={isSubmitting}
+                  id="newsletterOptIn"
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel htmlFor="newsletterOptIn" className="font-body text-sm text-muted-foreground cursor-pointer flex items-center">
+                  <Newspaper className="mr-2 h-4 w-4 text-primary/70" />
+                  Pia napenda kupokea taarifa na habari za kutia moyo kutoka HSCM Connect.
+                </FormLabel>
+              </div>
+            </FormItem>
+          )}
+        />
+
 
         <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user || authLoading}>
           {isSubmitting ? (

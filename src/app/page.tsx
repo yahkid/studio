@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -38,7 +37,7 @@ export default function HomePageSwahili() {
             Sikiliza Podikasti Yetu
           </h2>
           <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-            Pata mafundisho yenye nguvu, mahojiano ya kuvutia, na jumbe za kukujenga katika imani yako. Bofya hapa chini kusikiliza vipindi vyote.
+            Pata mafundisho yenye nguvu, mahojiano ya kuvutia, na jumbe za kukutia moyo katika imani yako. Bofya hapa chini kusikiliza vipindi vyote.
           </p>
           <Button asChild size="lg" className="font-headline text-lg" suppressHydrationWarning={true}>
             <Link href="https://innocentmorris.buzzsprout.com" target="_blank" rel="noopener noreferrer">
