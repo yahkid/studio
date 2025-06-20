@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, MicVocal } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { HeroSectionSw } from "@/components/sections/hero-section";
@@ -41,13 +41,7 @@ export default function HomePageSwahili() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
         >
-          <Image
-            src="/1750433685204.jpg"
-            alt="Podcast logo"
-            width={48}
-            height={48}
-            className="mx-auto h-12 w-12 rounded-full object-cover mb-4"
-          />
+          <MicVocal className="mx-auto h-12 w-12 text-primary mb-4" />
           <h2 className="font-headline font-bold text-3xl md:text-4xl text-foreground mb-4">
             Jilishe Imani Yako,Popote ulipo
           </h2>
