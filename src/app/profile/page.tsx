@@ -15,9 +15,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { db } from '@/lib/firebaseClient';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import type { UserCourseProgressDoc } from '@/types/firestore'; // Changed import
+import type { UserCourseProgressDoc } from '@/types/firestore';
 
-interface EnrichedProgress extends UserCourseProgressDoc { // Changed this line
+interface EnrichedProgress extends UserCourseProgressDoc {
   courseDetails?: Course;
   docId: string;
 }
@@ -67,7 +67,7 @@ export default function ProfilePage() {
 
         const progressData: EnrichedProgress[] = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data() as UserCourseProgressDoc; // Use UserCourseProgressDoc here
+          const data = doc.data() as UserCourseProgressDoc;
           const courseDetails = getCourseById(data.course_id);
           if (courseDetails) {
             progressData.push({ ...data, courseDetails, docId: doc.id });
@@ -250,5 +250,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    

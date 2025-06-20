@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react"; // Languages icon removed
+import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, MicVocal } from "lucide-react"; // Languages icon removed
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -68,13 +68,12 @@ export function Header() {
   };
 
 
-  if (!initialLoadingComplete && authLoading) {
-    return (
-      <header className="sticky top-0 z-50 w-full border-b bg-background">
+  const HeaderSkeleton = () => (
+     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
         <div className="container flex items-center justify-between py-4 md:py-6">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/hscm-logo.png" // Updated logo path
+              src="/hscm-logo.png"
               alt="Holy Spirit Connect Ministry Logo"
               width={40}
               height={40}
@@ -92,15 +91,18 @@ export function Header() {
           </div>
         </div>
       </header>
-    );
+  );
+
+  if (!initialLoadingComplete && authLoading) {
+    return <HeaderSkeleton />;
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/hscm-logo.png" // Updated logo path
+            src="/hscm-logo.png"
             alt="Holy Spirit Connect Ministry Logo"
             width={40}
             height={40}
@@ -120,7 +122,7 @@ export function Header() {
           ) : clientUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu" suppressHydrationWarning={true}>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-accent" aria-label="User menu" suppressHydrationWarning={true}>
                    <Avatar className="h-8 w-8">
                     {userPhotoURL && <AvatarImage src={userPhotoURL} alt={userDisplayName || 'User Avatar'} />}
                     <AvatarFallback>{userDisplayName ? getInitials(userDisplayName) : <User className="h-4 w-4" />}</AvatarFallback>

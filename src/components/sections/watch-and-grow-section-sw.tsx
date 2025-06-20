@@ -7,12 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlayCircle, Mail, Loader2 } from 'lucide-react';
-import { useState, useEffect } from 'react'; // Added useEffect
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// Define initial thumbnails outside the component for stable SSR
 const initialLocalThumbnails = [
   { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
   { id: 'local-thumb-2', src: '/images/video-thumb-2.jpg', alt: 'Video thumbnail 2 - Local' },
@@ -26,26 +25,20 @@ export function WatchAndGrowSectionSw() {
   const [displayedThumbnails, setDisplayedThumbnails] = useState(initialLocalThumbnails);
 
   useEffect(() => {
-    // Client-side shuffle effect
     const shuffleArray = (array: typeof initialLocalThumbnails) => {
       let currentIndex = array.length;
       let randomIndex;
-      const newArray = [...array]; // Create a copy to shuffle
+      const newArray = [...array];
 
-      // While there remain elements to shuffle.
       while (currentIndex !== 0) {
-        // Pick a remaining element.
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-
-        // And swap it with the current element.
-        [newArray[currentIndex], newArray[randomIndex]] = [
-          newArray[randomIndex], newArray[currentIndex]];
+        [newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]];
       }
       return newArray;
     };
     setDisplayedThumbnails(shuffleArray(initialLocalThumbnails));
-  }, []); // Empty dependency array ensures this runs once on mount on the client
+  }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,14 +97,17 @@ export function WatchAndGrowSectionSw() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {displayedThumbnails.map((thumb) => (
-              <div key={thumb.id} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
+              <div key={thumb.id} className="group relative aspect-video overflow-hidden rounded-md border">
                 <Image 
                   src={thumb.src} 
                   alt={thumb.alt} 
                   width={300} 
                   height={169} 
-                  className="w-full h-auto object-cover rounded-md" 
+                  className="w-full h-auto object-cover rounded-md group-hover:scale-105 transition-transform duration-300" 
                   data-ai-hint="video sermon" />
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <PlayCircle className="w-12 h-12 text-white/80" />
+                </div>
               </div>
             ))}
           </div>

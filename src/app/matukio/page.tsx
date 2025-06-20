@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient'; 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { motion } from "framer-motion";
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
@@ -200,7 +201,12 @@ export default function MatukioPage() {
       </div>
       
       {viewMode === 'month' && mounted && (
-         <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border">
+         <motion.div 
+            className="mb-8 bg-card p-2 sm:p-4 rounded-lg border"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+         >
             <Calendar
                 mode="single"
                 selected={selectedDate}
@@ -222,7 +228,7 @@ export default function MatukioPage() {
                 fromYear={calendarConfig.fromYear} 
                 toYear={calendarConfig.toYear}
             />
-        </div>
+        </motion.div>
       )}
        {viewMode === 'month' && !mounted && (
         <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border min-h-[370px] flex justify-center items-center">
@@ -298,5 +304,3 @@ export default function MatukioPage() {
     </div>
   );
 }
-
-    
