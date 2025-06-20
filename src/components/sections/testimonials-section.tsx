@@ -39,7 +39,7 @@ const testimonials = [
     location: "Temeke, DSM",
   },
   {
-    imageSrc: "https://placehold.co/150x225.png",
+    imageSrc: "/1750433614351.jpg",
     imageAlt: "Picha ya Fatuma Saidi",
     aiHint: "portrait young woman",
     quote: "Upendo nilioupata hapa hauna kifani.",
