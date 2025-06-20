@@ -1,4 +1,3 @@
-
 "use client";
 
 import './globals.css';
@@ -14,6 +13,7 @@ import { PodcastPlayerProvider } from '@/contexts/PodcastPlayerContext';
 import { SitePlayer } from '@/components/podcast/SitePlayer';
 import { Suspense } from 'react';
 import { BackToTopButton } from '@/components/ui/back-to-top-button';
+import { FloatingWhatsAppButton } from '@/components/ui/floating-whatsapp-button';
 
 
 export default function RootLayout({
@@ -47,6 +47,7 @@ export default function RootLayout({
               <Toaster />
             </ThemeProvider>
             <SitePlayer />
+            <FloatingWhatsAppButton />
             <BackToTopButton />
           </PodcastPlayerProvider>
         </AuthContextProviderFirebase>
