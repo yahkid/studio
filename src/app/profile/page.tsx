@@ -3,21 +3,23 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import type { Course } from '@/lib/courses-data';
 import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
 import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare, Search } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Added AvatarImage
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
+import { db } from '@/lib/firebaseClient';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import type { FirestoreDocTypes } from '@/types/firestore';
 
-type UserProgressRecord = Database['public']['Tables']['user_course_progress']['Row'];
-interface EnrichedProgress extends UserProgressRecord {
+interface EnrichedProgress extends FirestoreDocTypes['user_course_progress'] {
   courseDetails?: Course;
+  docId: string;
 }
 
 const getInitials = (name?: string) => {
@@ -35,55 +37,46 @@ const getInitials = (name?: string) => {
 };
 
 export default function ProfilePage() {
-  const session = useSession();
-  const supabase = useSupabaseClient<Database>();
+  const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const { toast } = useToast();
   const [userProgress, setUserProgress] = useState<EnrichedProgress[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isProgressLoading, setIsProgressLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
+  const userDisplayName = user?.displayName || user?.email;
 
   useEffect(() => {
     setMounted(true);
-    if (session === undefined) {
-        setIsLoading(true);
-    } else {
-        setIsLoading(false);
-    }
-  }, [session]);
+  }, []);
 
   useEffect(() => {
-    if (!mounted || !session?.user) {
+    if (!mounted || !initialLoadingComplete || !user) {
       setIsProgressLoading(false);
-      if (session !== undefined) setIsLoading(false);
+      if (initialLoadingComplete && !user) setUserProgress([]);
       return;
     }
 
     const fetchProgress = async () => {
       setIsProgressLoading(true);
-      setIsLoading(false);
       try {
-        const { data: progressData, error: progressError } = await supabase
-          .from('user_course_progress')
-          .select('id, course_id, completed_lessons, progress_percentage')
-          .eq('user_id', session.user.id);
+        const progressQuery = query(
+          collection(db, 'user_course_progress'),
+          where('user_id', '==', user.uid)
+        );
+        const querySnapshot = await getDocs(progressQuery);
 
-        if (progressError) {
-          throw progressError;
-        }
+        const progressData: EnrichedProgress[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data() as FirestoreDocTypes['user_course_progress'];
+          const courseDetails = getCourseById(data.course_id);
+          if (courseDetails) {
+            progressData.push({ ...data, courseDetails, docId: doc.id });
+          }
+        });
 
-        if (progressData) {
-          const enrichedData = progressData.map(progressRecord => {
-            const courseDetails = getCourseById(progressRecord.course_id);
-            return { ...progressRecord, courseDetails };
-          }).filter(record => record.courseDetails);
-          setUserProgress(enrichedData as EnrichedProgress[]);
-        } else {
-          setUserProgress([]);
-        }
+        setUserProgress(progressData);
       } catch (error: any) {
+        console.error("Error fetching user progress from Firestore:", error);
         toast({
           title: 'Error Fetching Learning Progress',
           description: error.message || 'An unexpected error occurred.',
@@ -96,15 +89,16 @@ export default function ProfilePage() {
     };
 
     fetchProgress();
-  }, [session, supabase, mounted, toast]);
+  }, [user, initialLoadingComplete, mounted, toast]);
 
   const totalCoursesStarted = userProgress.length;
   const totalLessonsCompleted = userProgress.reduce((sum, p) => sum + (p.completed_lessons?.length || 0), 0);
 
-  if (!mounted || isLoading) {
+  if (!mounted || (!initialLoadingComplete && authLoading)) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
-        <p className="font-body text-lg">Loading profile...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="ml-4 font-body text-lg">Loading profile...</p>
       </div>
     );
   }
@@ -113,22 +107,23 @@ export default function ProfilePage() {
     <div className="container mx-auto py-12 px-4">
       <Card className="mb-10 w-full overflow-hidden">
         <CardHeader className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:items-center sm:p-8 sm:text-left sm:gap-6 bg-muted/30 dark:bg-muted/10">
-          {session?.user && (
+          {user && (
             <Avatar className="h-24 w-24 text-3xl sm:h-32 sm:w-32 sm:text-5xl border-2 border-primary dark:border-primary shadow-md">
+              {user.photoURL && <AvatarImage src={user.photoURL} alt={userDisplayName || 'User Avatar'} />}
               <AvatarFallback className="bg-background">
                 {userDisplayName ? getInitials(userDisplayName) : <User className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />}
               </AvatarFallback>
             </Avatar>
           )}
           <div className="flex-1">
-            {session?.user ? (
+            {user ? (
               <>
                 <CardTitle className="font-headline text-3xl sm:text-4xl text-foreground">
                   {userDisplayName || 'Mtumiaji'}
                 </CardTitle>
-                {session.user.email && (
+                {user.email && (
                   <CardDescription className="font-body text-lg text-muted-foreground mt-1">
-                    {session.user.email}
+                    {user.email}
                   </CardDescription>
                 )}
               </>
@@ -150,9 +145,8 @@ export default function ProfilePage() {
         </CardHeader>
       </Card>
 
-      {session?.user && (
+      {user && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* Account Details Section */}
           <div className="md:col-span-1">
             <Card>
               <CardHeader>
@@ -165,7 +159,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <Label htmlFor="profile-email" className="font-body text-sm text-muted-foreground">Anwani ya Barua Pepe</Label>
-                  <p id="profile-email" className="font-body text-foreground">{session.user.email}</p>
+                  <p id="profile-email" className="font-body text-foreground">{user.email}</p>
                 </div>
                 <div className="flex flex-col space-y-2 pt-3">
                    <Button asChild variant="outline" size="sm" className="font-body justify-start">
@@ -183,9 +177,7 @@ export default function ProfilePage() {
             </Card>
           </div>
 
-          {/* Learning Journey & Stats Section */}
           <div className="md:col-span-2 space-y-8">
-            {/* Learning Stats Card */}
             {!isProgressLoading && (
               <Card>
                 <CardHeader>
@@ -212,13 +204,12 @@ export default function ProfilePage() {
               </Card>
             )}
 
-            {/* Learning Journey Section */}
             <div>
               <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6 flex items-center">
                 <BookOpen className="mr-3 h-7 w-7 text-primary" />
                 Safari Yangu ya Kujifunza
               </h2>
-              {isProgressLoading ? (
+              {isProgressLoading || authLoading ? (
                 <div className="flex justify-center items-center py-10">
                   <Loader2 className="h-10 w-10 animate-spin text-primary" />
                   <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
@@ -226,9 +217,9 @@ export default function ProfilePage() {
               ) : userProgress.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {userProgress.map((progress) => (
-                    progress.courseDetails && progress.id && (
+                    progress.courseDetails && progress.docId && (
                       <ProgressCourseCard
-                        key={progress.id}
+                        key={progress.docId}
                         course={progress.courseDetails}
                         progressPercentage={progress.progress_percentage ?? 0}
                         completedLessonsCount={progress.completed_lessons?.length ?? 0}
@@ -259,4 +250,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-

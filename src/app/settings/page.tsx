@@ -7,15 +7,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label'; // Keep Label, but use FormLabel where appropriate from Form component
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Settings, User, Loader2, Save, KeyRound, Lock } from 'lucide-react';
+import { Settings, User, Loader2, Save, KeyRound, Lock, Image as ImageIcon, UploadCloud } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
-import { auth } from '@/lib/firebaseClient';
-import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { auth, storage } from '@/lib/firebaseClient'; // Added storage
+import { updateProfile, updatePassword } from 'firebase/auth';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase Storage functions
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // Next.js Image component for preview
 
 const profileSettingsSchema = z.object({
   displayName: z.string()
@@ -28,7 +29,7 @@ const passwordSettingsSchema = z.object({
   confirmPassword: z.string().min(6, { message: "Password must be at least 6 characters." }),
 }).refine(data => data.newPassword === data.confirmPassword, {
   message: "Passwords do not match.",
-  path: ["confirmPassword"], // Show error on confirmPassword field
+  path: ["confirmPassword"],
 });
 
 type ProfileSettingsFormValues = z.infer<typeof profileSettingsSchema>;
@@ -40,6 +41,10 @@ export default function SettingsPage() {
   const router = useRouter();
   const [isProfileSubmitting, setIsProfileSubmitting] = useState(false);
   const [isPasswordSubmitting, setIsPasswordSubmitting] = useState(false);
+  const [isPictureSubmitting, setIsPictureSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
 
   const profileForm = useForm<ProfileSettingsFormValues>({
     resolver: zodResolver(profileSettingsSchema),
@@ -59,6 +64,9 @@ export default function SettingsPage() {
   useEffect(() => {
     if (user?.displayName) {
       profileForm.reset({ displayName: user.displayName });
+    }
+    if (user?.photoURL) {
+      setPreviewUrl(user.photoURL); // Set initial preview from user's current photoURL
     }
   }, [user, profileForm.reset]);
 
@@ -81,7 +89,7 @@ export default function SettingsPage() {
         title: "Profile Updated",
         description: "Your display name has been successfully updated.",
       });
-      router.refresh(); 
+      router.refresh();
     } catch (error: any) {
       console.error("Error updating profile:", error);
       toast({
@@ -111,7 +119,7 @@ export default function SettingsPage() {
         title: "Password Updated",
         description: "Your password has been successfully changed.",
       });
-      passwordForm.reset(); // Clear password fields
+      passwordForm.reset();
     } catch (error: any) {
       console.error("Error updating password:", error);
       let description = "Could not update your password. Please try again.";
@@ -127,6 +135,74 @@ export default function SettingsPage() {
       });
     } finally {
       setIsPasswordSubmitting(false);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSelectedFile(null);
+      setPreviewUrl(user?.photoURL || null); // Revert to original if selection is cleared
+    }
+  };
+
+  const onProfilePictureSubmit = async () => {
+    if (!selectedFile || !user || !auth.currentUser) {
+      toast({
+        title: "No File Selected or Not Authenticated",
+        description: "Please select a picture to upload and ensure you are logged in.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsPictureSubmitting(true);
+    try {
+      // Create a reference to 'profileImages/userId/profilePicture.jpg'
+      // The filename includes a timestamp to avoid caching issues, or you could use a static name and rely on versioning/cache control.
+      // For simplicity, let's use a static name like 'profile.jpg' which will overwrite.
+      const fileExtension = selectedFile.name.split('.').pop();
+      const profilePicRef = storageRef(storage, `profileImages/${user.uid}/profile.${fileExtension}`);
+
+      // Upload the file
+      const snapshot = await uploadBytes(profilePicRef, selectedFile);
+      
+      // Get the download URL
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      // Update the user's profile
+      await updateProfile(auth.currentUser, { photoURL: downloadURL });
+
+      toast({
+        title: "Profile Picture Updated",
+        description: "Your new profile picture has been set.",
+      });
+      setSelectedFile(null); // Clear selection after successful upload
+      // The previewUrl is already updated to the new photoURL by the useEffect hook listening to `user`
+      router.refresh(); // Refresh to update user context everywhere
+
+    } catch (error: any) {
+      console.error("Error uploading profile picture:", error);
+      let description = "Could not upload your profile picture. Please try again.";
+      if (error.code === 'storage/unauthorized') {
+        description = "You are not authorized to upload to this location. Please check Firebase Storage rules.";
+      } else if (error.message) {
+        description = error.message;
+      }
+      toast({
+        title: "Upload Failed",
+        description,
+        variant: "destructive",
+      });
+    } finally {
+      setIsPictureSubmitting(false);
     }
   };
 
@@ -159,7 +235,6 @@ export default function SettingsPage() {
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-2xl space-y-10">
-      {/* Profile Settings Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center space-x-3 mb-2">
@@ -209,7 +284,60 @@ export default function SettingsPage() {
         </Form>
       </Card>
 
-      {/* Password Settings Card */}
+      {/* Profile Picture Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3 mb-2">
+            <ImageIcon className="h-7 w-7 text-primary" />
+            <CardTitle className="font-headline text-2xl text-foreground">Profile Picture</CardTitle>
+          </div>
+          <CardDescription className="font-body">
+            Upload or change your profile picture. Recommended: Square image, e.g., 200x200 pixels.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center space-x-4">
+            {previewUrl ? (
+              <Image
+                src={previewUrl}
+                alt="Profile preview"
+                width={80}
+                height={80}
+                className="rounded-full object-cover border"
+              />
+            ) : (
+              <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center border">
+                <User className="h-10 w-10 text-muted-foreground" />
+              </div>
+            )}
+            <Input
+              id="profilePicture"
+              type="file"
+              accept="image/png, image/jpeg, image/webp, image/gif"
+              onChange={handleFileChange}
+              className="font-body max-w-xs"
+              disabled={isPictureSubmitting || authLoading}
+            />
+          </div>
+           {selectedFile && <p className="text-xs text-muted-foreground">Selected: {selectedFile.name}</p>}
+        </CardContent>
+        <CardFooter>
+          <Button
+            onClick={onProfilePictureSubmit}
+            className="font-headline"
+            disabled={!selectedFile || isPictureSubmitting || authLoading}
+            suppressHydrationWarning={true}
+          >
+            {isPictureSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <UploadCloud className="mr-2 h-4 w-4" />
+            )}
+            {isPictureSubmitting ? 'Uploading...' : 'Upload Picture'}
+          </Button>
+        </CardFooter>
+      </Card>
+
       <Card id="password">
         <CardHeader>
           <div className="flex items-center space-x-3 mb-2">

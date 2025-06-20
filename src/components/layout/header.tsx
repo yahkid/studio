@@ -2,10 +2,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/image"; // Next.js Image for logo
 import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import {
@@ -16,23 +15,83 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Added Avatar components
+import { useState, useEffect } from "react";
+
+// Firebase imports
+import { auth } from '@/lib/firebaseClient';
+import { signOut } from 'firebase/auth';
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
 
 export function Header() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [clientUser, setClientUser] = useState(user); // Local state to manage user photoURL reactivity
+
+  useEffect(() => {
+    setClientUser(user); // Update local user state when context user changes
+  }, [user]);
+
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
-    await supabase.auth.signOut();
-    router.push('/');
-    router.refresh(); // Ensures the layout re-evaluates session state
-    setIsSigningOut(false);
+    try {
+      await signOut(auth);
+      setClientUser(null); // Clear local user state on sign out
+      router.push('/');
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
-  const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
+  const userDisplayName = clientUser?.displayName || clientUser?.email;
+  const userPhotoURL = clientUser?.photoURL;
+
+  const getInitials = (name?: string | null) => {
+    if (!name) return '';
+    const nameParts = name.trim().split(' ');
+    if (nameParts.length === 0 || nameParts[0] === '') return '';
+    if (nameParts.length === 1 && nameParts[0].length > 0) {
+      return nameParts[0].substring(0, 2).toUpperCase();
+    }
+    return nameParts
+      .map((part) => (part.length > 0 ? part[0] : ''))
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
+
+  if (!initialLoadingComplete && authLoading) {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-background">
+        <div className="container flex items-center justify-between py-4 md:py-6">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
+              alt="Holy Spirit Connect Ministry Logo"
+              width={40}
+              height={40}
+              className="h-10 w-10 md:h-12 md:w-12"
+              priority
+              style={{ objectFit: 'contain' }}
+            />
+            <span className="font-headline font-bold text-xl sm:text-2xl text-primary whitespace-nowrap">
+              HOLY SPIRIT CONNECT
+            </span>
+          </Link>
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+             <ThemeToggle />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -61,24 +120,27 @@ export function Header() {
             <Link href="/decision">Nimeamua Leo</Link>
           </Button>
 
-          {isSigningOut ? (
+          {isSigningOut || authLoading ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </Button>
-          ) : session?.user ? (
+          ) : clientUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full" aria-label="User menu" suppressHydrationWarning={true}>
-                  <User className="h-5 w-5" />
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu" suppressHydrationWarning={true}>
+                   <Avatar className="h-8 w-8">
+                    {userPhotoURL && <AvatarImage src={userPhotoURL} alt={userDisplayName || 'User Avatar'} />}
+                    <AvatarFallback>{userDisplayName ? getInitials(userDisplayName) : <User className="h-4 w-4" />}</AvatarFallback>
+                  </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{userDisplayName}</p>
-                    {session.user.user_metadata?.full_name && session.user.email && ( // Show email if name is displayed and email exists
+                    {clientUser.displayName && clientUser.email && (
                       <p className="text-xs leading-none text-muted-foreground">
-                        {session.user.email}
+                        {clientUser.email}
                       </p>
                     )}
                   </div>
