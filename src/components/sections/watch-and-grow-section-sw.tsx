@@ -12,10 +12,11 @@ import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
+// Shuffled order of local image thumbnails
 const videoThumbnails = [
-  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
   { id: 'local-thumb-2', src: '/images/video-thumb-2.jpg', alt: 'Video thumbnail 2 - Local' },
   { id: 'local-thumb-3', src: '/images/video-thumb-3.jpg', alt: 'Video thumbnail 3 - Local' },
+  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
 ];
 
 export function WatchAndGrowSectionSw() {
