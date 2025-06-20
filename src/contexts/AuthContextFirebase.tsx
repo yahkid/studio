@@ -3,18 +3,18 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in src/lib/
+import { auth } from '@/lib/firebaseClient'; // Imports the authInstance as auth
 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; // Added to track if initial auth check is done
+  initialLoadingComplete: boolean;
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
   user: null,
   loading: true,
-  initialLoadingComplete: false, // Initialize
+  initialLoadingComplete: false,
 });
 
 export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -23,19 +23,31 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   const [initialLoadingComplete, setInitialLoadingComplete] = useState(false);
 
   useEffect(() => {
+    if (!auth) { // Check if the auth service is available from firebaseClient
+      console.warn(
+        "Firebase Auth service is not initialized. Auth context will not function. " +
+        "This is likely due to missing Firebase environment variables in your deployment environment (e.g., Vercel)."
+      );
+      setUser(null);
+      setLoading(false);
+      setInitialLoadingComplete(true);
+      return; // Exit early if auth is not available
+    }
+
+    // If auth is available, proceed with onAuthStateChanged
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-      setInitialLoadingComplete(true); // Mark initial load as complete
+      setInitialLoadingComplete(true);
     }, (error) => {
-      console.error("Auth state change error:", error);
-      setUser(null); // Ensure user is null on error
+      console.error("Firebase Auth state change error:", error);
+      setUser(null);
       setLoading(false);
-      setInitialLoadingComplete(true); // Still mark as complete even on error
+      setInitialLoadingComplete(true);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <AuthContextFirebase.Provider value={{ user, loading, initialLoadingComplete }}>
@@ -44,7 +56,6 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Exporting as useAuthFirebase for consistency with existing project usage
 export const useAuthFirebase = (): AuthContextFirebaseType => {
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
