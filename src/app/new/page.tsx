@@ -61,12 +61,12 @@ export default function MimiMgeniPage() {
               </div>
               <div className="rounded-lg overflow-hidden border">
                 <Image
-                  src="https://placehold.co/600x400.png"
-                  alt="Ramani ikionyesha eneo la HSCM Connect"
+                  src="/hscm-logo.png"
+                  alt="Logo ya Holy Spirit Connect Ministry"
                   width={600}
                   height={400}
-                  className="w-full h-auto object-cover"
-                  data-ai-hint="map location church"
+                  className="w-full h-auto object-contain p-4"
+                  data-ai-hint="ministry logo"
                 />
               </div>
             </div>
