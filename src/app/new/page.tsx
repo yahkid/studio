@@ -61,12 +61,12 @@ export default function MimiMgeniPage() {
               </div>
               <div className="rounded-lg overflow-hidden border">
                 <Image
-                  src="https://photos.app.goo.gl/44yQMd6bGncDQZqj9"
-                  alt="Shared image from Google Photos"
+                  src="https://photos.app.goo.gl/WrzaGmEvRqh7xCDA8"
+                  alt="Shared image from Google Photos of HSCM Connect location or event"
                   width={600}
                   height={400}
                   className="w-full h-auto object-contain p-4"
-                  data-ai-hint="shared photo"
+                  data-ai-hint="shared photo location"
                 />
               </div>
             </div>
@@ -145,3 +145,5 @@ export default function MimiMgeniPage() {
   );
 }
 
+
+    
