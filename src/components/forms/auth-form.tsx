@@ -70,7 +70,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
     setIsLoading(true);
     try {
       if (!auth) {
-        toast({ title: 'Firebase Error', description: 'Firebase is not initialized.', variant: 'destructive'});
+        toast({ title: 'Firebase Error', description: 'Firebase is not initialized. Please check console for details.', variant: 'destructive'});
         setIsLoading(false);
         return;
       }
@@ -119,7 +119,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
     setIsGoogleLoading(true);
     try {
       if (!auth) {
-        toast({ title: 'Firebase Error', description: 'Firebase is not initialized.', variant: 'destructive'});
+        toast({ title: 'Firebase Error', description: 'Firebase is not initialized. Please check console for details.', variant: 'destructive'});
         setIsGoogleLoading(false);
         return;
       }
@@ -135,7 +135,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           case 'auth/popup-closed-by-user': description = 'Google Sign-In popup was closed before completion.'; break;
           case 'auth/cancelled-popup-request': description = 'Multiple Google Sign-In popups were opened. Please try again.'; break;
           case 'auth/popup-blocked': description = 'Google Sign-In popup was blocked by the browser. Please allow popups for this site.'; break;
-          case 'auth/unauthorized-domain': description = 'This domain is not authorized for Firebase Authentication. Please check your Firebase project settings and ensure your Vercel domain is listed.'; break; // Specific message
+          case 'auth/unauthorized-domain': description = 'This domain is not authorized for Firebase Authentication. Please check your Firebase project settings and ensure your current domain is listed.'; break; 
           default: description = caughtError.message || 'A Google Sign-In error occurred.';
         }
       } else if (caughtError.message) {
@@ -257,4 +257,3 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
     </Card>
   );
 }
-
