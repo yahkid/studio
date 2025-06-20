@@ -7,22 +7,45 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlayCircle, Mail, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// Shuffled order of local image thumbnails
-const videoThumbnails = [
+// Define initial thumbnails outside the component for stable SSR
+const initialLocalThumbnails = [
+  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
   { id: 'local-thumb-2', src: '/images/video-thumb-2.jpg', alt: 'Video thumbnail 2 - Local' },
   { id: 'local-thumb-3', src: '/images/video-thumb-3.jpg', alt: 'Video thumbnail 3 - Local' },
-  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
 ];
 
 export function WatchAndGrowSectionSw() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [displayedThumbnails, setDisplayedThumbnails] = useState(initialLocalThumbnails);
+
+  useEffect(() => {
+    // Client-side shuffle effect
+    const shuffleArray = (array: typeof initialLocalThumbnails) => {
+      let currentIndex = array.length;
+      let randomIndex;
+      const newArray = [...array]; // Create a copy to shuffle
+
+      // While there remain elements to shuffle.
+      while (currentIndex !== 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [newArray[currentIndex], newArray[randomIndex]] = [
+          newArray[randomIndex], newArray[currentIndex]];
+      }
+      return newArray;
+    };
+    setDisplayedThumbnails(shuffleArray(initialLocalThumbnails));
+  }, []); // Empty dependency array ensures this runs once on mount on the client
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +103,7 @@ export function WatchAndGrowSectionSw() {
             ></iframe>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {videoThumbnails.map((thumb) => (
+            {displayedThumbnails.map((thumb) => (
               <div key={thumb.id} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
                 <Image 
                   src={thumb.src} 
@@ -131,4 +154,3 @@ export function WatchAndGrowSectionSw() {
     </section>
   );
 }
-
