@@ -5,54 +5,48 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button'; 
 
-interface HeroSectionSwProps {
-  onOpenLeadMagnet: () => void;
-}
-
-export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
+// onOpenLeadMagnet prop removed
+export function HeroSectionSw() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
       <Image
-        src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
-        alt="Joyful congregation celebrating at HSCM Connect."
+        src="/hscm-logo.png" 
+        alt="Holy Spirit Connect Ministry Logo" 
         fill
         style={{ objectFit: 'cover' }}
         quality={85}
         className="z-0"
-        data-ai-hint="church congregation"
+        data-ai-hint="logo ministry" 
         priority
         suppressHydrationWarning={true}
       />
-      <div className="absolute inset-0 bg-black/50 z-10"></div> {/* Overlay */}
+      <div className="absolute inset-0 bg-black/60 z-10"></div> {/* Overlay */}
 
-      <div className="container mx-auto px-4 relative z-20">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-headline font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-8 tracking-tight">
+      <div className="relative z-20 container mx-auto px-6 py-8 text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="font-headline text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter text-white mb-6">
             PATA MATUMAINI.
-            <span className="block text-hscm-gold drop-shadow-md">GUNDUA KUSUDI LAKO KUU.</span>
+            <br />
+            GUNDUA KUSUDI LAKO KUU.
           </h1>
 
-          <p className="font-body text-xl md:text-2xl text-slate-100 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="font-body text-lg md:text-xl font-light text-slate-100 mb-8 max-w-3xl mx-auto leading-relaxed">
             Holy Spirit Connect: Familia ya kimataifa inayokuletea ujumbe wa Yesu Kristo unaobadilisha maisha yako, kukupa mwelekeo mpya, na kukujaza tumaini lisilokwisha.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button asChild size="lg" className="font-body font-semibold" suppressHydrationWarning={true}>
-              <Link href="/#tazama-na-ukue">Tazama Ujumbe wa Karibuni</Link>
-            </Button>
-          </div>
-
-          <div className="mt-12">
-            <button
-              onClick={onOpenLeadMagnet}
-              className="font-body text-lg text-white hover:text-hscm-gold underline underline-offset-4 transition-colors duration-300"
+          <div className="mt-10">
+            <Button
+              asChild
+              size="lg"
+              className="font-headline font-semibold text-lg px-8 py-3"
               suppressHydrationWarning={true}
             >
-              Mgeni katika imani? Anza safari yako hapa.
-            </button>
+              <Link href="/#tazama-na-ukue">Tazama Ujumbe Mpya</Link>
+            </Button>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
