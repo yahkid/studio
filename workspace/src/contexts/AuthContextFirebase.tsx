@@ -8,7 +8,7 @@ import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; // Added for consistency with existing usage
+  initialLoadingComplete: boolean; 
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
@@ -44,7 +44,6 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Exporting as useAuthFirebase for consistency with existing project usage
 export const useAuthFirebase = (): AuthContextFirebaseType => {
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
