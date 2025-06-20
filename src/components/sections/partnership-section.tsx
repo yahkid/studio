@@ -76,7 +76,7 @@ export function PartnershipSectionSw() {
             <div className="text-center mb-12 md:mb-16">
               <h2 className="font-headline font-bold text-4xl md:text-5xl text-foreground mb-6">
                 KUWA SEHEMU YA
-                <span className="block text-primary">HADITHI</span>
+                <span className="block text-primary">HUDUMA HII</span>
               </h2>
               <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Unapokuwa mshirika na HSCM, hauchangii tu—unawekeza katika maisha yanayobadilishwa. 
