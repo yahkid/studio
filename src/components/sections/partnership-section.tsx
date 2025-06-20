@@ -8,6 +8,7 @@ import { FinancialPartnerModal } from '@/components/modals/financial-partner-mod
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
 import { HandCoins, Sparkles, HandHeart, Users, TrendingUp, Heart, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface PartnershipOption {
   id: string;
@@ -70,7 +71,14 @@ export function PartnershipSectionSw() {
 
   return (
     <>
-      <section id="ushirika" className="py-16 md:py-20 bg-muted/30 dark:bg-muted/10">
+      <motion.section 
+        id="ushirika" 
+        className="py-16 md:py-20 bg-muted/30 dark:bg-muted/10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
@@ -79,8 +87,7 @@ export function PartnershipSectionSw() {
                 <span className="block text-primary">HUDUMA HII</span>
               </h2>
               <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Unapokuwa mshirika na HSCM, hauchangii tu—unawekeza katika maisha yanayobadilishwa. 
-                Ukarimu wako unatuwezesha kuipeleka Injili mbali zaidi na kujenga kanisa la karibu.
+                Ushirika wako ni zaidi ya mchango—ni uwekezaji katika maisha yanayobadilishwa. Kwa pamoja, tunapeleka Injili mbali zaidi na kujenga jamii imara ya waumini.
               </p>
             </div>
 
@@ -131,7 +138,7 @@ export function PartnershipSectionSw() {
 
           </div>
         </div>
-      </section>
+      </motion.section>
       <FinancialPartnerModal open={isFinancialModalOpen} onOpenChange={setIsFinancialModalOpen} />
       <PrayerPartnerModal open={isPrayerModalOpen} onOpenChange={setIsPrayerModalOpen} />
       <VolunteerPartnerModal open={isVolunteerModalOpen} onOpenChange={setIsVolunteerModalOpen} />

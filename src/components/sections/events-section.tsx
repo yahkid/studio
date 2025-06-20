@@ -7,6 +7,7 @@ import { Calendar, Clock, MapPin } from 'lucide-react';
 import { initialEventsData } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface EventsSectionSwProps {
   onOpenVisitPlanner: () => void;
@@ -23,7 +24,14 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
     .slice(0, 3);
 
   return (
-    <section id="matukio" className="py-16 md:py-20 bg-background">
+    <motion.section 
+      id="matukio" 
+      className="py-16 md:py-20 bg-background"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
@@ -32,8 +40,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
               <span className="block text-primary">PAMOJA</span>
             </h2>
             <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Kuna nafasi kwa ajili yako daima. Gundua ibada, mikutano, na matukio yetu yajayo, 
-              na uwe sehemu ya jamii yetu changamfu.
+              Katika HSCM Connect, daima kuna nafasi kwa ajili yako. Gundua matukio yetu yajayo na ujiunge na jamii yetu changamfu ambapo utapata marafiki na familia.
             </p>
           </div>
 
@@ -166,7 +173,6 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
-

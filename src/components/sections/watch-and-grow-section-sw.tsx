@@ -2,7 +2,7 @@
 "use client";
 
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { motion } from 'framer-motion';
 
 const initialLocalThumbnails = [
   { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
@@ -77,7 +78,14 @@ export function WatchAndGrowSectionSw() {
   };
 
   return (
-    <section id="tazama-na-ukue" className="w-full text-center py-16 md:py-24 space-y-6 bg-muted/30 dark:bg-muted/10">
+    <motion.section 
+      id="tazama-na-ukue" 
+      className="w-full text-center py-16 md:py-24 space-y-6 bg-muted/30 dark:bg-muted/10"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto px-4">
         <PlayCircle className="h-16 w-16 text-primary mx-auto mb-6" />
         <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-6">
@@ -103,7 +111,7 @@ export function WatchAndGrowSectionSw() {
                   alt={thumb.alt} 
                   width={300} 
                   height={169} 
-                  className="w-full h-auto object-cover rounded-md group-hover:scale-105 transition-transform duration-300" 
+                  className="w-full h-full object-cover rounded-md group-hover:scale-105 transition-transform duration-300" 
                   data-ai-hint="video sermon" />
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <PlayCircle className="w-12 h-12 text-white/80" />
@@ -116,8 +124,11 @@ export function WatchAndGrowSectionSw() {
         <Card className="max-w-xl mx-auto mt-12 p-6 sm:p-8">
           <CardHeader>
             <CardTitle className="font-headline text-2xl text-foreground mb-2">
-              Pokea Neno la Wiki Linaloweza Kubadilisha Maisha Yako
+              Anza Wiki Yako kwa Nguvu
             </CardTitle>
+            <CardDescription>
+              Jisajili sasa upokee jumbe za kutia moyo na mafundisho mapya kila wiki, moja kwa moja kwenye barua pepe yako.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -141,12 +152,12 @@ export function WatchAndGrowSectionSw() {
               <p className="text-xs text-muted-foreground text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
               <Button type="submit" className="w-full font-headline text-base" suppressHydrationWarning={true} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLoading ? 'Inasajili...' : 'Pata Taarifa za Wiki'}
+                {isLoading ? 'Inasajili...' : 'Nitumie Neno la Wiki'}
               </Button>
             </form>
           </CardContent>
         </Card>
       </div>
-    </section>
+    </motion.section>
   );
 }

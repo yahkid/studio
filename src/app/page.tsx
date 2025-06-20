@@ -1,9 +1,11 @@
+
 "use client"
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { MicVocal, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import { HeroSectionSw } from "@/components/sections/hero-section";
 import { MissionSectionSw } from "@/components/sections/mission-section-sw";
@@ -31,20 +33,27 @@ export default function HomePageSwahili() {
         <WatchAndGrowSectionSw />
 
         {/* New Simplified Podcast Link Section */}
-        <section id="podcast-link" className="w-full max-w-5xl mx-auto text-center py-12 md:py-16 space-y-6 px-4">
+        <motion.section 
+          id="podcast-link" 
+          className="w-full max-w-5xl mx-auto text-center py-12 md:py-16 space-y-6 px-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+        >
           <MicVocal className="mx-auto h-12 w-12 text-primary mb-4" />
           <h2 className="font-headline font-bold text-3xl md:text-4xl text-foreground mb-4">
-            Sikiliza Podikasti Yetu
+            Jilisha Imani Yako, Popote Ulipo
           </h2>
           <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-            Pata mafundisho yenye nguvu, mahojiano ya kuvutia, na jumbe za kukutia moyo katika imani yako. Bofya hapa chini kusikiliza vipindi vyote.
+            Sikiliza mafundisho yenye nguvu, mahojiano ya kusisimua, na jumbe za kukutia moyo. Podikasti yetu imeundwa kwa ajili ya safari yako ya kiroho.
           </p>
           <Button asChild size="lg" className="font-headline text-lg" suppressHydrationWarning={true}>
             <Link href="https://innocentmorris.buzzsprout.com" target="_blank" rel="noopener noreferrer">
               Nenda Kwenye Podikasti <ExternalLink className="ml-2 h-5 w-5" />
             </Link>
           </Button>
-        </section>
+        </motion.section>
 
         <DecisionPathwaySectionSw />
         <TestimonialsSectionSw />

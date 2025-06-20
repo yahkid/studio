@@ -13,17 +13,25 @@ interface HeroSectionSwProps {
 export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden w-full">
-      <Image
-        src="https://placehold.co/1920x1080.png"
-        alt="Joyful congregation celebrating at HSCM Connect."
-        fill
-        style={{ objectFit: 'cover' }}
-        quality={85}
-        className="z-0"
-        data-ai-hint="church congregation"
-        priority
-        suppressHydrationWarning={true}
-      />
+      <motion.div
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 z-0"
+      >
+        <Image
+          src="/hscm-logo.png"
+          alt="HSCM Connect Logo as background"
+          fill
+          style={{ objectFit: 'contain', objectPosition: 'center' }}
+          quality={85}
+          className="opacity-5 dark:opacity-10"
+          data-ai-hint="logo background"
+          priority
+          suppressHydrationWarning={true}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 z-10"></div>
+      </motion.div>
       <div className="absolute inset-0 bg-black/60 z-10"></div> {/* Overlay */}
 
       <div className="relative z-20 container mx-auto px-6 py-8 text-white">
@@ -45,7 +53,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
             className="font-body text-lg md:text-xl font-light text-slate-100 mb-10 max-w-3xl mx-auto leading-relaxed"
           >
-            Holy Spirit Connect: Familia ya kimataifa inayokuletea ujumbe wa Yesu Kristo unaobadilisha maisha yako, kukupa mwelekeo mpya, na kukujaza tumaini lisilokwisha.
+            Karibu kwenye familia ya kimataifa inayojengwa katika tumaini la Yesu. Tuko hapa kukusaidia ugundue kusudi lako na kuishi maisha yaliyojaa furaha na mwelekeo.
           </motion.p>
 
           <motion.div 

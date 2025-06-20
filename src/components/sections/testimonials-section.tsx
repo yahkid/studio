@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { TestimonyForm } from "@/components/forms/testimony-form";
 import { Feather } from "lucide-react";
+import { motion } from 'framer-motion';
 
 const testimonials = [
   {
@@ -78,16 +79,20 @@ export function TestimonialsSectionSw() {
 
   return (
     <>
-      <section
+      <motion.section
         id="shuhuda"
         className="w-full py-16 md:py-24 bg-background"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-4">
             Hadithi za Mabadiliko
           </h2>
           <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 md:mb-16 leading-relaxed">
-            Uaminifu wa Mungu unaonekana kupitia maisha ya watu wake.
+            Sikia jinsi Mungu anavyofanya kazi kupitia maisha ya watu kama wewe. Ushuhuda wako unaweza kuwa unaofuata!
           </p>
 
           <Carousel
@@ -139,7 +144,7 @@ export function TestimonialsSectionSw() {
             </Button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-lg">
@@ -150,7 +155,7 @@ export function TestimonialsSectionSw() {
             </DialogTitle>
             <DialogDescription className="font-body pt-1">
               Tunapenda kusikia jinsi Mungu anavyofanya kazi maishani mwako. Tafadhali shiriki hadithi yako nasi.
-              Shuhuda zilizowasilishwa zinaweza kupitiwa na kushirikiwa hadharani (tutakuomba ruhusa kwanza ikihitajika).
+              Shuhuda zilizowasilishwa zinaweza kupitiwa na kushirikiwa hadharani (tutakuomba ruhusa zaidi ikihitajika kabla ya kuchapisha).
             </DialogDescription>
           </DialogHeader>
           <TestimonyForm onFormSubmit={() => setIsModalOpen(false)} />
@@ -162,5 +167,3 @@ export function TestimonialsSectionSw() {
     </>
   );
 }
-
-    
