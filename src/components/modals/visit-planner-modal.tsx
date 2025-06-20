@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, MessageSquare, CalendarCheck, Loader2 } from 'lucide-react';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { WhatsAppIcon } from '@/components/ui/whatsapp-icon';
 
 interface VisitPlannerModalProps {
   open: boolean;
@@ -44,6 +45,28 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
       resetForm();
     }
     onOpenChange(isOpen);
+  };
+  
+  const handleWhatsAppSubmit = () => {
+    if (!name || !email) {
+      toast({
+        title: "Taarifa Hazijakamilika",
+        description: "Tafadhali jaza jina lako na barua pepe kabla ya kutuma kupitia WhatsApp.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const ministryPhone = "255652796450";
+    const messageText = `*Ombi la Kupanga Ujio - HSCM Connect:*
+
+*Jina:* ${name}
+*Barua Pepe:* ${email}
+*Ujumbe:* ${message || "Hakuna"}
+    `;
+
+    const whatsappUrl = `https://wa.me/${ministryPhone}?text=${encodeURIComponent(messageText)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -165,15 +188,19 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
                 Ghairi
               </Button>
             </DialogClose>
-            <Button type="submit" className="font-headline" disabled={isLoading} suppressHydrationWarning={true}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Inatuma...' : 'Tuma Taarifa za Ujio'}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+                <Button type="submit" className="font-headline flex-1" disabled={isLoading} suppressHydrationWarning={true}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isLoading ? 'Inatuma...' : 'Tuma Taarifa'}
+                </Button>
+                <Button type="button" variant="outline" className="font-headline flex-1 text-green-600 border-green-600 hover:bg-green-600 hover:text-white" onClick={handleWhatsAppSubmit} disabled={isLoading}>
+                    <WhatsAppIcon className="mr-2" />
+                    Tuma kwa WhatsApp
+                </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
-
-    

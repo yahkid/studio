@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { WhatsAppIcon } from '@/components/ui/whatsapp-icon';
 
 export function DecisionForm() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -23,6 +25,14 @@ export function DecisionForm() {
   const [comments, setComments] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  
+  const decisionOptions = [
+    { id: "faith", label: "Nilifanya agano la kwanza na Kristo.", Icon: HeartHandshake },
+    { id: "rededication", label: "Niliweka upya maisha yangu kwa Kristo.", Icon: CheckCircle },
+    { id: "baptism", label: "Nataka kujifunza zaidi kuhusu ubatizo.", Icon: HelpCircle },
+    { id: "membership", label: "Ninapenda kuwa mwanachama wa kanisa.", Icon: Users2 },
+    { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
+  ];
 
   useEffect(() => {
     if (initialLoadingComplete && user) {
@@ -34,6 +44,31 @@ export function DecisionForm() {
       }
     }
   }, [user, initialLoadingComplete, name, email]);
+
+  const handleWhatsAppSubmit = () => {
+    if (!name || !email || !decisionType) {
+      toast({
+        title: "Taarifa Hazijakamilika",
+        description: "Tafadhali jaza jina lako, barua pepe, na uchague aina ya uamuzi kabla ya kutuma kupitia WhatsApp.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const ministryPhone = "255652796450";
+    const selectedOption = decisionOptions.find(opt => opt.id === decisionType);
+    
+    const message = `*Uamuzi Mpya kutoka HSCM Connect:*
+    
+*Jina:* ${name}
+*Barua Pepe:* ${email}
+*Aina ya Uamuzi:* ${selectedOption ? selectedOption.label : decisionType}
+*Maoni:* ${comments || "Hakuna"}
+    `;
+
+    const whatsappUrl = `https://wa.me/${ministryPhone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,13 +143,6 @@ export function DecisionForm() {
     }
   };
 
-  const decisionOptions = [
-    { id: "faith", label: "Nilifanya agano la kwanza na Kristo.", Icon: HeartHandshake },
-    { id: "rededication", label: "Niliweka upya maisha yangu kwa Kristo.", Icon: CheckCircle },
-    { id: "baptism", label: "Nataka kujifunza zaidi kuhusu ubatizo.", Icon: HelpCircle },
-    { id: "membership", label: "Ninapenda kuwa mwanachama wa kanisa.", Icon: Users2 },
-    { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
-  ];
 
   const isSubmitDisabled = authLoading || isSubmitting;
 
@@ -212,8 +240,8 @@ export function DecisionForm() {
             {user ? "Taarifa zako zitahusishwa na akaunti yako kwa usalama." : "Tafadhali ingia ili kuhifadhi uamuzi huu na wasifu wako."} Hatutakutumia barua taka.
           </p>
         </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full font-headline" disabled={isSubmitDisabled} suppressHydrationWarning={true}>
+        <CardFooter className="flex flex-col sm:flex-row gap-2">
+           <Button type="submit" className="w-full font-headline sm:flex-1" disabled={isSubmitDisabled} suppressHydrationWarning={true}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {authLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {!authLoading && !user && initialLoadingComplete && <LogIn className="mr-2 h-4 w-4" />}
@@ -222,6 +250,10 @@ export function DecisionForm() {
              authLoading ? 'Inapakia uthibitishaji...' : 
              !user && initialLoadingComplete ? 'Tafadhali Ingia Kwanza' : 
              'Wasilisha Uamuzi Wangu'}
+          </Button>
+          <Button type="button" variant="outline" className="w-full font-headline sm:flex-1 text-green-600 border-green-600 hover:bg-green-600 hover:text-white" onClick={handleWhatsAppSubmit} disabled={isSubmitting || authLoading}>
+            <WhatsAppIcon className="mr-2" />
+            Tuma kwa WhatsApp
           </Button>
         </CardFooter>
       </form>

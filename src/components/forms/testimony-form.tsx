@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -17,6 +18,7 @@ import { db, storage } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { UserTestimonyDoc } from '@/types/firestore';
+import { WhatsAppIcon } from '../ui/whatsapp-icon';
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -88,6 +90,33 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
     } else {
       setSelectedFile(null);
     }
+  };
+
+  const handleWhatsAppSubmit = () => {
+    const { story, consentToShare } = form.getValues();
+    if (!story) {
+        toast({ title: "Ushuhuda haujakamilika", description: "Tafadhali andika hadithi yako kabla ya kutuma.", variant: "destructive" });
+        return;
+    }
+     if (consentToShare !== true) {
+      toast({
+        title: "Idhini Inahitajika",
+        description: "Lazima ukubali kushiriki ushuhuda wako ili kuwasilisha.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const ministryPhone = "255652796450";
+    const messageText = `*Ushuhuda Mpya kutoka kwa ${user?.displayName || user?.email || 'Mtumiaji'}:*
+
+${story}
+
+---
+*(Kumbuka: Faili zozote zilizopakiwa hazikutumwa kupitia WhatsApp. Zimewasilishwa tu kupitia fomu ya tovuti.)*
+`;
+    const whatsappUrl = `https://wa.me/${ministryPhone}?text=${encodeURIComponent(messageText)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const onSubmit = async (values: TestimonyFormValues) => {
@@ -319,14 +348,20 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
         />
 
 
-        <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user || authLoading}>
-          {isSubmitting ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="mr-2 h-4 w-4" />
-          )}
-          {isSubmitting ? 'Inawasilisha...' : 'Wasilisha Ushuhuda'}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+            <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user || authLoading}>
+                {isSubmitting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                    <Send className="mr-2 h-4 w-4" />
+                )}
+                {isSubmitting ? 'Inawasilisha...' : 'Wasilisha Ushuhuda'}
+            </Button>
+            <Button type="button" variant="outline" className="w-full font-headline text-green-600 border-green-600 hover:bg-green-600 hover:text-white" onClick={handleWhatsAppSubmit} disabled={isSubmitting}>
+                <WhatsAppIcon className="mr-2" />
+                Tuma kwa WhatsApp
+            </Button>
+        </div>
       </form>
     </Form>
   );
