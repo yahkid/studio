@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -20,13 +19,12 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
         className="absolute inset-0 z-0"
       >
         <Image
-          src="https://placehold.co/1920x1080.png"
+          src="/herosection.png"
           alt="Joyful congregation celebrating at HSCM Connect."
           fill
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           quality={85}
           className="opacity-10 dark:opacity-20"
-          data-ai-hint="hopeful sunrise"
           priority
           suppressHydrationWarning={true}
         />
