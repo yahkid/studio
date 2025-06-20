@@ -3,18 +3,18 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebaseClient'; // Imports the authInstance as auth
+import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in src/lib/
 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean;
+  initialLoadingComplete: boolean; // Added to track if initial auth check is done
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
   user: null,
   loading: true,
-  initialLoadingComplete: false,
+  initialLoadingComplete: false, // Initialize
 });
 
 export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -38,16 +38,16 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-      setInitialLoadingComplete(true);
+      setInitialLoadingComplete(true); // Mark initial load as complete
     }, (error) => {
       console.error("Firebase Auth state change error:", error);
-      setUser(null);
+      setUser(null); // Ensure user is null on error
       setLoading(false);
-      setInitialLoadingComplete(true);
+      setInitialLoadingComplete(true); // Still mark as complete even on error
     });
 
     return () => unsubscribe();
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []);
 
   return (
     <AuthContextFirebase.Provider value={{ user, loading, initialLoadingComplete }}>
@@ -56,6 +56,7 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+// Exporting as useAuthFirebase for consistency with existing project usage
 export const useAuthFirebase = (): AuthContextFirebaseType => {
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
