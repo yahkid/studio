@@ -116,7 +116,7 @@ export function DecisionForm() {
     { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
   ];
 
-  const isSubmitDisabled = authLoading || isSubmitting || (!user && initialLoadingComplete);
+  const isSubmitDisabled = authLoading || isSubmitting;
 
   return (
     <Card className="w-full max-w-lg mx-auto my-8">
@@ -210,6 +210,7 @@ export function DecisionForm() {
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {authLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {!authLoading && !user && initialLoadingComplete && <LogIn className="mr-2 h-4 w-4" />}
+            
             {isSubmitting ? 'Inawasilisha...' : 
              authLoading ? 'Inapakia uthibitishaji...' : 
              !user && initialLoadingComplete ? 'Tafadhali Ingia Kwanza' : 
