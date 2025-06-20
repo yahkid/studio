@@ -9,15 +9,15 @@ import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
 import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare, Search } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Added AvatarImage
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { db } from '@/lib/firebaseClient';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import type { FirestoreDocTypes } from '@/types/firestore';
+import type { UserCourseProgressDoc } from '@/types/firestore'; // Changed import
 
-interface EnrichedProgress extends FirestoreDocTypes['user_course_progress'] {
+interface EnrichedProgress extends UserCourseProgressDoc { // Changed this line
   courseDetails?: Course;
   docId: string;
 }
@@ -67,7 +67,7 @@ export default function ProfilePage() {
 
         const progressData: EnrichedProgress[] = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data() as FirestoreDocTypes['user_course_progress'];
+          const data = doc.data() as UserCourseProgressDoc; // Use UserCourseProgressDoc here
           const courseDetails = getCourseById(data.course_id);
           if (courseDetails) {
             progressData.push({ ...data, courseDetails, docId: doc.id });
@@ -250,3 +250,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
