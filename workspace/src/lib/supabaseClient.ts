@@ -1,7 +1,17 @@
+// Supabase client initialization logic has been removed as the project is migrating to Firebase.
+// This file is deprecated and will be removed once all Supabase dependencies are eliminated.
 
-// This file is no longer needed as Supabase client is not used.
-// All database operations are being migrated to Firebase Firestore.
-// Keeping it empty to avoid import errors until all references are removed.
-// It can be safely deleted once the migration is fully complete and verified.
+import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const supabase = null; // Explicitly null
+// Log a warning that Supabase is being phased out.
+if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+  let warningMessage = "*********************************************************************\n";
+  warningMessage += "** WARNING: supabaseClient.ts is DEPRECATED.                     **\n";
+  warningMessage += "** Project is migrating from Supabase to Firebase.                 **\n";
+  warningMessage += "** The 'supabase' export from this file is now NULL.             **\n";
+  warningMessage += "** Ensure all Supabase-dependent code has been migrated.         **\n";
+  warningMessage += "*********************************************************************";
+  console.warn(warningMessage);
+}
+
+export const supabase: SupabaseClient | null = null;
