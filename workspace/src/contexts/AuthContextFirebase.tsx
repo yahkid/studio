@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -8,7 +7,7 @@ import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; 
+  initialLoadingComplete: boolean;
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
