@@ -11,7 +11,7 @@ export function DecisionPathwaySectionSw() {
       <div className="aspect-video w-full rounded-lg border overflow-hidden">
         <iframe
           className="w-full h-full"
-          src="https://www.youtube.com/embed/zqZlRS_v4z8"
+          src="https://www.youtube.com/embed/SP3FVbEP0ps"
           title="Ujumbe Kuhusu Kufanya Uamuzi"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
