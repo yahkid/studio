@@ -61,12 +61,12 @@ export default function MimiMgeniPage() {
               </div>
               <div className="rounded-lg overflow-hidden border">
                 <Image
-                  src="/hscm-logo.png"
-                  alt="Logo ya Holy Spirit Connect Ministry"
+                  src="https://photos.app.goo.gl/44yQMd6bGncDQZqj9"
+                  alt="Shared image from Google Photos"
                   width={600}
                   height={400}
                   className="w-full h-auto object-contain p-4"
-                  data-ai-hint="ministry logo"
+                  data-ai-hint="shared photo"
                 />
               </div>
             </div>

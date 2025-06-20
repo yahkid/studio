@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com', // Added for Unsplash images
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'photos.app.goo.gl', // Added for Google Photos links
+        port: '',
+        pathname: '/**',
       }
     ],
   },
