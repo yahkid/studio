@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,21 +9,56 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2 } from 'lucide-react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn } from 'lucide-react';
+import { db } from '@/lib/firebaseClient'; // Firebase
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Firebase
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Import Firebase Auth Context
+import Link from 'next/link';
 
 export function DecisionForm() {
+  const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [decisionType, setDecisionType] = useState('');
   const [comments, setComments] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast, dismiss } = useToast();
-  const supabase = useSupabaseClient<Database>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (initialLoadingComplete && user) {
+      if (!name && user.displayName) {
+        setName(user.displayName);
+      }
+      if (!email && user.email) {
+        setEmail(user.email);
+      }
+    }
+  }, [user, initialLoadingComplete, name, email]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!initialLoadingComplete || authLoading) {
+        toast({ title: "Tafadhali subiri", description: "Tunathibitisha uthibitishaji wako...", variant: "default"});
+        return;
+    }
+
+    if (!user) {
+      toast({
+        title: "Unahitaji Kuingia Kwanza",
+        description: (
+            <div>
+                Tafadhali ingia au jisajili ili kuwasilisha uamuzi wako.
+                <Button asChild variant="link" className="p-0 ml-1 h-auto text-primary">
+                    <Link href="/auth?mode=login">Nenda Kwenye Ukurasa wa Kuingia</Link>
+                </Button>
+            </div>
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!name || !email || !decisionType) {
       toast({
         title: "Taarifa Hazijakamilika",
@@ -40,80 +75,39 @@ export function DecisionForm() {
       });
       return;
     }
-    
-    setIsLoading(true);
+
+    setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('decisions').insert([
-        { name, email, decision_type: decisionType, comments: comments || null }
-      ]);
-
-      if (error) {
-        throw error;
-      }
-
-      const { id: toastId } = toast({
-        title: "Asante kwa Kushiriki Uamuzi Wako!",
-        description: "Tumefurahi sana na uamuzi wako. Mtu kutoka timu yetu atawasiliana nawe hivi karibuni (ndani ya saa 24-48) ili kukusaidia katika hatua zako zinazofuata. Karibu kwenye familia!",
-        duration: 7000, // Increased duration for better readability
+      await addDoc(collection(db, 'decisions'), {
+        name,
+        email,
+        decision_type: decisionType,
+        comments: comments || null,
+        user_id: user.uid, // Include the authenticated user's ID
+        created_at: serverTimestamp()
       });
 
-      // No explicit dismiss needed if duration is set, but can be kept if manual dismissal is desired elsewhere
-      // setTimeout(() => {
-      //   dismiss(toastId);
-      // }, 7000);
+      toast({
+        title: "Asante kwa Kushiriki Uamuzi Wako!",
+        description: "Tumefurahi sana na uamuzi wako. Mtu kutoka timu yetu atawasiliana nawe hivi karibuni (ndani ya saa 24-48) ili kukusaidia katika hatua zako zinazofuata. Karibu kwenye familia!",
+        duration: 7000,
+      });
 
-      setName('');
-      setEmail('');
+      // Optionally clear fields if user might submit another decision,
+      // but for this form, typically a one-time action per event.
+      // setName('');
+      // setEmail('');
       setDecisionType('');
       setComments('');
-    } catch (caughtError: any) {
-      const defaultMessage = `Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena.`;
-      let description = defaultMessage;
-      
-      console.error('--- Supabase Insert Error Details (DecisionForm) ---');
-      console.error('Type of caughtError:', typeof caughtError);
-
-      if (caughtError) {
-        console.error('Caught Error Object:', caughtError);
-        
-        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-          description = caughtError.message;
-          console.error('Message property:', caughtError.message);
-        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
-          description = caughtError.error_description;
-          console.error('Error Description property:', caughtError.error_description);
-        } else if (typeof caughtError === 'string') {
-          description = caughtError;
-        }
-
-
-        if (caughtError.details) { 
-          console.error('Details:', caughtError.details);
-        }
-        if (caughtError.code) {
-          console.error('Code:', caughtError.code);
-        }
-        if (caughtError.hint) {
-            console.error('Hint:', caughtError.hint);
-        }
-        
-        try {
-          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify caughtError:', e_stringify);
-        }
-      } else {
-        console.error('Caught error is undefined or null.');
-      }
-      console.error('--- End Supabase Error Details (DecisionForm) ---');
-      
+    } catch (error: any) {
+      console.error('Error submitting decision to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: description,
+        description: "Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena. " + (error.message || ""),
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -124,6 +118,8 @@ export function DecisionForm() {
     { id: "membership", label: "Ninapenda kuwa mwanachama wa kanisa.", Icon: Users2 },
     { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
   ];
+
+  const isSubmitDisabled = !initialLoadingComplete || authLoading || isSubmitting || !user;
 
   return (
     <Card className="w-full max-w-lg mx-auto my-8">
@@ -147,7 +143,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Jina lako kamili"
-                disabled={isLoading}
+                disabled={isSubmitting || authLoading}
                 suppressHydrationWarning={true}
               />
             </div>
@@ -166,7 +162,7 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 required
                 aria-label="Anwani yako ya barua pepe"
-                disabled={isLoading}
+                disabled={isSubmitting || authLoading}
                 suppressHydrationWarning={true}
               />
             </div>
@@ -181,9 +177,9 @@ export function DecisionForm() {
               aria-label="Aina ya uamuzi"
             >
               {decisionOptions.map(option => (
-                <div key={option.id} className={`flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                  <RadioGroupItem value={option.id} id={`decision-${option.id}`} disabled={isLoading} />
-                  <Label htmlFor={`decision-${option.id}`} className={`font-body flex items-center gap-2 text-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                <div key={option.id} className={`flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors ${(isSubmitting || authLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <RadioGroupItem value={option.id} id={`decision-${option.id}`} disabled={isSubmitting || authLoading} />
+                  <Label htmlFor={`decision-${option.id}`} className={`font-body flex items-center gap-2 text-sm ${(isSubmitting || authLoading) ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                     <option.Icon className="h-5 w-5 text-primary" />
                     {option.label}
                   </Label>
@@ -204,16 +200,23 @@ export function DecisionForm() {
                 className="pl-10 font-body"
                 rows={4}
                 aria-label="Maoni ya hiari"
-                disabled={isLoading}
+                disabled={isSubmitting || authLoading}
               />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-3 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
+          <p className="text-xs text-muted-foreground mt-3 text-center">
+            Taarifa zako zitahusishwa na akaunti yako kwa usalama. Hatutakutumia barua taka.
+          </p>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full font-headline" disabled={isLoading} suppressHydrationWarning={true}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isLoading ? 'Inawasilisha...' : 'Wasilisha Uamuzi Wangu'}
+          <Button type="submit" className="w-full font-headline" disabled={isSubmitDisabled} suppressHydrationWarning={true}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {authLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {!authLoading && !user && initialLoadingComplete && <LogIn className="mr-2 h-4 w-4" />}
+            {isSubmitting ? 'Inawasilisha...' : 
+             authLoading ? 'Inapakia uthibitishaji...' : 
+             !user && initialLoadingComplete ? 'Tafadhali Ingia Kwanza' : 
+             'Wasilisha Uamuzi Wangu'}
           </Button>
         </CardFooter>
       </form>
