@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
 // Firebase Auth Provider
-import { AuthContextProviderFirebase } from '@/contexts/AuthContextFirebase'; // Using alias path
+import { AuthContextProviderFirebase } from '@/contexts/AuthContextFirebase'; // Using ALIAS path
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PodcastPlayerProvider } from '@/contexts/PodcastPlayerContext';
 import { SitePlayer } from '@/components/podcast/SitePlayer';
