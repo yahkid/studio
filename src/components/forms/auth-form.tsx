@@ -156,7 +156,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           <X className="h-5 w-5 text-muted-foreground" />
         </Button>
       </Link>
-      <CardHeader className="p-8 pb-4">
+      <CardHeader className="p-6 sm:p-8 pb-4">
         <CardTitle className="font-headline text-3xl text-center">
           {mode === 'login' ? 'Karibu Tena!' : 'Fungua Akaunti'}
         </CardTitle>
@@ -170,7 +170,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         </div>
       )}
 
-      <CardContent className="p-8 pt-4">
+      <CardContent className="p-6 sm:p-8 pt-4">
         {mode === 'login' && (
           <Form {...form}>
               <form onSubmit={form.handleSubmit(handleEmailPasswordAuth)} className="space-y-6 mb-6">
@@ -248,7 +248,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
       </CardContent>
 
       {onSwitchMode && (
-        <CardFooter className="p-8 pt-2">
+        <CardFooter className="p-6 sm:p-8 pt-2">
           <Button
             variant="link"
             type="button"

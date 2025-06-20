@@ -66,7 +66,7 @@ export default function ExpandableTabsDemoPage() {
         <div>
           <h2 className="font-headline text-2xl text-foreground mb-4">Default Style</h2>
           <Card> {/* Use Card component */}
-            <div className="flex justify-center p-8"> {/* Padding moved to inner div */}
+            <div className="flex justify-center p-6 md:p-8"> {/* Padding changed */}
               <DefaultDemo />
             </div>
           </Card>
@@ -74,7 +74,7 @@ export default function ExpandableTabsDemoPage() {
         <div>
           <h2 className="font-headline text-2xl text-foreground mb-4">Custom Color Style</h2>
            <Card> {/* Use Card component */}
-            <div className="flex justify-center p-8"> {/* Padding moved to inner div */}
+            <div className="flex justify-center p-6 md:p-8"> {/* Padding changed */}
               <CustomColorDemo />
             </div>
           </Card>

@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card"; // Import Card
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -25,19 +25,11 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-// import type { Metadata } from 'next'; // Removed as client components can't export metadata
-
-// Client components cannot export metadata directly. 
-// If metadata is needed, it should be in a parent Server Component or layout.
-// export const metadata: Metadata = {
-//   title: 'Context Menu Demo | HSCM Connect',
-//   description: 'Demonstration of the ContextMenu component.',
-// };
 
 function WithAvatar() {
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex cursor-pointer items-center gap-2 p-4 text-xs rounded-md border shadow-sm hover:shadow-md transition-shadow"> {/* Added shadow-sm for subtle depth */}
+      <ContextMenuTrigger className="flex cursor-pointer items-center gap-2 p-4 text-xs rounded-md border shadow-sm hover:shadow-md transition-shadow">
         <Avatar className="size-8">
           <AvatarFallback>PJ</AvatarFallback>
         </Avatar>
@@ -111,10 +103,17 @@ export default function ContextMenuDemoPage() {
         This page demonstrates the usage of the <code>ContextMenu</code> component. 
         Right-click on the "PJ" avatar and text below to see it in action.
       </p>
-      <Card className="min-h-[200px]"> {/* Use Card component, removed custom styling */}
-        <div className="flex justify-center items-center h-full"> {/* Ensure content is centered within card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Context Menu Example</CardTitle>
+          <CardDescription>
+            Right-click on the items below to see their context menus.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-start gap-4">
+          <p>This card contains an element that has a context menu attached. Try right-clicking on the avatar and the text next to it.</p>
           <WithAvatar />
-        </div>
+        </CardContent>
       </Card>
     </div>
   );
