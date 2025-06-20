@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, FileText, User, MailIcon, Send } from 'lucide-react'; // Added Send icon
+import { Loader2, UploadCloud, FileText, User, MailIcon, Send } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { db, storage } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -60,30 +60,27 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
   });
 
   useEffect(() => {
-    // Pre-fill name and email if user is logged in and fields are empty
-    // This is mainly for display if we choose to show it on the form.
-    // The actual submission will use the authenticated user's details directly.
     if (user && initialLoadingComplete) {
-      // No fields to pre-fill in the form based on schema, but good to keep in mind.
+      // No fields to pre-fill in the form based on schema.
     }
   }, [user, initialLoadingComplete, form.reset]);
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    setFileError(null); 
+    setFileError(null);
 
     if (file) {
       if (file.size > MAX_FILE_SIZE_BYTES) {
         setFileError(`Faili ni kubwa mno. Ukubwa wa juu ni ${MAX_FILE_SIZE_MB}MB.`);
         setSelectedFile(null);
-        event.target.value = ""; 
+        event.target.value = "";
         return;
       }
       if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
         setFileError("Aina ya faili si sahihi. Inakubalika: JPG, PNG, WEBP, PDF, DOC, DOCX, TXT.");
         setSelectedFile(null);
-        event.target.value = ""; 
+        event.target.value = "";
         return;
       }
       setSelectedFile(file);
@@ -105,9 +102,20 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
       });
       return;
     }
-    if (fileError) { 
+    if (fileError) {
         toast({ title: "Hitilafu ya Faili", description: fileError, variant: "destructive" });
         return;
+    }
+
+    // Explicit check for consentToShare, even though Zod validation should ensure it's true.
+    if (values.consentToShare !== true) {
+      toast({
+        title: "Idhini Inahitajika",
+        description: "Lazima ukubali kushiriki ushuhuda wako ili kuwasilisha. Tafadhali tia alama kwenye kisanduku cha idhini.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false); // Reset loading state if it was set
+      return;
     }
 
     setIsSubmitting(true);
@@ -130,7 +138,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
         story: values.story,
         fileUrl: fileUrl,
         originalFileName: originalFileName,
-        submittedAt: serverTimestamp() as any, 
+        submittedAt: serverTimestamp() as any,
         status: "pending_review",
         consentToShare: values.consentToShare,
       };
@@ -144,20 +152,24 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
       form.reset();
       setSelectedFile(null);
       const fileInput = document.getElementById('testimony-file') as HTMLInputElement;
-      if (fileInput) fileInput.value = ""; 
+      if (fileInput) fileInput.value = "";
       onFormSubmit?.();
     } catch (error: any) {
       console.error("Error submitting testimony:", error);
+      let description = error.message || "Imeshindwa kuwasilisha ushuhuda wako. Jaribu tena.";
+      if (error.code === 'permission-denied' || (error.message && error.message.toLowerCase().includes("permission"))) {
+        description = "Ruhusa haitoshi kuwasilisha ushuhuda. Tafadhali hakikisha umekubali kushiriki na umeingia. Ikiwa tatizo litaendelea, wasiliana na usaidizi.";
+      }
       toast({
         title: "Hitilafu ya Kuwasilisha",
-        description: error.message || "Imeshindwa kuwasilisha ushuhuda wako. Jaribu tena.",
+        description: description,
         variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   if (authLoading || !initialLoadingComplete) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -191,7 +203,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
             </div>
           </div>
         )}
-        
+
         <FormField
           control={form.control}
           name="story"
@@ -260,7 +272,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
           )}
         />
 
-        <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user}>
+        <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user || authLoading}>
           {isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
