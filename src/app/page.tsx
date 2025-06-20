@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -43,7 +42,7 @@ export default function HomePageSwahili() {
         >
           <MicVocal className="mx-auto h-12 w-12 text-primary mb-4" />
           <h2 className="font-headline font-bold text-3xl md:text-4xl text-foreground mb-4">
-            Jilisha Imani Yako, Popote Ulipo
+            Jilishe Imani Yako,Popote ulipo
           </h2>
           <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             Sikiliza mafundisho yenye nguvu, mahojiano ya kusisimua, na jumbe za kukutia moyo. Podikasti yetu imeundwa kwa ajili ya safari yako ya kiroho.
