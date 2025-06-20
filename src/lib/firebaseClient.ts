@@ -20,7 +20,7 @@ function checkEnvVarsPresent(): boolean {
     'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
     'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
     'NEXT_PUBLIC_FIREBASE_APP_ID',
-    // 'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID', // Measurement ID is optional for core functionality
+    // NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID is optional
   ];
   const missingVars = requiredEnvVars.filter(v => !process.env[v]);
   if (missingVars.length > 0) {
@@ -50,7 +50,7 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
         authInstance = getAuth(app);
         dbInstance = getFirestore(app);
         storageInstance = getStorage(app);
-        // if (firebaseConfig.measurementId) { // Optional
+        // if (firebaseConfig.measurementId && app) { // Optional
         //   analytics = getAnalytics(app);
         // }
         console.log("Firebase initialized successfully via firebaseClient.ts.");
@@ -60,20 +60,27 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
       }
     } else {
       app = getApps()[0];
+      // Ensure instances are re-fetched if app already exists
       authInstance = getAuth(app);
       dbInstance = getFirestore(app);
       storageInstance = getStorage(app);
       // if (firebaseConfig.measurementId && app) { // Optional
-      //   analytics = getAnalytics(app);
+      //   try { // Check if analytics is already initialized
+      //     analytics = getAnalytics(app);
+      //   } catch (e) {
+      //     // console.warn("Could not get analytics instance, possibly already initialized or not available.")
+      //   }
       // }
       console.log("Firebase app already initialized (firebaseClient.ts).");
     }
   } else {
-    // This else block handles the case where checkEnvVarsPresent returns false
     console.warn("Firebase was not initialized due to missing environment variables (firebaseClient.ts). Some app features may not work.");
   }
+} else {
+    console.warn("Firebase client-side code (firebaseClient.ts) is attempting to run on the server. Initialization skipped.");
 }
 
 // Export the potentially undefined instances using their intended names
 export { app, authInstance as auth, dbInstance as db, storageInstance as storage };
 // export { app, authInstance as auth, dbInstance as db, storageInstance as storage, analytics }; // Optional
+
