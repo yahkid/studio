@@ -29,15 +29,14 @@ const loginSchema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-// Signup schema is not strictly needed if signup is Google-only, but define for AuthFormValues type
 const signupSchema = z.object({
-  name: z.string().optional(), // Optional for Google-only signup, required for email/pass signup
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Invalid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
 
-type AuthFormValues = z.infer<typeof loginSchema> & { name?: string };
+type AuthFormValues = z.infer<typeof loginSchema> & z.infer<typeof signupSchema>;
 
 interface AuthFormProps {
   mode?: 'login' | 'signup';
@@ -80,7 +79,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         toast({ title: 'Login Successful', description: "Welcome back!" });
         router.push('/');
       } else { // signup mode
-        if (!values.name) { // Should be caught by Zod if schema requires it
+        if (!values.name) { 
           toast({ title: 'Signup Error', description: 'Name is required for signup.', variant: 'destructive'});
           setIsLoading(false);
           return;
@@ -88,9 +87,6 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
         if (userCredential.user) {
           await updateProfile(userCredential.user, { displayName: values.name });
-          // await sendEmailVerification(userCredential.user); // Optional
-          // toast({ title: 'Signup Successful', description: 'Please check your email for verification.' });
-          // router.push('/auth/confirmation-info');
           toast({ title: 'Signup Successful!', description: 'Welcome! Your account has been created.'});
            router.push('/');
         } else {
@@ -139,7 +135,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           case 'auth/popup-closed-by-user': description = 'Google Sign-In popup was closed before completion.'; break;
           case 'auth/cancelled-popup-request': description = 'Multiple Google Sign-In popups were opened. Please try again.'; break;
           case 'auth/popup-blocked': description = 'Google Sign-In popup was blocked by the browser. Please allow popups for this site.'; break;
-          case 'auth/unauthorized-domain': description = 'This domain is not authorized for Firebase Authentication. Please check your Firebase project settings.'; break;
+          case 'auth/unauthorized-domain': description = 'This domain is not authorized for Firebase Authentication. Please check your Firebase project settings and ensure your Vercel domain is listed.'; break; // Specific message
           default: description = caughtError.message || 'A Google Sign-In error occurred.';
         }
       } else if (caughtError.message) {
@@ -159,7 +155,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           {mode === 'login' ? 'Karibu Tena!' : 'Fungua Akaunti'}
         </CardTitle>
         <CardDescription className="font-body text-center pt-1">
-          {mode === 'login' ? 'Ingia kwa kutumia barua pepe yako au Google.' : 'Jisajili kwa kutumia barua pepe yako au Google.'}
+          {mode === 'login' ? 'Ingia kwa kutumia barua pepe yako au Google.' : 'Jisajili kwa kutumia Google.'}
         </CardDescription>
       </CardHeader>
       {initialMessage && (
@@ -169,64 +165,54 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
       )}
 
       <CardContent className="p-8 pt-4">
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleEmailPasswordAuth)} className="space-y-6 mb-6">
-            {mode === 'signup' && (
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-body">Jina Kamili</FormLabel>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <FormControl>
-                        <Input placeholder="Jina lako kamili" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-body">Anwani ya Barua Pepe</FormLabel>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <FormControl>
-                        <Input type="email" placeholder="barua.pepe@mfano.com" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-body">Nenosiri</FormLabel>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <FormControl>
-                        <Input type="password" placeholder="••••••••" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full font-headline" disabled={isLoading || isGoogleLoading} suppressHydrationWarning={true}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : (mode === 'login' ? <LogIn className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />)}
-                {isLoading ? 'Inasubiri...' : (mode === 'login' ? 'Ingia' : 'Jisajili na Barua Pepe')}
-              </Button>
-            </form>
-          </Form>
+        {mode === 'login' && (
+          <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleEmailPasswordAuth)} className="space-y-6 mb-6">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-body">Anwani ya Barua Pepe</FormLabel>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <FormControl>
+                          <Input type="email" placeholder="barua.pepe@mfano.com" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-body">Nenosiri</FormLabel>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <FormControl>
+                          <Input type="password" placeholder="••••••••" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full font-headline" disabled={isLoading || isGoogleLoading} suppressHydrationWarning={true}>
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogIn className="mr-2 h-4 w-4" />}
+                  {isLoading ? 'Inasubiri...' : 'Ingia na Barua Pepe'}
+                </Button>
+              </form>
+            </Form>
+        )}
+         {mode === 'signup' && (
+             <p className="font-body text-sm text-muted-foreground text-center mb-6">
+                Kwa sasa, jisajili kwa kutumia Google kwa uzoefu wa haraka na salama.
+             </p>
+         )}
+
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
@@ -271,3 +257,4 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
     </Card>
   );
 }
+
