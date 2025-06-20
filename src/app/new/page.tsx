@@ -55,13 +55,23 @@ export default function MimiMgeniPage() {
                   Mahali Petu
                 </h2>
                 <div className="font-body text-lg text-muted-foreground space-y-2">
-                  <p>123 Mtaa wa Imani, Jiji la Huduma, JH 12345</p>
+                  <p>Barabara ya Nyerere, DSM</p>
+                  <p>
+                    <a
+                      href="https://maps.app.goo.gl/5z3dGxia6ZDKoiMo7"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Tazama Kwenye Ramani &rarr;
+                    </a>
+                  </p>
                   <p>Tuna maegesho ya kutosha yanayopatikana eneo letu.</p>
                 </div>
               </div>
               <div className="rounded-lg overflow-hidden border">
                 <Image
-                  src="https://placehold.co/600x400.png"
+                  src="/Picsart_25-06-19_09-19-42-630.jpg"
                   alt="Exterior of the HSCM Connect church building"
                   width={600}
                   height={400}
