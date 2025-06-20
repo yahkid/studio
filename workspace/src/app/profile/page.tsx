@@ -2,24 +2,24 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link'; // Added for login button
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import Link from 'next/link';
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
+import type { Database } from '@/types/supabase'; // Keep for Supabase specific types if other parts still use it
 import type { Course } from '@/lib/courses-data';
 import { getCourseById } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
-import { Loader2, User } from 'lucide-react';
+import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare, Search } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'; // Added Avatar components
-import { Button } from '@/components/ui/button'; // Added Button for login
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useSupabaseClient } from '@supabase/auth-helpers-react'; // Keep for DB operations for now
 
 type UserProgressRecord = Database['public']['Tables']['user_course_progress']['Row'];
 interface EnrichedProgress extends UserProgressRecord {
   courseDetails?: Course;
 }
 
-// Helper function to get initials from a name string
 const getInitials = (name?: string) => {
   if (!name) return '';
   const nameParts = name.trim().split(' ');
@@ -35,40 +35,34 @@ const getInitials = (name?: string) => {
 };
 
 export default function ProfilePage() {
-  const session = useSession();
-  const supabase = useSupabaseClient<Database>();
+  const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
+  const supabase = useSupabaseClient<Database>(); // Still needed for user_course_progress
   const { toast } = useToast();
   const [userProgress, setUserProgress] = useState<EnrichedProgress[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Covers both session and progress loading initially
-  const [isProgressLoading, setIsProgressLoading] = useState(true); // Specific for course progress
+  const [isProgressLoading, setIsProgressLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  const userDisplayName = session?.user?.user_metadata?.full_name || session?.user?.email;
+  const userDisplayName = user?.displayName || user?.email;
 
   useEffect(() => {
     setMounted(true);
-    if (session === undefined) { // Still loading session
-        setIsLoading(true);
-    } else {
-        setIsLoading(false); // Session loaded (or is null)
-    }
-  }, [session]);
+  }, []);
 
   useEffect(() => {
-    if (!mounted || !session?.user) {
-      setIsProgressLoading(false); // No progress to load if not mounted or no user
-      if (session !== undefined) setIsLoading(false); // Ensure main loading is off if session is determined
+    if (!mounted || !initialLoadingComplete || !user) {
+      setIsProgressLoading(false);
+      if (initialLoadingComplete && !user) setUserProgress([]); // Clear progress if definitely logged out
       return;
     }
 
     const fetchProgress = async () => {
       setIsProgressLoading(true);
-      setIsLoading(false); // Main page structure can show, progress is loading separately
       try {
+        // This part still uses Supabase. We will migrate this DB call later.
         const { data: progressData, error: progressError } = await supabase
           .from('user_course_progress')
           .select('id, course_id, completed_lessons, progress_percentage')
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.uid); // Use user.uid for Firebase user ID
 
         if (progressError) {
           throw progressError;
@@ -96,10 +90,12 @@ export default function ProfilePage() {
     };
 
     fetchProgress();
-  }, [session, supabase, mounted, toast]);
+  }, [user, initialLoadingComplete, supabase, mounted, toast]);
 
+  const totalCoursesStarted = userProgress.length;
+  const totalLessonsCompleted = userProgress.reduce((sum, p) => sum + (p.completed_lessons?.length || 0), 0);
 
-  if (!mounted || isLoading) { // Combined loading state for initial mount and session check
+  if (!mounted || (!initialLoadingComplete && authLoading)) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -110,32 +106,28 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto py-12 px-4">
-      {/* New Profile Header Card */}
       <Card className="mb-10 w-full overflow-hidden">
         <CardHeader className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:items-center sm:p-8 sm:text-left sm:gap-6 bg-muted/30 dark:bg-muted/10">
-          {session?.user && (
+          {user && (
             <Avatar className="h-24 w-24 text-3xl sm:h-32 sm:w-32 sm:text-5xl border-2 border-primary dark:border-primary shadow-md">
-              {/* Placeholder for AvatarImage if you implement avatar uploads */}
-              {/* <AvatarImage src={session.user.user_metadata?.avatar_url} alt={userDisplayName || 'User Avatar'} /> */}
               <AvatarFallback className="bg-background">
                 {userDisplayName ? getInitials(userDisplayName) : <User className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />}
               </AvatarFallback>
             </Avatar>
           )}
           <div className="flex-1">
-            {session?.user ? (
+            {user ? (
               <>
                 <CardTitle className="font-headline text-3xl sm:text-4xl text-foreground">
                   {userDisplayName || 'Mtumiaji'}
                 </CardTitle>
-                {session.user.email && (
+                {user.email && (
                   <CardDescription className="font-body text-lg text-muted-foreground mt-1">
-                    {session.user.email}
+                    {user.email}
                   </CardDescription>
                 )}
               </>
             ) : (
-              // Logged out state within the card
               <div className="py-4 sm:py-8 text-center w-full">
                 <User className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mx-auto mb-4" />
                 <CardTitle className="font-headline text-2xl sm:text-3xl text-foreground mb-2">
@@ -153,40 +145,107 @@ export default function ProfilePage() {
         </CardHeader>
       </Card>
 
-      {/* Learning Journey Section - only shown if logged in */}
-      {session?.user && (
-        <section>
-          <h2 className="font-headline text-3xl md:text-4xl text-foreground mb-8">
-            Safari Yangu ya Kujifunza
-          </h2>
-          {isProgressLoading ? (
-            <div className="flex justify-center items-center py-10">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
-            </div>
-          ) : userProgress.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userProgress.map((progress) => (
-                progress.courseDetails && progress.id && (
-                  <ProgressCourseCard
-                    key={progress.id}
-                    course={progress.courseDetails}
-                    progressPercentage={progress.progress_percentage ?? 0}
-                    completedLessonsCount={progress.completed_lessons?.length ?? 0}
-                  />
-                )
-              ))}
-            </div>
-          ) : (
+      {user && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="md:col-span-1">
             <Card>
-              <CardContent className="pt-6">
-                <p className="font-body text-muted-foreground text-center py-8">
-                  Bado haujaanza kozi yoyote au hakuna maendeleo yaliyorekodiwa. Tembelea sehemu ya kozi ili kuanza kujifunza!
-                </p>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Taarifa za Akaunti</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="profile-name" className="font-body text-sm text-muted-foreground">Jina Kamili</Label>
+                  <p id="profile-name" className="font-body text-foreground">{userDisplayName || 'Haikuwekwa'}</p>
+                </div>
+                <div>
+                  <Label htmlFor="profile-email" className="font-body text-sm text-muted-foreground">Anwani ya Barua Pepe</Label>
+                  <p id="profile-email" className="font-body text-foreground">{user.email}</p>
+                </div>
+                <div className="flex flex-col space-y-2 pt-3">
+                   <Button asChild variant="outline" size="sm" className="font-body justify-start">
+                     <Link href="/settings">
+                       <Edit className="mr-2 h-4 w-4" /> Badilisha Wasifu
+                     </Link>
+                   </Button>
+                   <Button asChild variant="outline" size="sm" className="font-body justify-start">
+                     <Link href="/settings#password">
+                       <KeyRound className="mr-2 h-4 w-4" /> Badilisha Nenosiri
+                     </Link>
+                   </Button>
+                </div>
               </CardContent>
             </Card>
-          )}
-        </section>
+          </div>
+
+          <div className="md:col-span-2 space-y-8">
+            {!isProgressLoading && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Muhtasari wa Mafunzo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex items-center p-4 bg-muted/50 rounded-lg">
+                      <BookOpen className="h-8 w-8 text-primary mr-4" />
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{totalCoursesStarted}</p>
+                        <p className="text-sm text-muted-foreground">Kozi Zilizoanzishwa</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center p-4 bg-muted/50 rounded-lg">
+                      <CheckSquare className="h-8 w-8 text-primary mr-4" />
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{totalLessonsCompleted}</p>
+                        <p className="text-sm text-muted-foreground">Masomo Yaliyokamilika</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <div>
+              <h2 className="font-headline text-2xl md:text-3xl text-foreground mb-6 flex items-center">
+                <BookOpen className="mr-3 h-7 w-7 text-primary" />
+                Safari Yangu ya Kujifunza
+              </h2>
+              {isProgressLoading ? (
+                <div className="flex justify-center items-center py-10">
+                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  <p className="ml-4 font-body text-muted-foreground">Inapakia maendeleo yako...</p>
+                </div>
+              ) : userProgress.length > 0 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {userProgress.map((progress) => (
+                    progress.courseDetails && progress.id && (
+                      <ProgressCourseCard
+                        key={progress.id}
+                        course={progress.courseDetails}
+                        progressPercentage={progress.progress_percentage ?? 0}
+                        completedLessonsCount={progress.completed_lessons?.length ?? 0}
+                      />
+                    )
+                  ))}
+                </div>
+              ) : (
+                <Card className="text-center">
+                  <CardContent className="pt-8 pb-10">
+                    <Search className="h-16 w-16 text-muted-foreground/50 mx-auto mb-6" />
+                    <h3 className="font-headline text-xl text-foreground mb-3">
+                      Safari Yako ya Kujifunza Inasubiri!
+                    </h3>
+                    <p className="font-body text-muted-foreground mb-6 max-w-md mx-auto">
+                      Gundua kozi zetu za kina na anza kukua katika ufahamu wako wa Neno la Mungu leo.
+                    </p>
+                    <Button asChild size="lg" className="font-headline">
+                      <Link href="/kozi">Anza Kujifunza Sasa</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -3,8 +3,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { Course, Lesson } from '@/lib/courses-data';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
+import type { Database } from '@/types/supabase'; // Keep for Supabase specific types
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -14,14 +14,15 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSupabaseClient } from '@supabase/auth-helpers-react'; // Keep for DB operations
 
 interface CourseContentProps {
   course: Course;
 }
 
 export function CourseContent({ course }: CourseContentProps) {
-  const session = useSession();
-  const supabase = useSupabaseClient<Database>();
+  const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
+  const supabase = useSupabaseClient<Database>(); // Still needed for user_course_progress
   const { toast } = useToast();
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -41,19 +42,22 @@ export function CourseContent({ course }: CourseContentProps) {
 
   useEffect(() => {
     const fetchProgress = async () => {
-      if (!session?.user) {
+      if (!initialLoadingComplete) return; // Wait for Firebase auth to settle
+
+      if (!user) {
         setIsLoadingProgress(false);
-        setCompletedLessons([]); 
-        setShowGuestSignupPrompt(true); // Show prompt if not logged in and viewing course
+        setCompletedLessons([]);
+        setShowGuestSignupPrompt(true); 
         return;
       }
-      setShowGuestSignupPrompt(false); // Hide if logged in
+      setShowGuestSignupPrompt(false);
       setIsLoadingProgress(true);
       try {
+        // This part still uses Supabase. We will migrate this DB call later.
         const { data, error } = await supabase
           .from('user_course_progress') 
           .select('completed_lessons')
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.uid) // Use user.uid for Firebase user ID
           .eq('course_id', course.id)
           .single();
 
@@ -79,21 +83,20 @@ export function CourseContent({ course }: CourseContentProps) {
     };
 
     fetchProgress();
-  }, [session, course.id, supabase, toast]);
+  }, [user, course.id, supabase, toast, initialLoadingComplete]);
   
   useEffect(() => {
-    // If user is not logged in and a lesson is selected, show the prompt.
-    if (!session?.user && currentLesson) {
+    if (initialLoadingComplete && !user && currentLesson) {
       setShowGuestSignupPrompt(true);
-    } else if (session?.user) {
+    } else if (user) {
       setShowGuestSignupPrompt(false);
     }
-  }, [session, currentLesson]);
+  }, [user, currentLesson, initialLoadingComplete]);
 
 
   const handleMarkComplete = async () => {
-    if (!session?.user) {
-      setShowGuestSignupPrompt(true); // Reinforce prompt if they try to mark complete
+    if (!user) {
+      setShowGuestSignupPrompt(true);
       toast({
         title: 'Unahitaji Kuingia Kwanza',
         description: 'Tafadhali ingia au jisajili ili kuhifadhi maendeleo yako.',
@@ -111,8 +114,9 @@ export function CourseContent({ course }: CourseContentProps) {
     const newProgressPercentage = Math.round((newCompletedLessons.length / course.lessons.length) * 100);
 
     try {
+      // This part still uses Supabase. We will migrate this DB call later.
       const { error } = await supabase.from('user_course_progress').upsert({ 
-        user_id: session.user.id,
+        user_id: user.uid, // Use user.uid for Firebase user ID
         course_id: course.id,
         completed_lessons: newCompletedLessons,
         last_accessed: new Date().toISOString(),
@@ -159,7 +163,7 @@ export function CourseContent({ course }: CourseContentProps) {
             <p className="font-body text-muted-foreground mb-2">Na: {course.instructor}</p>
             <p className="font-body text-muted-foreground mb-4 leading-relaxed">{course.description}</p>
             <div className="font-body text-sm text-muted-foreground">
-              Masomo: {course.lessons.length} | Maendeleo: {isLoadingProgress ? <Loader2 className="inline-block h-4 w-4 animate-spin" /> : `${progressPercentage}%`}
+              Masomo: {course.lessons.length} | Maendeleo: {isLoadingProgress || authLoading ? <Loader2 className="inline-block h-4 w-4 animate-spin" /> : `${progressPercentage}%`}
             </div>
           </div>
         </div>
@@ -188,10 +192,10 @@ export function CourseContent({ course }: CourseContentProps) {
                    <p className="font-body text-muted-foreground mb-6">{currentLesson.description}</p>
                 )}
 
-                {session?.user ? (
+                {user ? (
                   <Button
                     onClick={handleMarkComplete}
-                    disabled={isSavingProgress || completedLessons.includes(currentLesson.id)}
+                    disabled={isSavingProgress || completedLessons.includes(currentLesson.id) || authLoading}
                     className="w-full font-headline"
                     size="lg"
                     suppressHydrationWarning
@@ -206,12 +210,13 @@ export function CourseContent({ course }: CourseContentProps) {
                     )}
                   </Button>
                 ) : (
-                   <Button onClick={handleMarkComplete} className="w-full font-headline" size="lg">
-                     <Lock className="mr-2 h-4 w-4" /> Ingia Ili Kuhifadhi Maendeleo
+                   <Button onClick={handleMarkComplete} className="w-full font-headline" size="lg" disabled={authLoading}>
+                     {authLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lock className="mr-2 h-4 w-4" />}
+                     {authLoading ? 'Inapakia...' : 'Ingia Ili Kuhifadhi Maendeleo'}
                    </Button>
                 )}
 
-                {showGuestSignupPrompt && !session?.user && (
+                {showGuestSignupPrompt && !user && initialLoadingComplete && (
                   <Alert variant="default" className="mt-6 border-primary/50">
                     <AlertCircle className="h-5 w-5 text-primary" />
                     <AlertTitle className="font-headline text-primary">Hifadhi Maendeleo Yako!</AlertTitle>
@@ -246,26 +251,29 @@ export function CourseContent({ course }: CourseContentProps) {
                     <li key={lesson.id}>
                       <button
                         onClick={() => setCurrentLessonIndex(index)}
-                        disabled={isLoadingProgress}
+                        disabled={isLoadingProgress || authLoading}
                         className={`w-full text-left p-4 hover:bg-muted/50 transition-colors ${
                           index === currentLessonIndex ? 'bg-muted' : ''
-                        } ${isLoadingProgress ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        } ${(isLoadingProgress || authLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                {session?.user && !isLoadingProgress ? (
+                                {user && !isLoadingProgress && initialLoadingComplete ? (
                                   <Checkbox
                                     id={`lesson-${lesson.id}`}
                                     checked={isLessonCompleted(lesson.id)}
                                     aria-label={`Mark lesson ${lesson.title} as ${isLessonCompleted(lesson.id) ? 'incomplete' : 'complete'}`}
                                     onCheckedChange={(checked) => {
-                                      if(checked && currentLessonIndex === index) handleMarkComplete();
+                                      // Only call handleMarkComplete if currentLesson is this one and user is checking it
+                                      if (checked && currentLesson && currentLesson.id === lesson.id) handleMarkComplete();
+                                      // If unchecking, this would require a different logic path to remove from completed.
+                                      // For simplicity, current logic only handles marking as complete.
                                     }}
-                                    disabled={isSavingProgress || (index === currentLessonIndex && completedLessons.includes(lesson.id))}
+                                    disabled={isSavingProgress || (currentLesson && lesson.id === currentLesson.id && completedLessons.includes(lesson.id))}
                                   />
                                 ) : (
                                   <div className="w-5 h-5 flex items-center justify-center">
-                                    {isLoadingProgress ? <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" /> : <PlayCircle className="h-4 w-4 text-muted-foreground"/>}
+                                    {isLoadingProgress || authLoading ? <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" /> : <PlayCircle className="h-4 w-4 text-muted-foreground"/>}
                                   </div>
                                 )}
                                 <span className={`font-body ${index === currentLessonIndex ? 'text-primary font-semibold' : 'text-foreground'}`}>
