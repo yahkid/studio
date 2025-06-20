@@ -25,9 +25,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" aria-label="Toggle theme" className="rounded-full" disabled>
-        {/* Render a placeholder or a default icon that matches server render for "system" */}
-        {/* System theme often defaults to light, so Moon might be shown initially if server can't know preference */}
+      <Button variant="ghost" size="icon" aria-label="Toggle theme" title="Toggle theme" className="rounded-full" disabled>
         <Sun className="h-[1.2rem] w-[1.2rem]" /> 
       </Button>
     )
@@ -38,12 +36,15 @@ export function ThemeToggle() {
     displayTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 
+  const buttonTitle = displayTheme === "light" ? "Switch to dark mode" : "Switch to light mode";
+
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      aria-label={displayTheme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+      aria-label={buttonTitle}
+      title={buttonTitle} // Added dynamic title attribute
       className="rounded-full hover:bg-accent transition-colors"
     >
       {displayTheme === "light" ? (
@@ -54,3 +55,4 @@ export function ThemeToggle() {
     </Button>
   )
 }
+
