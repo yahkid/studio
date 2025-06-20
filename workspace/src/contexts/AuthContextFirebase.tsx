@@ -8,7 +8,7 @@ import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; 
+  initialLoadingComplete: boolean; // Added for consistency with existing usage
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
@@ -26,10 +26,10 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-      setInitialLoadingComplete(true); 
+      setInitialLoadingComplete(true);
     }, (error) => {
       console.error("Auth state change error:", error);
-      setUser(null); 
+      setUser(null);
       setLoading(false);
       setInitialLoadingComplete(true);
     });
@@ -44,6 +44,7 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+// Exporting as useAuthFirebase for consistency with existing project usage
 export const useAuthFirebase = (): AuthContextFirebaseType => {
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
