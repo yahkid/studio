@@ -26,7 +26,7 @@ if (supabaseUrl && supabaseUrl.startsWith('http') && supabaseAnonKey) {
 } else {
   // If variables are missing or URL is invalid, log a clear warning but do not throw.
   const missingVars = [];
-  if (!supabaseUrl || !supabaseUrl.startsWith('http')) missingVars.push('NEXT_PUBLIC_SUPABASE_URL (valid URL starting with http(s)://)');
+  if (!supabaseUrl || !supabaseUrl.startsWith('http')) missingVars.push('NEXT_PUBLIC_SUPABASE_URL (must be a valid URL starting with http(s)://)');
   if (!supabaseAnonKey) missingVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
   if (missingVars.length > 0) {
@@ -60,4 +60,11 @@ export function checkSupabaseEnv() {
         return false;
     }
     return true;
+}
+
+// Call check on module load (primarily for server-side or build-time checks if applicable)
+// For client-side, the try-catch in initialization block is more relevant for runtime.
+// This check will only run when the module is first evaluated.
+if (typeof window !== 'undefined') { // Only run checkSupabaseEnv in client-side context if needed
+    // checkSupabaseEnv(); // You can call this if you want an explicit check on client-side load too, but the main logic above handles the null client.
 }
