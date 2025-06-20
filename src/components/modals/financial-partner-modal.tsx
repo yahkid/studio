@@ -16,8 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, HandCoins, Loader2, Phone, Globe, CheckCircle } from 'lucide-react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { db } from '@/lib/firebaseClient';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface FinancialPartnerModalProps {
   open: boolean;
@@ -33,7 +33,6 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
   const [country, setCountry] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const supabase = useSupabaseClient<Database>();
 
   const resetForm = () => {
     setFirstName('');
@@ -47,7 +46,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) {
       resetForm();
-      if (open) { 
+      if (open) { // Only reset step if the modal was actually open and is now closing
          setCurrentStep(1);
       }
     }
@@ -80,64 +79,22 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         email,
         phone_number: phoneNumber || null,
         country: country || null,
+        created_at: serverTimestamp()
     };
 
     try {
-      const { error } = await supabase
-        .from('financial_partner_signups')
-        .insert(payload);
-
-      if (error) throw error;
+      await addDoc(collection(db, 'financial_partner_signups'), payload);
 
       toast({
         title: "Hatua ya 1 Imekamilika!",
         description: "Taarifa zako zimepokelewa.",
       });
       setCurrentStep(2); 
-    } catch (caughtError: any) {
-      const defaultMessage = "Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena.";
-      let description = defaultMessage;
-      
-      console.error('--- Supabase Insert Error Details (FinancialPartnerModal Step 1) ---');
-      console.error('Type of caughtError:', typeof caughtError);
-
-      if (caughtError) {
-        console.error('Caught Error Object:', caughtError);
-        
-        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-          description = caughtError.message;
-          console.error('Message property:', caughtError.message);
-        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
-          description = caughtError.error_description;
-          console.error('Error Description property:', caughtError.error_description);
-        } else if (typeof caughtError === 'string') {
-          description = caughtError;
-        }
-
-
-        if (caughtError.details) { 
-          console.error('Details:', caughtError.details);
-        }
-        if (caughtError.code) {
-          console.error('Code:', caughtError.code);
-        }
-        if (caughtError.hint) {
-            console.error('Hint:', caughtError.hint);
-        }
-        
-        try {
-          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify caughtError:', e_stringify);
-        }
-      } else {
-        console.error('Caught error is undefined or null.');
-      }
-      console.error('--- End Supabase Error Details (FinancialPartnerModal Step 1) ---');
-
+    } catch (error: any) {
+      console.error('Error submitting financial partner signup to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: description,
+        description: `Imeshindwa kuwasilisha taarifa zako. Tafadhali jaribu tena. ${error.message || ""}`,
         variant: "destructive",
       });
     } finally {
@@ -275,3 +232,5 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     </Dialog>
   );
 }
+
+    

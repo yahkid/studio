@@ -14,8 +14,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { db } from '@/lib/firebaseClient'; 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
@@ -27,8 +27,6 @@ export default function MatukioPage() {
   const [eventSignupEmail, setEventSignupEmail] = useState('');
   const [isEventSignupLoading, setIsEventSignupLoading] = useState(false);
   const { toast } = useToast();
-  const supabase = useSupabaseClient<Database>();
-
 
   const filteredAndSortedEvents = useMemo(() => {
     let processedEvents = events
@@ -113,27 +111,22 @@ export default function MatukioPage() {
 
     setIsEventSignupLoading(true);
     try {
-      const { error } = await supabase
-        .from('weekly_updates_signups') // Using existing table for now
-        .insert({ email: eventSignupEmail });
-
-      if (error) throw error;
+      await addDoc(collection(db, 'weekly_updates_signups'), { 
+        email: eventSignupEmail,
+        created_at: serverTimestamp(),
+        source: 'matukio_page' 
+      });
 
       toast({
         title: "Umefanikiwa Kujisajili!",
         description: "Utapokea taarifa za matukio yetu mapya na ya kipekee.",
       });
       setEventSignupEmail('');
-    } catch (caughtError: any) {
-      const defaultMessage = "Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena.";
-      let description = defaultMessage;
-      
-      console.error('--- Supabase Insert Error Details (Event Signup) ---');
-      if (caughtError && caughtError.message) description = caughtError.message;
-      
+    } catch (error: any) {
+      console.error('Error submitting event signup to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: description,
+        description: `Imeshindwa kuwasilisha barua pepe yako. Tafadhali jaribu tena. ${error.message || ""}`,
         variant: "destructive",
       });
     } finally {
@@ -282,3 +275,5 @@ export default function MatukioPage() {
     </div>
   );
 }
+
+    

@@ -16,15 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { Mail, MessageCircleHeart, Loader2 } from 'lucide-react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { db } from '@/lib/firebaseClient';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export function ExitIntentModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const supabase = useSupabaseClient<Database>();
   const [showOnExit, setShowOnExit] = useState(true);
 
   useEffect(() => {
@@ -63,11 +62,10 @@ export function ExitIntentModal() {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('exit_intent_offers')
-        .insert({ email: email });
-
-      if (error) throw error;
+      await addDoc(collection(db, 'exit_intent_offers'), { 
+        email: email,
+        created_at: serverTimestamp()
+      });
 
       toast({
         title: "Ombi Limepokelewa",
@@ -76,49 +74,11 @@ export function ExitIntentModal() {
       setEmail('');
       setIsOpen(false);
       setShowOnExit(false);
-    } catch (caughtError: any) {
-      const defaultMessage = "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.";
-      let description = defaultMessage;
-      
-      console.error('--- Supabase Insert Error Details (ExitIntentModal) ---');
-      console.error('Type of caughtError:', typeof caughtError);
-
-      if (caughtError) {
-        console.error('Caught Error Object:', caughtError);
-        
-        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-          description = caughtError.message;
-          console.error('Message property:', caughtError.message);
-        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
-          description = caughtError.error_description;
-          console.error('Error Description property:', caughtError.error_description);
-        } else if (typeof caughtError === 'string') {
-          description = caughtError;
-        }
-
-        if (caughtError.details) { 
-          console.error('Details:', caughtError.details);
-        }
-        if (caughtError.code) {
-          console.error('Code:', caughtError.code);
-        }
-        if (caughtError.hint) {
-            console.error('Hint:', caughtError.hint);
-        }
-        
-        try {
-          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify caughtError:', e_stringify);
-        }
-      } else {
-        console.error('Caught error is undefined or null.');
-      }
-      console.error('--- End Supabase Error Details (ExitIntentModal) ---');
-      
+    } catch (error: any) {
+      console.error('Error submitting exit intent with email to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: description,
+        description: `Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena. ${error.message || ""}`,
         variant: "destructive",
       });
     } finally {
@@ -126,13 +86,29 @@ export function ExitIntentModal() {
     }
   };
 
-  const handleJustPray = () => {
-    toast({
-      title: "Ombi Limepokelewa",
-      description: "Tutakuombea. Asante kwa kushiriki nasi.",
-    });
-    setIsOpen(false);
-    setShowOnExit(false);
+  const handleJustPray = async () => {
+    setIsLoading(true);
+    try {
+       await addDoc(collection(db, 'exit_intent_offers'), {
+         email: 'anonymous_prayer_request', // Store a placeholder
+         created_at: serverTimestamp()
+       });
+      toast({
+        title: "Ombi Limepokelewa",
+        description: "Tutakuombea. Asante kwa kushiriki nasi.",
+      });
+      setIsOpen(false);
+      setShowOnExit(false);
+    } catch (error: any) {
+      console.error('Error submitting anonymous prayer request to Firestore:', error);
+      toast({
+        title: "Hitilafu Imetokea",
+        description: `Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena. ${error.message || ""}`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDialogClose = (openStatus: boolean) => {
@@ -190,7 +166,7 @@ export function ExitIntentModal() {
                 type="button" 
                 suppressHydrationWarning={true}
               >
-                Funga {/* Changed from Hapana Asante */}
+                Funga 
               </Button>
             </DialogClose>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -216,3 +192,5 @@ export function ExitIntentModal() {
     </Dialog>
   );
 }
+
+    

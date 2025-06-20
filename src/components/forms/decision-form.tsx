@@ -10,9 +10,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn } from 'lucide-react';
-import { db } from '@/lib/firebaseClient'; // Firebase
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Firebase
-import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Import Firebase Auth Context
+import { db } from '@/lib/firebaseClient'; 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
 import Link from 'next/link';
 
 export function DecisionForm() {
@@ -38,8 +38,8 @@ export function DecisionForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!initialLoadingComplete || authLoading) {
-        toast({ title: "Tafadhali subiri", description: "Tunathibitisha uthibitishaji wako...", variant: "default"});
+    if (!initialLoadingComplete) {
+        toast({ title: "Tafadhali subiri", description: "Inapakia uthibitishaji...", variant: "default"});
         return;
     }
 
@@ -83,7 +83,7 @@ export function DecisionForm() {
         email,
         decision_type: decisionType,
         comments: comments || null,
-        user_id: user.uid, // Include the authenticated user's ID
+        user_id: user.uid, 
         created_at: serverTimestamp()
       });
 
@@ -92,18 +92,15 @@ export function DecisionForm() {
         description: "Tumefurahi sana na uamuzi wako. Mtu kutoka timu yetu atawasiliana nawe hivi karibuni (ndani ya saa 24-48) ili kukusaidia katika hatua zako zinazofuata. Karibu kwenye familia!",
         duration: 7000,
       });
-
-      // Optionally clear fields if user might submit another decision,
-      // but for this form, typically a one-time action per event.
-      // setName('');
-      // setEmail('');
+      
       setDecisionType('');
       setComments('');
+      // Keep name and email prefilled if user is logged in
     } catch (error: any) {
       console.error('Error submitting decision to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: "Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena. " + (error.message || ""),
+        description: `Imeshindwa kuwasilisha uamuzi wako. Tafadhali jaribu tena. ${error.message || ""}`,
         variant: "destructive",
       });
     } finally {
@@ -119,7 +116,7 @@ export function DecisionForm() {
     { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },
   ];
 
-  const isSubmitDisabled = !initialLoadingComplete || authLoading || isSubmitting || !user;
+  const isSubmitDisabled = authLoading || isSubmitting || (!user && initialLoadingComplete);
 
   return (
     <Card className="w-full max-w-lg mx-auto my-8">
@@ -205,7 +202,7 @@ export function DecisionForm() {
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-3 text-center">
-            Taarifa zako zitahusishwa na akaunti yako kwa usalama. Hatutakutumia barua taka.
+            {user ? "Taarifa zako zitahusishwa na akaunti yako kwa usalama." : "Tafadhali ingia ili kuhifadhi uamuzi huu na wasifu wako."} Hatutakutumia barua taka.
           </p>
         </CardContent>
         <CardFooter>
@@ -223,3 +220,5 @@ export function DecisionForm() {
     </Card>
   );
 }
+
+    

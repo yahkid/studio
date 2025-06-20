@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, MessageSquare, CalendarCheck, Loader2 } from 'lucide-react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import type { Database } from '@/types/supabase';
+import { db } from '@/lib/firebaseClient';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface VisitPlannerModalProps {
   open: boolean;
@@ -31,7 +31,6 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const supabase = useSupabaseClient<Database>();
 
   const resetForm = () => {
     setName('');
@@ -68,11 +67,12 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
     
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('visit_requests')
-        .insert({ name, email, message: message || null });
-
-      if (error) throw error;
+      await addDoc(collection(db, 'visit_requests'), { 
+        name, 
+        email, 
+        message: message || null,
+        created_at: serverTimestamp()
+      });
 
       toast({
         title: "Tutawasiliana Nawe!",
@@ -80,49 +80,11 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
       });
       onOpenChange(false); 
       resetForm(); 
-    } catch (caughtError: any) {
-      const defaultMessage = "Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena.";
-      let description = defaultMessage;
-      
-      console.error('--- Supabase Insert Error Details (VisitPlannerModal) ---');
-      console.error('Type of caughtError:', typeof caughtError);
-
-      if (caughtError) {
-        console.error('Caught Error Object:', caughtError);
-        
-        if (typeof caughtError.message === 'string' && caughtError.message.trim() !== '') {
-          description = caughtError.message;
-          console.error('Message property:', caughtError.message);
-        } else if (typeof caughtError.error_description === 'string' && caughtError.error_description.trim() !== '') {
-          description = caughtError.error_description;
-          console.error('Error Description property:', caughtError.error_description);
-        } else if (typeof caughtError === 'string') {
-          description = caughtError;
-        }
-
-        if (caughtError.details) { 
-          console.error('Details:', caughtError.details);
-        }
-        if (caughtError.code) {
-          console.error('Code:', caughtError.code);
-        }
-        if (caughtError.hint) {
-            console.error('Hint:', caughtError.hint);
-        }
-        
-        try {
-          console.error('Error JSON:', JSON.stringify(caughtError, null, 2));
-        } catch (e_stringify) {
-          console.error('Could not stringify caughtError:', e_stringify);
-        }
-      } else {
-        console.error('Caught error is undefined or null.');
-      }
-      console.error('--- End Supabase Error Details (VisitPlannerModal) ---');
-      
+    } catch (error: any) {
+      console.error('Error submitting visit request to Firestore:', error);
       toast({
         title: "Hitilafu Imetokea",
-        description: description,
+        description: `Imeshindwa kuwasilisha ombi lako. Tafadhali jaribu tena. ${error.message || ""}`,
         variant: "destructive",
       });
     } finally {
@@ -213,3 +175,5 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
     </Dialog>
   );
 }
+
+    
