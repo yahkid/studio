@@ -1,14 +1,21 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MapPin, Clock, Smile, Users, Baby, Coffee } from 'lucide-react';
 import { VisitPlannerModal } from '@/components/modals/visit-planner-modal';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function MimiMgeniPage() {
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -98,44 +105,53 @@ export default function MimiMgeniPage() {
             <h2 className="font-headline text-3xl md:text-4xl text-foreground text-center mb-10">
               Nini cha Kutarajia
             </h2>
-            <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="font-body text-lg hover:no-underline">
-                  <Users className="h-5 w-5 mr-2 text-primary" /> Ibada ikoje?
-                </AccordionTrigger>
-                <AccordionContent className="font-body text-muted-foreground text-base pl-7">
-                  Ibada zetu ni za kusisimua na za kisasa, zikiwa na mchanganyiko wa nyimbo za kisasa za kuabudu na tenzi za kale.
-                  Lengo letu ni kuunda mazingira ambapo unaweza kuungana na Mungu kikweli.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger className="font-body text-lg hover:no-underline">
-                  <Baby className="h-5 w-5 mr-2 text-primary" /> Kuna nini kwa ajili ya watoto wangu?
-                </AccordionTrigger>
-                <AccordionContent className="font-body text-muted-foreground text-base pl-7">
-                  Tunawapenda watoto HSCM Connect! Tunatoa programu zinazovutia na zinazolingana na umri kwa watoto kuanzia chekechea hadi shule ya msingi wakati wa ibada zetu za Jumapili.
-                  Watoto wako watajifunza kuhusu Mungu katika mazingira salama, ya kufurahisha, na yenye kulea.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger className="font-body text-lg hover:no-underline">
-                  Nivae nini?
-                </AccordionTrigger>
-                <AccordionContent className="font-body text-muted-foreground text-base pl-7">
-                  Njoo ulivyo! Utakuta mitindo mbalimbali katika ibada zetu, kuanzia mavazi ya kawaida hadi yale ya kupendeza zaidi.
-                  Tunajali zaidi wewe kuungana na Mungu kuliko unachovaa.
-                </AccordionContent>
-              </AccordionItem>
-               <AccordionItem value="item-4">
-                <AccordionTrigger className="font-body text-lg hover:no-underline">
-                  <Coffee className="h-5 w-5 mr-2 text-primary" /> Kuna kahawa?
-                </AccordionTrigger>
-                <AccordionContent className="font-body text-muted-foreground text-base pl-7">
-                  Bila shaka! Tunakualika ujiunge nasi kwa kahawa na ushirika kabla au baada ya ibada.
-                  Ni njia nzuri ya kukutana na watu na kuunganishwa.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            {!mounted ? (
+              <div className="w-full max-w-3xl mx-auto space-y-2">
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
+              </div>
+            ) : (
+              <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="font-body text-lg hover:no-underline">
+                    <Users className="h-5 w-5 mr-2 text-primary" /> Ibada ikoje?
+                  </AccordionTrigger>
+                  <AccordionContent className="font-body text-muted-foreground text-base pl-7">
+                    Ibada zetu ni za kusisimua na za kisasa, zikiwa na mchanganyiko wa nyimbo za kisasa za kuabudu na tenzi za kale.
+                    Lengo letu ni kuunda mazingira ambapo unaweza kuungana na Mungu kikweli.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="font-body text-lg hover:no-underline">
+                    <Baby className="h-5 w-5 mr-2 text-primary" /> Kuna nini kwa ajili ya watoto wangu?
+                  </AccordionTrigger>
+                  <AccordionContent className="font-body text-muted-foreground text-base pl-7">
+                    Tunawapenda watoto HSCM Connect! Tunatoa programu zinazovutia na zinazolingana na umri kwa watoto kuanzia chekechea hadi shule ya msingi wakati wa ibada zetu za Jumapili.
+                    Watoto wako watajifunza kuhusu Mungu katika mazingira salama, ya kufurahisha, na yenye kulea.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="font-body text-lg hover:no-underline">
+                    Nivae nini?
+                  </AccordionTrigger>
+                  <AccordionContent className="font-body text-muted-foreground text-base pl-7">
+                    Njoo ulivyo! Utakuta mitindo mbalimbali katika ibada zetu, kuanzia mavazi ya kawaida hadi yale ya kupendeza zaidi.
+                    Tunajali zaidi wewe kuungana na Mungu kuliko unachovaa.
+                  </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-4">
+                  <AccordionTrigger className="font-body text-lg hover:no-underline">
+                    <Coffee className="h-5 w-5 mr-2 text-primary" /> Kuna kahawa?
+                  </AccordionTrigger>
+                  <AccordionContent className="font-body text-muted-foreground text-base pl-7">
+                    Bila shaka! Tunakualika ujiunge nasi kwa kahawa na ushirika kabla au baada ya ibada.
+                    Ni njia nzuri ya kukutana na watu na kuunganishwa.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
           </div>
         </section>
 
