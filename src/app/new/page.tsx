@@ -15,9 +15,9 @@ export default function MimiMgeniPage() {
     <>
       <div className="bg-background">
         {/* Welcome Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-hscm-gold/10 via-white to-hscm-green/10 dark:from-hscm-gold-dark-theme/10 dark:via-background dark:to-hscm-green-dark-theme/10">
+        <section className="py-16 md:py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/10 dark:from-primary/20 dark:via-background dark:to-secondary/20">
           <div className="container mx-auto px-4 text-center">
-            <Smile className="mx-auto h-16 w-16 text-hscm-gold mb-6" />
+            <Smile className="mx-auto h-16 w-16 text-secondary mb-6" />
             <h1 className="font-headline text-4xl md:text-6xl text-foreground mb-6">
               Karibu HSCM Connect!
             </h1>
@@ -61,12 +61,12 @@ export default function MimiMgeniPage() {
               </div>
               <div className="rounded-lg overflow-hidden border">
                 <Image
-                  src="https://photos.app.goo.gl/WrzaGmEvRqh7xCDA8"
-                  alt="Shared image from Google Photos of HSCM Connect location or event"
+                  src="https://placehold.co/600x400.png"
+                  alt="Exterior of the HSCM Connect church building"
                   width={600}
                   height={400}
-                  className="w-full h-auto object-contain p-4"
-                  data-ai-hint="shared photo location"
+                  className="w-full h-auto object-cover p-4"
+                  data-ai-hint="church building exterior"
                 />
               </div>
             </div>
@@ -144,6 +144,3 @@ export default function MimiMgeniPage() {
     </>
   );
 }
-
-
-    

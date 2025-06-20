@@ -29,7 +29,7 @@ export function TestimonialCard({
           alt={imageAlt}
           width={150}
           height={225}
-          className="rounded-xl object-cover w-[150px] h-[225px]"
+          className="rounded-xl object-cover w-[150px] h-[225px] border"
           data-ai-hint={aiHint || "portrait person"}
         />
       </div>

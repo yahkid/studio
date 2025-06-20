@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Users } from 'lucide-react';
+import { HandHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function DecisionPathwaySectionSw() {
@@ -15,6 +15,7 @@ export function DecisionPathwaySectionSw() {
           title="Ujumbe Kuhusu Kufanya Uamuzi"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
+          loading="lazy"
         ></iframe>
       </div>
       <h2 className="font-headline text-4xl md:text-5xl text-foreground mt-10 mb-4">
@@ -25,10 +26,9 @@ export function DecisionPathwaySectionSw() {
       </p>
       <Button asChild size="lg" className="text-lg font-headline" suppressHydrationWarning={true}>
         <Link href="/decision">
-          Nimeamua Leo <Users className="ml-2 h-5 w-5" />
+          Nimeamua Leo <HandHeart className="ml-2 h-5 w-5" />
         </Link>
       </Button>
     </section>
   );
 }
-

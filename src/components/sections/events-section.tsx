@@ -3,7 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin, Sparkles } from 'lucide-react';
 import { initialEventsData } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
 import Link from 'next/link';
@@ -87,7 +87,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                 <div className="p-6 md:p-8">
                   <div className="flex items-start space-x-4 mb-6">
                     <div className="w-12 h-12 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🙏</span>
+                       <Sparkles className="w-6 h-6 text-secondary" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-headline font-semibold text-xl text-foreground mb-2">

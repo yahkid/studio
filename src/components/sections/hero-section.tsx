@@ -20,13 +20,13 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
         className="absolute inset-0 z-0"
       >
         <Image
-          src="/hscm-logo.png"
-          alt="HSCM Connect Logo as background"
+          src="https://placehold.co/1920x1080.png"
+          alt="Joyful congregation celebrating at HSCM Connect."
           fill
-          style={{ objectFit: 'contain', objectPosition: 'center' }}
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
           quality={85}
-          className="opacity-5 dark:opacity-10"
-          data-ai-hint="logo background"
+          className="opacity-10 dark:opacity-20"
+          data-ai-hint="church congregation"
           priority
           suppressHydrationWarning={true}
         />
