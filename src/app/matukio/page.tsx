@@ -22,11 +22,23 @@ export default function MatukioPage() {
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
   const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1)));
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1))); // Fixed date, fine for SSR
 
   const [eventSignupEmail, setEventSignupEmail] = useState('');
   const [isEventSignupLoading, setIsEventSignupLoading] = useState(false);
   const { toast } = useToast();
+
+  const [calendarConfig, setCalendarConfig] = useState<{fromYear?: number, toYear?: number}>({});
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const currentYear = new Date().getFullYear();
+    setCalendarConfig({
+      fromYear: currentYear - 1,
+      toYear: currentYear + 5,
+    });
+  }, []);
 
   const filteredAndSortedEvents = useMemo(() => {
     let processedEvents = events
@@ -111,6 +123,9 @@ export default function MatukioPage() {
 
     setIsEventSignupLoading(true);
     try {
+      if (!db) {
+        throw new Error("Firestore database is not initialized.");
+      }
       await addDoc(collection(db, 'weekly_updates_signups'), { 
         email: eventSignupEmail,
         created_at: serverTimestamp(),
@@ -184,7 +199,7 @@ export default function MatukioPage() {
         </div>
       </div>
       
-      {viewMode === 'month' && (
+      {viewMode === 'month' && mounted && (
          <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border">
             <Calendar
                 mode="single"
@@ -203,11 +218,19 @@ export default function MatukioPage() {
                 components={{
                     DayContent: DayContent 
                 }}
-                captionLayout="dropdown-buttons" 
-                fromYear={new Date().getFullYear() -1} toYear={new Date().getFullYear() + 5} 
+                captionLayout="dropdown-buttons"
+                fromYear={calendarConfig.fromYear} 
+                toYear={calendarConfig.toYear}
             />
         </div>
       )}
+       {viewMode === 'month' && !mounted && (
+        <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border min-h-[370px] flex justify-center items-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" /> 
+          <p className="ml-2 font-body">Inapakia Kalenda...</p>
+        </div>
+       )}
+
 
       {filteredAndSortedEvents.length > 0 ? (
         <div className="space-y-6">
