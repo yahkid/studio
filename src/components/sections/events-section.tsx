@@ -1,10 +1,11 @@
 
 "use client";
 
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Clock, MapPin, Sparkles } from 'lucide-react';
-import { initialEventsData } from '@/lib/events-data';
+import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -14,14 +15,23 @@ interface EventsSectionSwProps {
 }
 
 export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
-  const upcomingEvents = initialEventsData
-    .map(event => ({
-      ...event,
-      parsedDate: parseISO(event.date)
-    }))
-    .filter(event => isValid(event.parsedDate) && event.parsedDate.getTime() >= new Date().setHours(0,0,0,0)) // Filter for today or future
-    .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime())
-    .slice(0, 3);
+  const [upcomingEvents, setUpcomingEvents] = useState<MinistryEvent[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // This code now runs only on the client, after hydration
+    const events = initialEventsData
+      .map(event => ({
+        ...event,
+        parsedDate: parseISO(event.date)
+      }))
+      .filter(event => isValid(event.parsedDate) && event.parsedDate.getTime() >= new Date().setHours(0,0,0,0))
+      .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime())
+      .slice(0, 3);
+    
+    setUpcomingEvents(events);
+    setMounted(true);
+  }, []);
 
   return (
     <motion.section 
@@ -125,14 +135,20 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                     Matukio Yajayo
                   </h3>
                   
-                  <div className="space-y-4 text-left font-body">
-                    {upcomingEvents.length > 0 ? (
+                  <div className="space-y-4 text-left font-body min-h-[185px]">
+                    {!mounted ? (
+                      <div className="space-y-4">
+                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
+                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
+                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
+                      </div>
+                    ) : upcomingEvents.length > 0 ? (
                       upcomingEvents.map(event => (
                         <div key={event.id} className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
                           <div>
                             <h4 className="font-semibold text-foreground">{event.title}</h4>
                             <p className="text-sm text-muted-foreground">
-                              {isValid(event.parsedDate) ? format(event.parsedDate, "MMMM d, yyyy") : 'Tarehe Batili'}
+                              {event.parsedDate && isValid(event.parsedDate) ? format(event.parsedDate, "MMMM d, yyyy") : 'Tarehe Batili'}
                             </p>
                           </div>
                           <Button asChild size="sm" variant="outline" suppressHydrationWarning={true}>
@@ -141,10 +157,10 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                         </div>
                       ))
                     ) : (
-                      <p className="text-muted-foreground text-center">Hakuna matukio yajayo kwa sasa.</p>
+                      <p className="text-muted-foreground text-center pt-8">Hakuna matukio yajayo kwa sasa.</p>
                     )}
                   </div>
-                  {upcomingEvents.length > 0 && (
+                  {mounted && upcomingEvents.length > 0 && (
                      <Button asChild variant="link" className="mt-6 font-body" suppressHydrationWarning={true}>
                        <Link href="/matukio">Tazama Kalenda Kamili &rarr;</Link>
                      </Button>
