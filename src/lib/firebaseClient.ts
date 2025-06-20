@@ -6,15 +6,16 @@ import { getFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, type Analytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
 
-// Your web app's Firebase configuration (Hardcoded as per user request)
+// Your web app's Firebase configuration using environment variables
+// Ensure these NEXT_PUBLIC_ variables are set in your environment (e.g., .env.local or Vercel environment variables)
 const firebaseConfig = {
-  apiKey: "AIzaSyCqcbz2wQiPK6quYe3zUBG8iqovCU1HA08",
-  authDomain: "hsc-website-d7569.firebaseapp.com",
-  projectId: "hsc-website-d7569",
-  storageBucket: "hsc-website-d7569.firebasestorage.app",
-  messagingSenderId: "386290307127",
-  appId: "1:386290307127:web:697cd11e19ef5fe409afb2",
-  measurementId: "G-4PHE9L3LK1"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 let app: FirebaseApp | undefined;
@@ -25,9 +26,21 @@ let analytics: Analytics | undefined;
 
 // Initialize Firebase
 if (typeof window !== 'undefined') { // Ensure this code runs only on the client-side
-  if (!getApps().length) {
+  // Check if all required Firebase config values are present
+  const requiredConfigKeys: (keyof typeof firebaseConfig)[] = [
+    'apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'
+    // measurementId is optional for core functionality
+  ];
+  const missingKeys = requiredConfigKeys.filter(key => !firebaseConfig[key]);
+
+  if (missingKeys.length > 0) {
+    console.warn(
+      `Firebase initialization skipped due to missing environment variables: ${missingKeys.join(', ')}. ` +
+      "Please ensure all NEXT_PUBLIC_FIREBASE_* variables are set."
+    );
+  } else if (!getApps().length) {
     try {
-      console.log("Attempting to initialize Firebase with hardcoded config (firebaseClient.ts)...");
+      console.log("Attempting to initialize Firebase with environment variables (firebaseClient.ts)...");
       app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
@@ -43,7 +56,7 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
       });
       console.log("Firebase app, Auth, Firestore, Storage initialized successfully.");
     } catch (error) {
-      console.error("Firebase hardcoded initialization error in firebaseClient.ts:", error);
+      console.error("Firebase initialization error in firebaseClient.ts:", error);
       app = undefined;
       auth = undefined;
       db = undefined;
