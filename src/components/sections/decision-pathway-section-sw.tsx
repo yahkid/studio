@@ -2,21 +2,21 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { HandHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function DecisionPathwaySectionSw() {
   return (
     <section id="njia-ya-uamuzi" className="w-full max-w-5xl mx-auto text-center py-16 md:py-24 space-y-6 px-4">
-      <div className="aspect-video w-full rounded-lg border overflow-hidden">
-        <iframe
-          className="w-full h-full"
-          src="https://www.youtube.com/embed/SP3FVbEP0ps"
-          title="Ujumbe Kuhusu Kufanya Uamuzi"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          loading="lazy"
-        ></iframe>
+      <div className="aspect-video w-full rounded-lg border overflow-hidden relative">
+        <Image
+          src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
+          alt="Inspirational image related to making a faith decision"
+          fill
+          style={{ objectFit: 'cover' }}
+          data-ai-hint="inspirational faith"
+        />
       </div>
       <h2 className="font-headline text-4xl md:text-5xl text-foreground mt-10 mb-4">
         UMEFANYA UAMUZI LEO?
