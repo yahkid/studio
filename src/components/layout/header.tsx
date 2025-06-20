@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react";
+import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal, ChevronRight } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Added Avatar components
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 
 // Firebase imports
@@ -27,18 +31,17 @@ export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [clientUser, setClientUser] = useState(user); // Local state to manage user photoURL reactivity
+  const [clientUser, setClientUser] = useState(user);
 
   useEffect(() => {
-    setClientUser(user); // Update local user state when context user changes
+    setClientUser(user);
   }, [user]);
-
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
       await signOut(auth);
-      setClientUser(null); // Clear local user state on sign out
+      setClientUser(null);
       router.push('/');
     } catch (error) {
       console.error("Error signing out: ", error);
@@ -63,7 +66,6 @@ export function Header() {
       .toUpperCase()
       .substring(0, 2);
   };
-
 
   if (!initialLoadingComplete && authLoading) {
     return (
@@ -91,7 +93,6 @@ export function Header() {
       </header>
     );
   }
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -166,18 +167,26 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                 <DropdownMenuItem asChild>
-                  <Link href="/context-menu-demo" className="flex items-center cursor-pointer">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
                     <MenuSquare className="mr-2 h-4 w-4" />
-                    <span>ContextMenu Demo</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/expandable-tabs-demo" className="flex items-center cursor-pointer">
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    <span>ExpandableTabs Demo</span>
-                  </Link>
-                </DropdownMenuItem>
+                    <span>Demos</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem asChild>
+                        <Link href="/context-menu-demo" className="flex items-center cursor-pointer">
+                           ContextMenu Demo
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/expandable-tabs-demo" className="flex items-center cursor-pointer">
+                           ExpandableTabs Demo
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="cursor-pointer">
                   {isSigningOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
@@ -209,3 +218,6 @@ export function Header() {
     </header>
   );
 }
+
+
+    
