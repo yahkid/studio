@@ -158,12 +158,14 @@ export function Header() {
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/podcast" className="flex items-center cursor-pointer">
                     <MicVocal className="mr-2 h-4 w-4" />
                     <span>Podcast</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                  <DropdownMenuItem asChild>
                   <Link href="/context-menu-demo" className="flex items-center cursor-pointer">
                     <MenuSquare className="mr-2 h-4 w-4" />
