@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react";
+import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react"; // Languages icon removed
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -33,28 +33,23 @@ export function Header() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [clientUser, setClientUser] = useState(user);
 
-  const [currentLanguage, setCurrentLanguage] = useState<'sw' | 'en'>('sw');
-  const [mounted, setMounted] = useState(false);
+  // Language state and related logic removed from header
+  // const [currentLanguage, setCurrentLanguage] = useState<'sw' | 'en'>('sw');
+  // const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    const storedLang = localStorage.getItem('hscm-connect-language') as 'sw' | 'en' | null;
-    if (storedLang) {
-      setCurrentLanguage(storedLang);
-    }
-  }, []);
+  // useEffect(() => {
+  //   setMounted(true);
+  //   const storedLang = localStorage.getItem('hscm-connect-language') as 'sw' | 'en' | null;
+  //   if (storedLang) {
+  //     setCurrentLanguage(storedLang);
+  //   }
+  // }, []);
 
   useEffect(() => {
     setClientUser(user);
   }, [user]);
 
-  const toggleLanguage = () => {
-    const newLang = currentLanguage === 'sw' ? 'en' : 'sw';
-    setCurrentLanguage(newLang);
-    if (mounted) {
-      localStorage.setItem('hscm-connect-language', newLang);
-    }
-  };
+  // toggleLanguage function removed
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -132,8 +127,6 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
-          {/* "Nimeamua Leo" button removed */}
-
           {isSigningOut || authLoading ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -214,22 +207,7 @@ export function Header() {
               </Link>
             </Button>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-xs sm:text-sm"
-            title={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
-            aria-label={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
-            onClick={toggleLanguage}
-            suppressHydrationWarning={true}
-          >
-            <Languages className="h-5 w-5" />
-            {mounted && (
-              <span className="ml-1 hidden sm:inline">
-                {currentLanguage.toUpperCase()}
-              </span>
-            )}
-          </Button>
+          {/* Language switch button removed from here */}
           <ThemeToggle />
         </nav>
       </div>

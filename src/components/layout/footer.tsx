@@ -1,9 +1,34 @@
 
+"use client"; // Make this a client component
+
 import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Languages } from 'lucide-react'; // Added Languages
+import { Button } from "@/components/ui/button"; // Added Button
+import { useState, useEffect } from "react"; // Added useState, useEffect
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+
+  const [currentLanguage, setCurrentLanguage] = useState<'sw' | 'en'>('sw');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedLang = localStorage.getItem('hscm-connect-language') as 'sw' | 'en' | null;
+    if (storedLang) {
+      setCurrentLanguage(storedLang);
+    }
+  }, []);
+
+  const toggleLanguage = () => {
+    const newLang = currentLanguage === 'sw' ? 'en' : 'sw';
+    setCurrentLanguage(newLang);
+    if (mounted) {
+      localStorage.setItem('hscm-connect-language', newLang);
+    }
+    // Note: Actual content language change is not implemented here.
+    // This just updates the visual state and localStorage.
+  };
 
   return (
     <footer className="bg-background-dark text-[#D3D3D3]" style={{ padding: "5rem 2rem 2rem" }}>
@@ -91,6 +116,22 @@ export function Footer() {
                 <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>
               </ul>
             </div>
+          </div>
+
+          {/* Language Switch Button */}
+          <div className="my-8 flex justify-center">
+            <Button
+              variant="ghost"
+              size="sm" // Adjusted size for footer
+              className="rounded-md text-xs sm:text-sm text-[#D3D3D3] hover:text-white hover:bg-white/10 transition-colors"
+              title={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
+              aria-label={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
+              onClick={toggleLanguage}
+              suppressHydrationWarning={true}
+            >
+              <Languages className="h-5 w-5 mr-2" />
+              {mounted ? (currentLanguage === 'sw' ? "English" : "Kiswahili") : "Language"}
+            </Button>
           </div>
 
           <hr className="border-zinc-700 my-8" />
