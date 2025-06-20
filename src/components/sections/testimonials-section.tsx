@@ -20,9 +20,8 @@ import { motion } from 'framer-motion';
 
 const testimonials = [
   {
-    imageSrc: "https://placehold.co/150x225.png",
+    imageSrc: "/1750433685204.jpg",
     imageAlt: "Picha ya Asha Juma",
-    aiHint: "portrait woman african",
     quote: "Nilipata familia na kusudi jipya.",
     story:
       "Kabla ya kujiunga na HSCM, nilijihisi mpweke na niliyepotea. Kupitia jumuiya na mafundisho, nimepata uponyaji na mwelekeo mpya maishani mwangu.",
