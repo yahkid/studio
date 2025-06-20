@@ -20,7 +20,7 @@ function checkEnvVarsPresent(): boolean {
     'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
     'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
     'NEXT_PUBLIC_FIREBASE_APP_ID',
-    // NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID is optional
+    // NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID is optional for core services
   ];
   const missingVars = requiredEnvVars.filter(v => !process.env[v]);
   if (missingVars.length > 0) {
@@ -77,10 +77,11 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
     console.warn("Firebase was not initialized due to missing environment variables (firebaseClient.ts). Some app features may not work.");
   }
 } else {
-    console.warn("Firebase client-side code (firebaseClient.ts) is attempting to run on the server. Initialization skipped.");
+    // This console.warn might appear during server-side rendering or build, which is expected.
+    // console.warn("Firebase client-side code (firebaseClient.ts) is attempting to run on the server. Initialization skipped.");
 }
 
 // Export the potentially undefined instances using their intended names
 export { app, authInstance as auth, dbInstance as db, storageInstance as storage };
 // export { app, authInstance as auth, dbInstance as db, storageInstance as storage, analytics }; // Optional
-
+    

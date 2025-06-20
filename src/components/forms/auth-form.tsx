@@ -1,24 +1,24 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UserPlus, LogIn, Chrome } from 'lucide-react'; // Chrome used as Google icon
+import { Loader2, LogIn, UserPlus, Chrome } from 'lucide-react'; // Chrome as Google icon
 
 // Firebase imports
-import { auth } from '@/lib/firebaseClient';
+import { auth } from '@/lib/firebaseClient'; // Correct path to your firebaseClient
 import {
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
 } from 'firebase/auth';
 
 interface AuthFormProps {
   mode?: 'login' | 'signup';
   onSwitchMode?: () => void;
-  initialMessage?: string | null;
+  initialMessage?: string | null; // Not currently used with Google-only flow
 }
 
 export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthFormProps) {
@@ -27,6 +27,17 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    if (!auth) {
+      toast({
+        title: 'Firebase Error',
+        description: 'Firebase is not initialized. Please check console for details. Environment variables might be missing.',
+        variant: 'destructive',
+      });
+      console.error("Firebase auth instance is not available in AuthForm.");
+      setIsGoogleLoading(false);
+      return;
+    }
+
     setIsGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
@@ -49,6 +60,9 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           case 'auth/popup-blocked':
             description = 'Google Sign-In popup was blocked by the browser. Please allow popups for this site.';
             break;
+          case 'auth/unauthorized-domain':
+            description = 'This domain is not authorized for Firebase Authentication. Please check your Firebase project settings.';
+            break;
           default:
             description = caughtError.message || 'A Google Sign-In error occurred.';
         }
@@ -60,6 +74,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         description: description,
         variant: 'destructive',
       });
+      console.error("Google Sign-In Error in AuthForm:", caughtError);
     } finally {
       setIsGoogleLoading(false);
     }
@@ -87,12 +102,12 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           className="w-full font-headline"
           disabled={isGoogleLoading}
           suppressHydrationWarning={true}
-          variant="outline" // Consistent with previous Google button style
+          variant="default" // Changed from outline to default for better visibility
         >
           {isGoogleLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Chrome className="mr-2 h-4 w-4" /> // Using Chrome as placeholder Google icon
+            <Chrome className="mr-2 h-4 w-4" />
           )}
           {isGoogleLoading ? 'Processing...' : (mode === 'login' ? 'Sign in with Google' : 'Sign up with Google')}
         </Button>
@@ -114,3 +129,4 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
     </Card>
   );
 }
+    
