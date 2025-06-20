@@ -13,9 +13,9 @@ import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const videoThumbnails = [
-  { id: 'unsplash-1', src: 'https://images.unsplash.com/photo-1629646673790-1fd481b0a33e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 1' },
-  { id: 'unsplash-2', src: 'https://images.unsplash.com/photo-1589320843284-4b70884083a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 2' },
-  { id: 'unsplash-3', src: 'https://images.unsplash.com/photo-1629646673790-1fd481b0a33e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 3' },
+  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
+  { id: 'local-thumb-2', src: '/images/video-thumb-2.jpg', alt: 'Video thumbnail 2 - Local' },
+  { id: 'local-thumb-3', src: '/images/video-thumb-3.jpg', alt: 'Video thumbnail 3 - Local' },
 ];
 
 export function WatchAndGrowSectionSw() {
