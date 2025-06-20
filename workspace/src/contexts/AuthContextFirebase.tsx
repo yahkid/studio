@@ -1,11 +1,11 @@
 
-"use client";
+'use client';
 
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import type { FC, ReactNode } from 'react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../lib/firebaseClient'; // Ensure this path is correct
+import { auth } from '@/lib/firebaseClient'; // Ensure this path is correct
 
 interface AuthContextFirebaseType {
   user: User | null;
@@ -25,8 +25,8 @@ export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ child
   const [initialLoadingComplete, setInitialLoadingComplete] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
       setLoading(false);
       setInitialLoadingComplete(true); // Mark initial check as complete
     });
@@ -41,7 +41,7 @@ export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ child
   );
 };
 
-export const useAuthFirebase = (): AuthContextFirebaseType => {
+export const useAuthFirebase = (): AuthContextFirebaseType => { // Changed export name
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
     throw new Error('useAuthFirebase must be used within an AuthContextProviderFirebase');
