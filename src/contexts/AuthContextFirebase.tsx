@@ -23,10 +23,11 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
   const [initialLoadingComplete, setInitialLoadingComplete] = useState(false);
 
   useEffect(() => {
-    if (!auth) { // Check if the auth service is available from firebaseClient
+    // Check if the auth service is available (it might be undefined if firebaseClient failed to initialize)
+    if (!auth) { 
       console.warn(
-        "Firebase Auth service is not initialized. Auth context will not function. " +
-        "This is likely due to missing Firebase environment variables in your deployment environment (e.g., Vercel)."
+        "Firebase Auth service is not available in AuthContextFirebase. " +
+        "This is likely due to missing Firebase environment variables in your deployment environment or an initialization error in firebaseClient.ts."
       );
       setUser(null);
       setLoading(false);
@@ -40,7 +41,7 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
       setLoading(false);
       setInitialLoadingComplete(true); // Mark initial load as complete
     }, (error) => {
-      console.error("Firebase Auth state change error:", error);
+      console.error("Firebase Auth state change error in AuthContextFirebase:", error);
       setUser(null); // Ensure user is null on error
       setLoading(false);
       setInitialLoadingComplete(true); // Still mark as complete even on error

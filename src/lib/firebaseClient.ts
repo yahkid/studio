@@ -17,8 +17,10 @@ function checkEnvVarsPresent(): boolean {
     'NEXT_PUBLIC_FIREBASE_API_KEY',
     'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
     'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-    // Add others if strictly necessary for basic initialization
-    // e.g., 'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET' if storage is used early
+    'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
+    'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
+    'NEXT_PUBLIC_FIREBASE_APP_ID',
+    // 'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID', // Measurement ID is optional for core functionality
   ];
   const missingVars = requiredEnvVars.filter(v => !process.env[v]);
   if (missingVars.length > 0) {
@@ -51,9 +53,9 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
         // if (firebaseConfig.measurementId) { // Optional
         //   analytics = getAnalytics(app);
         // }
-        console.log("Firebase initialized successfully.");
+        console.log("Firebase initialized successfully via firebaseClient.ts.");
       } catch (error) {
-        console.error("Firebase initialization error:", error);
+        console.error("Firebase initialization error in firebaseClient.ts:", error);
         // app, authInstance, dbInstance, storageInstance will remain undefined
       }
     } else {
@@ -64,8 +66,11 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
       // if (firebaseConfig.measurementId && app) { // Optional
       //   analytics = getAnalytics(app);
       // }
-      console.log("Firebase app already initialized.");
+      console.log("Firebase app already initialized (firebaseClient.ts).");
     }
+  } else {
+    // This else block handles the case where checkEnvVarsPresent returns false
+    console.warn("Firebase was not initialized due to missing environment variables (firebaseClient.ts). Some app features may not work.");
   }
 }
 
