@@ -1,16 +1,14 @@
 
 'use client';
 
-import type { User } from 'firebase/auth';
-import { onAuthStateChanged } from 'firebase/auth';
-import type { FC, ReactNode } from 'react';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '@/lib/firebaseClient';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '@/lib/firebaseClient'; // Assumes firebaseClient.ts is in src/lib/
 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; // Added to match usage in other components
+  initialLoadingComplete: boolean; 
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
@@ -19,7 +17,7 @@ const AuthContextFirebase = createContext<AuthContextFirebaseType>({
   initialLoadingComplete: false,
 });
 
-export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [initialLoadingComplete, setInitialLoadingComplete] = useState(false);
@@ -28,10 +26,10 @@ export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ child
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-      setInitialLoadingComplete(true);
+      setInitialLoadingComplete(true); 
     }, (error) => {
       console.error("Auth state change error:", error);
-      setUser(null); // Ensure user is null on error
+      setUser(null); 
       setLoading(false);
       setInitialLoadingComplete(true);
     });
