@@ -12,8 +12,10 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2 } from 'lucide-react';
 import { db } from '@/lib/firebaseClient'; // Firebase
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Firebase
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Import Firebase Auth Context
 
 export function DecisionForm() {
+  const { user } = useAuthFirebase(); // Get current user
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [decisionType, setDecisionType] = useState('');
@@ -47,6 +49,7 @@ export function DecisionForm() {
         email,
         decision_type: decisionType,
         comments: comments || null,
+        user_id: user ? user.uid : "anonymous_user", // Use placeholder if user is not logged in
         created_at: serverTimestamp()
       });
 
