@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -15,13 +14,23 @@ export default function MimiMgeniPage() {
     <>
       <div className="bg-background">
         {/* Welcome Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/10 dark:from-primary/20 dark:via-background dark:to-secondary/20">
-          <div className="container mx-auto px-4 text-center">
-            <Smile className="mx-auto h-16 w-16 text-secondary mb-6" />
-            <h1 className="font-headline text-4xl md:text-6xl text-foreground mb-6">
+        <section className="relative py-24 md:py-32 flex items-center justify-center text-center overflow-hidden">
+          <Image
+            src="/DSC00243.jpg"
+            alt="Welcome to HSCM Connect background"
+            fill
+            style={{ objectFit: 'cover' }}
+            quality={85}
+            className="z-0"
+            data-ai-hint="church interior worship"
+          />
+          <div className="absolute inset-0 bg-black/60 z-10" />
+          <div className="relative z-20 container mx-auto px-4 text-center text-white">
+             <Smile className="mx-auto h-16 w-16 text-secondary mb-6" />
+            <h1 className="font-headline text-4xl md:text-6xl mb-6">
               Karibu HSCM Connect!
             </h1>
-            <p className="font-body text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            <p className="font-body text-xl md:text-2xl text-slate-100 max-w-3xl mx-auto mb-8">
               Tunafurahi sana umefika hapa na unafikiria kututembelea! Kuingia katika kanisa jipya kunaweza kuwa na msisimko, na tunataka kuhakikisha uzoefu wako wa kwanza nasi ni wa kukaribisha, rahisi, na wenye kuburudisha.
             </p>
             <Button 
