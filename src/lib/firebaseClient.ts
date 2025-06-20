@@ -20,7 +20,6 @@ function checkEnvVarsPresent(): boolean {
     'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
     'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
     'NEXT_PUBLIC_FIREBASE_APP_ID',
-    // NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID is optional for core services
   ];
   const missingVars = requiredEnvVars.filter(v => !process.env[v]);
   if (missingVars.length > 0) {
@@ -47,34 +46,43 @@ if (typeof window !== 'undefined') { // Ensure this code runs only on the client
     if (!getApps().length) {
       try {
         app = initializeApp(firebaseConfig);
-        authInstance = getAuth(app);
-        dbInstance = getFirestore(app);
-        storageInstance = getStorage(app);
-        // if (firebaseConfig.measurementId && app) { // Optional
-        //   analytics = getAnalytics(app);
-        // }
-        console.log("Firebase initialized successfully via firebaseClient.ts.");
+        console.log("Firebase app initialized successfully (firebaseClient.ts).");
       } catch (error) {
         console.error("Firebase initialization error in firebaseClient.ts:", error);
-        // app, authInstance, dbInstance, storageInstance will remain undefined
+        app = undefined; // Explicitly set to undefined on error
       }
     } else {
       app = getApps()[0];
-      // Ensure instances are re-fetched if app already exists
-      authInstance = getAuth(app);
-      dbInstance = getFirestore(app);
-      storageInstance = getStorage(app);
-      // if (firebaseConfig.measurementId && app) { // Optional
-      //   try { // Check if analytics is already initialized
-      //     analytics = getAnalytics(app);
-      //   } catch (e) {
-      //     // console.warn("Could not get analytics instance, possibly already initialized or not available.")
-      //   }
-      // }
       console.log("Firebase app already initialized (firebaseClient.ts).");
     }
+
+    if (app) {
+      try {
+        authInstance = getAuth(app);
+        dbInstance = getFirestore(app);
+        storageInstance = getStorage(app);
+        // if (firebaseConfig.measurementId) { // Optional
+        //   analytics = getAnalytics(app);
+        // }
+      } catch (serviceError) {
+        console.error("Error initializing Firebase services (auth, db, storage):", serviceError);
+        authInstance = undefined;
+        dbInstance = undefined;
+        storageInstance = undefined;
+      }
+    } else {
+      // If app itself is undefined, ensure services are also undefined.
+      authInstance = undefined;
+      dbInstance = undefined;
+      storageInstance = undefined;
+    }
+
   } else {
     console.warn("Firebase was not initialized due to missing environment variables (firebaseClient.ts). Some app features may not work.");
+    // Ensure services are undefined if env vars are missing
+    authInstance = undefined;
+    dbInstance = undefined;
+    storageInstance = undefined;
   }
 } else {
     // This console.warn might appear during server-side rendering or build, which is expected.

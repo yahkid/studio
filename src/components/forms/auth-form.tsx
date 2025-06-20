@@ -19,8 +19,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  // createUserWithEmailAndPassword, // Not used if signup is Google-only
-  // updateProfile, // Not used if signup is Google-only
+  createUserWithEmailAndPassword,
+  updateProfile,
+  // sendEmailVerification // Uncomment if you want to implement email verification
 } from 'firebase/auth';
 
 const loginSchema = z.object({
@@ -30,14 +31,13 @@ const loginSchema = z.object({
 
 // Signup schema is not strictly needed if signup is Google-only, but define for AuthFormValues type
 const signupSchema = z.object({
-  name: z.string().optional(), // Optional as it's not used in Google-only signup form
+  name: z.string().optional(), // Optional for Google-only signup, required for email/pass signup
   email: z.string().email({ message: 'Invalid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
 
-type AuthFormValues = z.infer<typeof loginSchema>; // For login
-// For a combined form, you might use: z.infer<typeof loginSchema> | z.infer<typeof signupSchema_if_email_password_enabled>
+type AuthFormValues = z.infer<typeof loginSchema> & { name?: string };
 
 interface AuthFormProps {
   mode?: 'login' | 'signup';
@@ -51,20 +51,23 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
+  const currentSchema = mode === 'signup' ? signupSchema : loginSchema;
+
   const form = useForm<AuthFormValues>({
-    resolver: zodResolver(loginSchema), // Use loginSchema for login mode
+    resolver: zodResolver(currentSchema),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   });
 
   useEffect(() => {
-    form.reset({ email: '', password: '' });
+    form.reset({ email: '', password: '', name: '' });
   }, [mode, form.reset]);
 
 
-  const handleEmailPasswordLogin = async (values: AuthFormValues) => {
+  const handleEmailPasswordAuth = async (values: AuthFormValues) => {
     setIsLoading(true);
     try {
       if (!auth) {
@@ -72,9 +75,28 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
         setIsLoading(false);
         return;
       }
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      toast({ title: 'Login Successful', description: "Welcome back!" });
-      router.push('/');
+      if (mode === 'login') {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        toast({ title: 'Login Successful', description: "Welcome back!" });
+        router.push('/');
+      } else { // signup mode
+        if (!values.name) { // Should be caught by Zod if schema requires it
+          toast({ title: 'Signup Error', description: 'Name is required for signup.', variant: 'destructive'});
+          setIsLoading(false);
+          return;
+        }
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        if (userCredential.user) {
+          await updateProfile(userCredential.user, { displayName: values.name });
+          // await sendEmailVerification(userCredential.user); // Optional
+          // toast({ title: 'Signup Successful', description: 'Please check your email for verification.' });
+          // router.push('/auth/confirmation-info');
+          toast({ title: 'Signup Successful!', description: 'Welcome! Your account has been created.'});
+           router.push('/');
+        } else {
+          throw new Error("User creation failed via email/password.");
+        }
+      }
     } catch (caughtError: any) {
       let description = 'An unexpected error occurred. Please try again.';
       if (caughtError.code) {
@@ -83,32 +105,34 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           case 'auth/user-not-found': description = 'No user found with this email.'; break;
           case 'auth/wrong-password': description = 'Incorrect password.'; break;
           case 'auth/invalid-credential': description = 'Invalid credentials. Please check your email and password.'; break;
+          case 'auth/email-already-in-use': description = 'This email address is already in use.'; break;
+          case 'auth/weak-password': description = 'Password is too weak. It must be at least 6 characters.'; break;
           default: description = caughtError.message || 'An authentication error occurred.';
         }
       } else if (caughtError.message) {
         description = caughtError.message;
       }
-      toast({ title: 'Error Logging In', description, variant: 'destructive' });
-      console.error("Email/Password Login Error:", caughtError);
+      toast({ title: `Error ${mode === 'login' ? 'Logging In' : 'Signing Up'}`, description, variant: 'destructive' });
+      console.error("Email/Password Auth Error:", caughtError);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    if (!auth) {
-      toast({ title: 'Firebase Error', description: 'Firebase is not initialized.', variant: 'destructive'});
-      return;
-    }
     setIsGoogleLoading(true);
-    const provider = new GoogleAuthProvider();
     try {
+      if (!auth) {
+        toast({ title: 'Firebase Error', description: 'Firebase is not initialized.', variant: 'destructive'});
+        setIsGoogleLoading(false);
+        return;
+      }
+      const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       toast({ title: 'Authentication Successful', description: `Welcome! You've been ${mode === 'login' ? 'logged in' : 'signed up'}.` });
       router.push('/');
     } catch (caughtError: any) {
       let description = 'An unexpected error occurred with Google Sign-In. Please try again.';
-      // Firebase specific error handling for Google Sign-In
       if (caughtError.code) {
         switch (caughtError.code) {
           case 'auth/account-exists-with-different-credential': description = 'An account already exists with the same email address but different sign-in credentials. Try signing in with the original method.'; break;
@@ -135,7 +159,7 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
           {mode === 'login' ? 'Karibu Tena!' : 'Fungua Akaunti'}
         </CardTitle>
         <CardDescription className="font-body text-center pt-1">
-          {mode === 'login' ? 'Ingia kwa kutumia barua pepe yako au Google.' : 'Jisajili na Google ili ujiunge nasi.'}
+          {mode === 'login' ? 'Ingia kwa kutumia barua pepe yako au Google.' : 'Jisajili kwa kutumia barua pepe yako au Google.'}
         </CardDescription>
       </CardHeader>
       {initialMessage && (
@@ -145,9 +169,26 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
       )}
 
       <CardContent className="p-8 pt-4">
-        {mode === 'login' && (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleEmailPasswordLogin)} className="space-y-6 mb-6">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleEmailPasswordAuth)} className="space-y-6 mb-6">
+            {mode === 'signup' && (
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-body">Jina Kamili</FormLabel>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <FormControl>
+                        <Input placeholder="Jina lako kamili" className="pl-10 font-body" {...field} disabled={isLoading || isGoogleLoading} />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
               <FormField
                 control={form.control}
                 name="email"
@@ -181,32 +222,29 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
                 )}
               />
               <Button type="submit" className="w-full font-headline" disabled={isLoading || isGoogleLoading} suppressHydrationWarning={true}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogIn className="mr-2 h-4 w-4" />}
-                {isLoading ? 'Inasubiri...' : 'Ingia'}
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : (mode === 'login' ? <LogIn className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />)}
+                {isLoading ? 'Inasubiri...' : (mode === 'login' ? 'Ingia' : 'Jisajili na Barua Pepe')}
               </Button>
             </form>
           </Form>
-        )}
 
-        {mode === 'login' && (
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Au ingia na
+                Au {mode === 'login' ? 'ingia na' : 'jisajili na'}
               </span>
             </div>
           </div>
-        )}
 
         <Button
           onClick={handleGoogleSignIn}
           className="w-full font-headline"
           disabled={isGoogleLoading || isLoading}
           suppressHydrationWarning={true}
-          variant={mode === 'login' ? "outline" : "default"}
+          variant="outline"
         >
           {isGoogleLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -226,12 +264,10 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
             className="font-body text-sm w-full"
             disabled={isLoading || isGoogleLoading}
           >
-            {mode === 'login' ? "Huna akaunti? Jisajili na Google" : 'Una akaunti tayari? Ingia na Barua Pepe au Google'}
+            {mode === 'login' ? "Huna akaunti? Jisajili" : 'Una akaunti tayari? Ingia'}
           </Button>
         </CardFooter>
       )}
     </Card>
   );
 }
-
-    

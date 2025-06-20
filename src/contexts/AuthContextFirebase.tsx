@@ -27,7 +27,7 @@ export const AuthContextProviderFirebase: React.FC<{ children: ReactNode }> = ({
     if (!auth) { 
       console.warn(
         "Firebase Auth service is not available in AuthContextFirebase. " +
-        "This is likely due to missing Firebase environment variables in your deployment environment or an initialization error in firebaseClient.ts."
+        "This is likely due to missing Firebase environment variables or an initialization error in firebaseClient.ts."
       );
       setUser(null);
       setLoading(false);
