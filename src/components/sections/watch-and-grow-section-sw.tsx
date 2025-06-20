@@ -13,9 +13,9 @@ import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const videoThumbnails = [
-  { id: '7Ja9JmMign0', alt: 'Video thumbnail 1' },
-  { id: 'zqZlRS_v4z8', alt: 'Video thumbnail 2' },
-  { id: 'SP3FVbEP0ps', alt: 'Video thumbnail 3' },
+  { id: 'unsplash-1', src: 'https://images.unsplash.com/photo-1629646673790-1fd481b0a33e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 1' },
+  { id: 'unsplash-2', src: 'https://images.unsplash.com/photo-1589320843284-4b70884083a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 2' },
+  { id: 'unsplash-3', src: 'https://images.unsplash.com/photo-1629646673790-1fd481b0a33e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', alt: 'Video thumbnail 3' },
 ];
 
 export function WatchAndGrowSectionSw() {
@@ -82,7 +82,7 @@ export function WatchAndGrowSectionSw() {
             {videoThumbnails.map((thumb) => (
               <div key={thumb.id} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
                 <Image 
-                  src={`https://img.youtube.com/vi/${thumb.id}/mqdefault.jpg`} 
+                  src={thumb.src} 
                   alt={thumb.alt} 
                   width={300} 
                   height={169} 
@@ -131,4 +131,3 @@ export function WatchAndGrowSectionSw() {
   );
 }
 
-    
