@@ -26,7 +26,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           quality={85}
           className="opacity-10 dark:opacity-20"
-          data-ai-hint="church congregation"
+          data-ai-hint="hopeful sunrise"
           priority
           suppressHydrationWarning={true}
         />
