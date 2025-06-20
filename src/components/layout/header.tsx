@@ -33,23 +33,9 @@ export function Header() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [clientUser, setClientUser] = useState(user);
 
-  // Language state and related logic removed from header
-  // const [currentLanguage, setCurrentLanguage] = useState<'sw' | 'en'>('sw');
-  // const [mounted, setMounted] = useState(false);
-
-  // useEffect(() => {
-  //   setMounted(true);
-  //   const storedLang = localStorage.getItem('hscm-connect-language') as 'sw' | 'en' | null;
-  //   if (storedLang) {
-  //     setCurrentLanguage(storedLang);
-  //   }
-  // }, []);
-
   useEffect(() => {
     setClientUser(user);
   }, [user]);
-
-  // toggleLanguage function removed
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -88,7 +74,7 @@ export function Header() {
         <div className="container flex items-center justify-between py-4 md:py-6">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
+              src="/hscm-logo.png" // Updated logo path
               alt="Holy Spirit Connect Ministry Logo"
               width={40}
               height={40}
@@ -114,7 +100,7 @@ export function Header() {
       <div className="container flex items-center justify-between py-4 md:py-6">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
+            src="/hscm-logo.png" // Updated logo path
             alt="Holy Spirit Connect Ministry Logo"
             width={40}
             height={40}
@@ -202,12 +188,11 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Button asChild variant="ghost" className="font-body text-xs sm:text-sm" size="sm" suppressHydrationWarning={true}>
-              <Link href="/auth">
+              <Link href="/auth?mode=login">
                 <LogIn className="mr-2 h-4 w-4" /> Ingia
               </Link>
             </Button>
           )}
-          {/* Language switch button removed from here */}
           <ThemeToggle />
         </nav>
       </div>
