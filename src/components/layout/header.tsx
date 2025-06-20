@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react"; // Removed ChevronRight as it's not used
+import { LogIn, LogOut, Loader2, Languages, User, Settings as SettingsIcon, MenuSquare, TrendingUp, MicVocal } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -54,8 +54,6 @@ export function Header() {
     if (mounted) {
       localStorage.setItem('hscm-connect-language', newLang);
     }
-    // Note: Full i18n would involve more here, like changing document.documentElement.lang
-    // and re-rendering content. For now, this is a visual toggle.
   };
 
   const handleSignOut = async () => {
@@ -134,14 +132,7 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
-          <Button
-            asChild
-            className="font-body font-semibold text-xs sm:text-sm py-2 px-2 sm:px-3"
-            size="sm"
-            suppressHydrationWarning={true}
-          >
-            <Link href="/decision">Nimeamua Leo</Link>
-          </Button>
+          {/* "Nimeamua Leo" button removed */}
 
           {isSigningOut || authLoading ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
