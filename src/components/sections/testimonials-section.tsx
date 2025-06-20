@@ -29,7 +29,7 @@ const testimonials = [
     location: "Kinondoni, DSM",
   },
   {
-    imageSrc: "https://placehold.co/150x225.png",
+    imageSrc: "/1750433633252.jpg",
     imageAlt: "Picha ya John Peter",
     aiHint: "portrait man african",
     quote: "Maisha yangu yamebadilika kabisa.",
