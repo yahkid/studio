@@ -5,12 +5,12 @@ import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import type { FC, ReactNode } from 'react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '@/lib/firebaseClient'; // Ensure this path is correct
+import { auth } from '@/lib/firebaseClient';
 
 interface AuthContextFirebaseType {
   user: User | null;
   loading: boolean;
-  initialLoadingComplete: boolean; // To track if initial auth check is done
+  initialLoadingComplete: boolean; // Added to match usage in other components
 }
 
 const AuthContextFirebase = createContext<AuthContextFirebaseType>({
@@ -28,7 +28,12 @@ export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ child
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-      setInitialLoadingComplete(true); // Mark initial check as complete
+      setInitialLoadingComplete(true);
+    }, (error) => {
+      console.error("Auth state change error:", error);
+      setUser(null); // Ensure user is null on error
+      setLoading(false);
+      setInitialLoadingComplete(true);
     });
 
     return () => unsubscribe();
@@ -41,7 +46,7 @@ export const AuthContextProviderFirebase: FC<{ children: ReactNode }> = ({ child
   );
 };
 
-export const useAuthFirebase = (): AuthContextFirebaseType => { // Changed export name
+export const useAuthFirebase = (): AuthContextFirebaseType => {
   const context = useContext(AuthContextFirebase);
   if (context === undefined) {
     throw new Error('useAuthFirebase must be used within an AuthContextProviderFirebase');
