@@ -20,7 +20,7 @@ export interface DecisionDoc {
   email: string;
   decision_type: string;
   comments: string | null;
-  user_id: string; // Firebase Auth user.uid or "anonymous_user" (though anonymous should be rare for decisions)
+  user_id: string; 
 }
 
 export interface LeadMagnetSignupDoc {
@@ -105,6 +105,19 @@ export interface UserCourseProgressDoc {
   progress_percentage: number;
 }
 
+export interface UserTestimonyDoc {
+  id?: string; // Firestore document ID
+  userId: string; // Firebase Auth user.uid
+  userName: string;
+  userEmail: string;
+  story: string;
+  fileUrl?: string | null; // URL to uploaded photo/document in Firebase Storage
+  originalFileName?: string | null; // Original name of the uploaded file
+  submittedAt: Timestamp;
+  status: "pending_review" | "approved" | "rejected"; // Moderation status
+  consentToShare: boolean;
+}
+
 export interface FirestoreDocTypes {
   decisions: DecisionDoc;
   lead_magnet_signups: LeadMagnetSignupDoc;
@@ -115,6 +128,7 @@ export interface FirestoreDocTypes {
   prayer_partner_signups: PrayerPartnerSignupDoc;
   volunteer_partner_signups: VolunteerPartnerSignupDoc;
   user_course_progress: UserCourseProgressDoc;
+  user_testimonies: UserTestimonyDoc;
 }
 
     

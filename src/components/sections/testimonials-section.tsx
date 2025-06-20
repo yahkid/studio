@@ -11,7 +11,11 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { TestimonialCard } from "@/components/cards/testimonial-card";
-import { cn } from "@/lib/utils"; // Added this import
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { TestimonyForm } from "@/components/forms/testimony-form";
+import { Feather } from "lucide-react";
 
 const testimonials = [
   {
@@ -50,6 +54,7 @@ export function TestimonialsSectionSw() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (!api) {
@@ -72,55 +77,90 @@ export function TestimonialsSectionSw() {
   );
 
   return (
-    <section
-      id="shuhuda"
-      className="w-full py-16 md:py-24 bg-background"
-    >
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-4">
-          Hadithi za Mabadiliko
-        </h2>
-        <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 md:mb-16 leading-relaxed">
-          Uaminifu wa Mungu unaonekana kupitia maisha ya watu wake.
-        </p>
+    <>
+      <section
+        id="shuhuda"
+        className="w-full py-16 md:py-24 bg-background"
+      >
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-4">
+            Hadithi za Mabadiliko
+          </h2>
+          <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 md:mb-16 leading-relaxed">
+            Uaminifu wa Mungu unaonekana kupitia maisha ya watu wake.
+          </p>
 
-        <Carousel
-          setApi={setApi}
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full max-w-3xl mx-auto"
-        >
-          <CarouselContent>
-            {testimonials.map((testimonial, index) => (
-              <CarouselItem key={index} className="basis-full">
-                <TestimonialCard {...testimonial} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden md:inline-flex" />
-          <CarouselNext className="hidden md:inline-flex" />
-        </Carousel>
+          <Carousel
+            setApi={setApi}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full max-w-3xl mx-auto"
+          >
+            <CarouselContent>
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={index} className="basis-full">
+                  <TestimonialCard {...testimonial} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:inline-flex" />
+            <CarouselNext className="hidden md:inline-flex" />
+          </Carousel>
 
-        {api && (
-          <div className="flex justify-center gap-2 mt-8">
-            {Array.from({ length: count }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleDotClick(index)}
-                aria-label={`Nenda kwenye ushuhuda ${index + 1}`}
-                className={cn(
-                  "h-3 w-3 rounded-full transition-colors",
-                  current === index + 1
-                    ? "bg-primary"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                )}
-              />
-            ))}
+          {api && (
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: count }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  aria-label={`Nenda kwenye ushuhuda ${index + 1}`}
+                  className={cn(
+                    "h-3 w-3 rounded-full transition-colors",
+                    current === index + 1
+                      ? "bg-primary"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  )}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className="mt-16">
+            <Button
+              size="lg"
+              onClick={() => setIsModalOpen(true)}
+              className="font-headline text-lg"
+              suppressHydrationWarning={true}
+            >
+              <Feather className="mr-2 h-5 w-5" />
+              Shiriki Hadithi Yako
+            </Button>
           </div>
-        )}
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-headline text-2xl flex items-center">
+              <Feather className="mr-2 h-6 w-6 text-primary"/>
+              Shiriki Ushuhuda Wako
+            </DialogTitle>
+            <DialogDescription className="font-body pt-1">
+              Tunapenda kusikia jinsi Mungu anavyofanya kazi maishani mwako. Tafadhali shiriki hadithi yako nasi.
+              Shuhuda zilizowasilishwa zinaweza kupitiwa na kushirikiwa hadharani (tutakuomba ruhusa kwanza ikihitajika).
+            </DialogDescription>
+          </DialogHeader>
+          <TestimonyForm onFormSubmit={() => setIsModalOpen(false)} />
+          <DialogClose onClick={() => setIsModalOpen(false)} asChild>
+            <button className="sr-only">Funga</button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
+
+    
