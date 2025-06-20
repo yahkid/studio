@@ -1,1 +1,3 @@
-// This file will be deleted. Types are now in src/types/firestore.ts
+// This file is deprecated and no longer in use.
+// Project has migrated to Firebase.
+// Firestore type definitions are in src/types/firestore.ts.

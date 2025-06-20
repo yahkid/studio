@@ -1,5 +1,4 @@
-// This file is deprecated. Supabase client is no longer initialized here.
+// This file is deprecated and no longer in use.
 // Project has migrated to Firebase.
-// All Supabase-related logic has been removed.
-
+// The `supabase` client should not be imported or used.
 export const supabase: any = null;

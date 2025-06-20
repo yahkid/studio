@@ -1,3 +1,3 @@
-// This file is no longer needed as authentication is handled by
-// src/components/forms/auth-form.tsx and Firebase.
-// This file will be deleted.
+// This file is deprecated and no longer in use.
+// Authentication is now handled by Firebase via src/components/forms/auth-form.tsx
+// and src/contexts/AuthContextFirebase.tsx.
