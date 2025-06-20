@@ -13,6 +13,7 @@ import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PodcastPlayerProvider } from '@/contexts/PodcastPlayerContext';
 import { SitePlayer } from '@/components/podcast/SitePlayer';
 import { Suspense } from 'react';
+import { BackToTopButton } from '@/components/ui/back-to-top-button';
 
 
 export default function RootLayout({
@@ -46,6 +47,7 @@ export default function RootLayout({
               <Toaster />
             </ThemeProvider>
             <SitePlayer />
+            <BackToTopButton />
           </PodcastPlayerProvider>
         </AuthContextProviderFirebase>
       </body>

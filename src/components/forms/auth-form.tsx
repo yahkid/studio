@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -11,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, LogIn, UserPlus, Loader2, User, Chrome } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, Loader2, User, Chrome, X } from 'lucide-react';
 
 // Firebase imports
 import { auth } from '@/lib/firebaseClient'; 
@@ -149,7 +150,12 @@ export function AuthForm({ mode = 'login', onSwitchMode, initialMessage }: AuthF
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto relative">
+       <Link href="/" aria-label="Close and return to homepage">
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 rounded-full z-10">
+          <X className="h-5 w-5 text-muted-foreground" />
+        </Button>
+      </Link>
       <CardHeader className="p-8 pb-4">
         <CardTitle className="font-headline text-3xl text-center">
           {mode === 'login' ? 'Karibu Tena!' : 'Fungua Akaunti'}

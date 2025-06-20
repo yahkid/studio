@@ -10,7 +10,7 @@ import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO, isSameDay, startOfMonth, isValid } from "date-fns";
 import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
@@ -274,31 +274,41 @@ export default function MatukioPage() {
             Jisajili kupokea taarifa za matukio yetu mapya na ya kipekee moja kwa moja kwenye barua pepe yako.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleEventSignupSubmit} className="space-y-3">
-            <div>
-              <Label htmlFor="email-event-signup" className="sr-only">Barua pepe</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  id="email-event-signup" 
-                  type="email"
-                  value={eventSignupEmail}
-                  onChange={(e) => setEventSignupEmail(e.target.value)}
-                  placeholder="Weka barua pepe yako" 
-                  required 
-                  className="pl-10 font-body"
-                  disabled={isEventSignupLoading}
-                />
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
-            <Button type="submit" className="w-full font-headline" disabled={isEventSignupLoading}>
-              {isEventSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isEventSignupLoading ? 'Inasajili...' : 'Nijulishe Kuhusu Matukio'}
-            </Button>
-          </form>
-        </CardContent>
+        <form onSubmit={handleEventSignupSubmit}>
+            <CardContent className="space-y-3">
+                <div>
+                <Label htmlFor="email-event-signup" className="sr-only">Barua pepe</Label>
+                <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input 
+                    id="email-event-signup" 
+                    type="email"
+                    value={eventSignupEmail}
+                    onChange={(e) => setEventSignupEmail(e.target.value)}
+                    placeholder="Weka barua pepe yako" 
+                    required 
+                    className="pl-10 font-body"
+                    disabled={isEventSignupLoading}
+                    />
+                </div>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
+            </CardContent>
+            <CardFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                <Button 
+                    type="button" 
+                    variant="ghost"
+                    onClick={() => setEventSignupEmail('')}
+                    disabled={isEventSignupLoading}
+                >
+                Ghairi
+                </Button>
+                <Button type="submit" className="w-full sm:w-auto font-headline" disabled={isEventSignupLoading}>
+                {isEventSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isEventSignupLoading ? 'Inasajili...' : 'Nijulishe Kuhusu Matukio'}
+                </Button>
+            </CardFooter>
+        </form>
       </Card>
 
     </div>
