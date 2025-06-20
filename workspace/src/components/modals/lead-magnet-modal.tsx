@@ -61,7 +61,7 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
         description: "Mwongozo wako wa 'Misingi ya Imani' utatumwa kwa barua pepe yako hivi karibuni.",
       });
       setEmail('');
-      onOpenChange(false); 
+      onOpenChange(false);
     } catch (error: any) {
       console.error('Error submitting lead magnet to Firestore:', error);
       toast({
@@ -76,8 +76,8 @@ export function LeadMagnetModal({ open, onOpenChange }: LeadMagnetModalProps) {
 
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) {
-      setEmail(''); 
-      setIsLoading(false); 
+      setEmail('');
+      setIsLoading(false);
     }
     onOpenChange(isOpen);
   };

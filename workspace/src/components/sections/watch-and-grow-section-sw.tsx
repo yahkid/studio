@@ -38,7 +38,8 @@ export function WatchAndGrowSectionSw() {
     try {
       await addDoc(collection(db, 'weekly_updates_signups'), {
         email: email,
-        created_at: serverTimestamp()
+        created_at: serverTimestamp(),
+        source: 'watch_grow_section'
       });
 
       toast({
@@ -65,12 +66,12 @@ export function WatchAndGrowSectionSw() {
         <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-6">
           UJUMBE UNAOBADILISHA KILA KITU
         </h2>
-        
+
         <div className="max-w-4xl mx-auto mb-12">
           <div className="aspect-video bg-slate-300 dark:bg-slate-700 rounded-lg border overflow-hidden mb-6 flex items-center justify-center">
              <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/zqZlRS_v4z8" 
+              src="https://www.youtube.com/embed/zqZlRS_v4z8"
               title="Ujumbe Maalum wa Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -80,12 +81,12 @@ export function WatchAndGrowSectionSw() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {videoThumbnails.map((thumb) => (
               <div key={thumb.id} className="aspect-video bg-slate-200 dark:bg-slate-600 rounded-md border flex items-center justify-center text-muted-foreground">
-                <Image 
-                  src={`https://img.youtube.com/vi/${thumb.id}/mqdefault.jpg`} 
-                  alt={thumb.alt} 
-                  width={300} 
-                  height={169} 
-                  className="w-full h-auto object-cover rounded-md" 
+                <Image
+                  src={`https://img.youtube.com/vi/${thumb.id}/mqdefault.jpg`}
+                  alt={thumb.alt}
+                  width={300}
+                  height={169}
+                  className="w-full h-auto object-cover rounded-md"
                   data-ai-hint="video sermon" />
               </div>
             ))}
@@ -104,13 +105,13 @@ export function WatchAndGrowSectionSw() {
                 <Label htmlFor="email-watch-grow" className="sr-only">Barua pepe</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input 
-                    id="email-watch-grow" 
+                  <Input
+                    id="email-watch-grow"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Weka barua pepe yako hapa" 
-                    required 
+                    placeholder="Weka barua pepe yako hapa"
+                    required
                     className="pl-10 font-body text-base"
                     suppressHydrationWarning={true}
                     disabled={isLoading}

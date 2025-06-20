@@ -39,7 +39,7 @@ export function DecisionForm() {
       });
       return;
     }
-    
+
     setIsLoading(true);
     try {
       await addDoc(collection(db, 'decisions'), {

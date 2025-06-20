@@ -3,8 +3,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { Course, Lesson } from '@/lib/courses-data';
-import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
-import type { FirestoreDocTypes } from '@/types/firestore'; // Updated types
+import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
+import type { FirestoreDocTypes } from '@/types/firestore';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -15,7 +15,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import Image from 'next/image';
 import Link from 'next/link';
 import { db } from '@/lib/firebaseClient';
-import { collection, query, where, getDocs, doc, setDoc, serverTimestamp, updateDoc, Timestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, setDoc, serverTimestamp, updateDoc, Timestamp, addDoc } from 'firebase/firestore';
 
 interface CourseContentProps {
   course: Course;
@@ -43,13 +43,13 @@ export function CourseContent({ course }: CourseContentProps) {
 
   useEffect(() => {
     const fetchProgress = async () => {
-      if (!initialLoadingComplete) return; 
+      if (!initialLoadingComplete) return;
 
       if (!user) {
         setIsLoadingProgress(false);
         setCompletedLessons([]);
         setProgressDocId(null);
-        setShowGuestSignupPrompt(true); 
+        setShowGuestSignupPrompt(true);
         return;
       }
       setShowGuestSignupPrompt(false);
@@ -69,7 +69,7 @@ export function CourseContent({ course }: CourseContentProps) {
           setCompletedLessons(data.completed_lessons || []);
         } else {
           setCompletedLessons([]);
-          setProgressDocId(null);
+          setProgressDocId(null); // Ensure progressDocId is null if no existing doc
         }
       } catch (error: any) {
         console.error('Error fetching progress from Firestore:', error);
@@ -87,7 +87,7 @@ export function CourseContent({ course }: CourseContentProps) {
 
     fetchProgress();
   }, [user, course.id, toast, initialLoadingComplete]);
-  
+
   useEffect(() => {
     if (initialLoadingComplete && !user && currentLesson) {
       setShowGuestSignupPrompt(true);
@@ -102,37 +102,36 @@ export function CourseContent({ course }: CourseContentProps) {
       toast({
         title: 'Unahitaji Kuingia Kwanza',
         description: 'Tafadhali ingia au jisajili ili kuhifadhi maendeleo yako.',
-        variant: 'default', 
+        variant: 'default',
       });
       return;
     }
 
     if (!currentLesson || completedLessons.includes(currentLesson.id)) {
-      return; 
+      return;
     }
 
     setIsSavingProgress(true);
     const newCompletedLessons = Array.from(new Set([...completedLessons, currentLesson.id]));
     const newProgressPercentage = Math.round((newCompletedLessons.length / course.lessons.length) * 100);
 
-    const progressData: Partial<FirestoreDocTypes['user_course_progress']> = {
+    const progressData: Omit<FirestoreDocTypes['user_course_progress'], 'id' | 'created_at'> & { last_accessed: Timestamp, created_at?: Timestamp } = {
       user_id: user.uid,
       course_id: course.id,
       completed_lessons: newCompletedLessons,
-      last_accessed: serverTimestamp() as Timestamp, // Cast for type compatibility
+      last_accessed: serverTimestamp() as Timestamp,
       progress_percentage: newProgressPercentage,
     };
 
+
     try {
       if (progressDocId) {
-        // Update existing document
         const docRef = doc(db, "user_course_progress", progressDocId);
         await updateDoc(docRef, progressData);
       } else {
-        // Add new document
-        progressData.created_at = serverTimestamp() as Timestamp; // Add created_at for new docs
+        progressData.created_at = serverTimestamp() as Timestamp;
         const newDocRef = await addDoc(collection(db, "user_course_progress"), progressData);
-        setProgressDocId(newDocRef.id); // Store new doc ID for future updates
+        setProgressDocId(newDocRef.id);
       }
 
       setCompletedLessons(newCompletedLessons);
@@ -151,7 +150,7 @@ export function CourseContent({ course }: CourseContentProps) {
       setIsSavingProgress(false);
     }
   };
-  
+
   const isLessonCompleted = (lessonId: number) => completedLessons.includes(lessonId);
 
   return (
@@ -274,7 +273,11 @@ export function CourseContent({ course }: CourseContentProps) {
                                     checked={isLessonCompleted(lesson.id)}
                                     aria-label={`Mark lesson ${lesson.title} as ${isLessonCompleted(lesson.id) ? 'incomplete' : 'complete'}`}
                                     onCheckedChange={(checked) => {
-                                      if (checked && currentLesson && currentLesson.id === lesson.id) handleMarkComplete();
+                                      if (checked && currentLesson && currentLesson.id === lesson.id && !completedLessons.includes(lesson.id)) {
+                                         handleMarkComplete();
+                                      }
+                                      // Logic for unchecking if needed can be added here,
+                                      // though current flow focuses on marking complete.
                                     }}
                                     disabled={isSavingProgress || (currentLesson && lesson.id === currentLesson.id && completedLessons.includes(lesson.id))}
                                   />

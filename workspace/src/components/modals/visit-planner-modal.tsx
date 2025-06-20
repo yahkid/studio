@@ -64,7 +64,7 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
       });
       return;
     }
-    
+
     setIsLoading(true);
     try {
       await addDoc(collection(db, 'visit_requests'), {
@@ -78,8 +78,8 @@ export function VisitPlannerModal({ open, onOpenChange }: VisitPlannerModalProps
         title: "Tutawasiliana Nawe!",
         description: "Asante kwa kupanga ujio wako. Tutawasiliana nawe hivi karibuni.",
       });
-      onOpenChange(false); 
-      resetForm(); 
+      onOpenChange(false);
+      resetForm();
     } catch (error: any) {
       console.error('Error submitting visit request to Firestore:', error);
       toast({

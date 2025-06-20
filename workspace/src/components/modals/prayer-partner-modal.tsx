@@ -66,13 +66,13 @@ export function PrayerPartnerModal({ open, onOpenChange }: PrayerPartnerModalPro
       });
       return;
     }
-    
+
     setIsLoading(true);
     try {
-      await addDoc(collection(db, 'prayer_partner_signups'), { 
-          first_name: firstName, 
-          last_name: lastName, 
-          email, 
+      await addDoc(collection(db, 'prayer_partner_signups'), {
+          first_name: firstName,
+          last_name: lastName,
+          email,
           committed_to_pray: committedToPray,
           created_at: serverTimestamp()
         });
@@ -81,8 +81,8 @@ export function PrayerPartnerModal({ open, onOpenChange }: PrayerPartnerModalPro
         title: "Asante kwa Kujiunga!",
         description: "Umefanikiwa kujiunga na timu ya maombi. Tutawasiliana nawe na maelezo zaidi.",
       });
-      onOpenChange(false); 
-      resetForm(); 
+      onOpenChange(false);
+      resetForm();
     } catch (error: any) {
       console.error('Error submitting prayer partner signup to Firestore:', error);
       toast({

@@ -2,16 +2,13 @@
 "use client";
 
 import './globals.css';
-import './global-styles.css'; 
+import './global-styles.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
-// Supabase imports removed
-// import { SessionContextProvider } from '@supabase/auth-helpers-react';
-// import { supabase } from '@/lib/supabaseClient'; 
-// import type { Session } from '@supabase/supabase-js';
-import { AuthContextProviderFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Provider
+// Firebase Auth Provider
+import { AuthContextProviderFirebase } from '@/contexts/AuthContextFirebase'; 
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { PodcastPlayerProvider } from '@/contexts/PodcastPlayerContext';
 import { SitePlayer } from '@/components/podcast/SitePlayer';
@@ -23,26 +20,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  // Supabase session logic removed
-  // const [initialSession, setInitialSession] = useState<Session | null | undefined>(undefined); 
-
-  // useEffect(() => {
-  //   const fetchSession = async () => {
-  //     const { data: { session } } = await supabase.auth.getSession();
-  //     setInitialSession(session);
-  //   };
-  //   fetchSession();
-
-  //   const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-  //     setInitialSession(session);
-  //   });
-
-  //   return () => {
-  //     subscription?.unsubscribe();
-  //   };
-  // }, []);
-
 
   return (
     <html lang="sw" suppressHydrationWarning>

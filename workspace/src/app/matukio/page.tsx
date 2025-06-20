@@ -42,13 +42,13 @@ export default function MatukioPage() {
 
     if (viewMode === 'month' && selectedDate) {
       processedEvents = processedEvents.filter(event => isSameDay(event.parsedDate, selectedDate));
-    } else if (viewMode === 'month' && !selectedDate) { 
+    } else if (viewMode === 'month' && !selectedDate) {
         processedEvents = processedEvents.filter(event => {
             const eventDate = event.parsedDate;
             return eventDate.getFullYear() === currentMonth.getFullYear() && eventDate.getMonth() === currentMonth.getMonth();
         });
     }
-    
+
     return processedEvents.sort((a, b) => {
       const dateComparison = a.parsedDate.getTime() - b.parsedDate.getTime();
       if (dateComparison !== 0) {
@@ -75,21 +75,21 @@ export default function MatukioPage() {
     });
     return daysWithEvents;
   }, [events, currentMonth]);
-  
+
   const DayContent = ({ date }: { date: Date }) => {
     const dayKey = format(date, "yyyy-MM-dd");
     const eventTypesOnDay = eventDaysInCurrentMonth.get(dayKey);
-    
+
     return (
       <div className="relative w-full h-full flex flex-col items-center justify-center">
         <span>{format(date, "d")}</span>
         {eventTypesOnDay && eventTypesOnDay.length > 0 && (
           <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-0.5">
             {eventTypesOnDay.slice(0,3).map((type, index) => {
-               let bgColor = "bg-gray-400"; 
-               if (type === 'weekly') bgColor = "bg-primary"; 
-               else if (type === 'monthly') bgColor = "bg-secondary"; 
-               else if (type === 'special') bgColor = "bg-destructive"; 
+               let bgColor = "bg-gray-400";
+               if (type === 'weekly') bgColor = "bg-primary";
+               else if (type === 'monthly') bgColor = "bg-secondary";
+               else if (type === 'special') bgColor = "bg-destructive";
                return <div key={index} className={`h-1.5 w-1.5 rounded-full ${bgColor}`}></div>;
             })}
           </div>
@@ -111,10 +111,10 @@ export default function MatukioPage() {
 
     setIsEventSignupLoading(true);
     try {
-      await addDoc(collection(db, 'weekly_updates_signups'), { // Using existing collection name, maps to 'events_signup' if needed
+      await addDoc(collection(db, 'weekly_updates_signups'), {
         email: eventSignupEmail,
         created_at: serverTimestamp(),
-        source: 'matukio_page' // Optional: to track signup source
+        source: 'matukio_page'
       });
 
       toast({
@@ -182,15 +182,15 @@ export default function MatukioPage() {
           </Select>
         </div>
       </div>
-      
+
       {viewMode === 'month' && (
          <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border">
             <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => {
-                  setSelectedDate(date); 
-                  if (date) setCurrentMonth(startOfMonth(date)); 
+                  setSelectedDate(date);
+                  if (date) setCurrentMonth(startOfMonth(date));
                 }}
                 month={currentMonth}
                 onMonthChange={setCurrentMonth}
@@ -200,10 +200,10 @@ export default function MatukioPage() {
                   day_today: "bg-accent text-accent-foreground",
                 }}
                 components={{
-                    DayContent: DayContent 
+                    DayContent: DayContent
                 }}
-                captionLayout="dropdown-buttons" 
-                fromYear={new Date().getFullYear() -1} toYear={new Date().getFullYear() + 5} 
+                captionLayout="dropdown-buttons"
+                fromYear={new Date().getFullYear() -1} toYear={new Date().getFullYear() + 5}
             />
         </div>
       )}
@@ -227,7 +227,7 @@ export default function MatukioPage() {
       ) : (
         <div className="text-center py-12">
           <p className="font-body text-muted-foreground text-lg">
-            {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' : 
+            {viewMode === 'month' && selectedDate ? 'Hakuna matukio yaliyopangwa kwa tarehe hii.' :
              viewMode === 'month' && !selectedDate ? `Hakuna matukio yanayolingana na kichujio chako kwa mwezi wa ${format(currentMonth, "MMMM yyyy")}.` :
              'Hakuna matukio yanayolingana na kichujio chako.'}
           </p>
@@ -250,13 +250,13 @@ export default function MatukioPage() {
               <Label htmlFor="email-event-signup" className="sr-only">Barua pepe</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  id="email-event-signup" 
+                <Input
+                  id="email-event-signup"
                   type="email"
                   value={eventSignupEmail}
                   onChange={(e) => setEventSignupEmail(e.target.value)}
-                  placeholder="Weka barua pepe yako" 
-                  required 
+                  placeholder="Weka barua pepe yako"
+                  required
                   className="pl-10 font-body"
                   disabled={isEventSignupLoading}
                 />

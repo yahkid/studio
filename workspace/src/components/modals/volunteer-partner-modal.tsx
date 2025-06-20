@@ -66,13 +66,13 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
       });
       return;
     }
-    
+
     setIsLoading(true);
     try {
-      await addDoc(collection(db, 'volunteer_partner_signups'), { 
-          first_name: firstName, 
-          last_name: lastName, 
-          email, 
+      await addDoc(collection(db, 'volunteer_partner_signups'), {
+          first_name: firstName,
+          last_name: lastName,
+          email,
           interests_skills: interestsSkills || null,
           created_at: serverTimestamp()
         });
@@ -81,8 +81,8 @@ export function VolunteerPartnerModal({ open, onOpenChange }: VolunteerPartnerMo
         title: "Asante kwa Kujitolea!",
         description: "Tumepokea ombi lako la kujitolea. Tutawasiliana nawe hivi karibuni na fursa zilizopo.",
       });
-      onOpenChange(false); 
-      resetForm(); 
+      onOpenChange(false);
+      resetForm();
     } catch (error: any) {
       console.error('Error submitting volunteer signup to Firestore:', error);
       toast({

@@ -41,17 +41,15 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
     setPhoneNumber('');
     setCountry('');
     setIsLoading(false);
-    // Do not reset currentStep here, only on explicit close/re-open.
   };
 
   const handleDialogStateChange = (isOpen: boolean) => {
     if (!isOpen) {
-      resetForm(); // Reset all fields
-      setCurrentStep(1); // Reset step when dialog is closed
+      resetForm();
+      setCurrentStep(1);
     }
     onOpenChange(isOpen);
   };
-
 
   const handleSubmitStep1 = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +69,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
       });
       return;
     }
-    
+
     setIsLoading(true);
     const payload = {
         first_name: firstName,
@@ -89,7 +87,7 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
         title: "Hatua ya 1 Imekamilika!",
         description: "Taarifa zako zimepokelewa.",
       });
-      setCurrentStep(2); 
+      setCurrentStep(2);
     } catch (error: any) {
       console.error('Error submitting financial partner signup to Firestore:', error);
       toast({
@@ -111,12 +109,12 @@ export function FinancialPartnerModal({ open, onOpenChange }: FinancialPartnerMo
             {currentStep === 1 ? "Kuwa Mshirika wa Kifedha - Hatua ya 1" : "Asante kwa Nia Yako!"}
           </DialogTitle>
           <DialogDescription className="font-body">
-            {currentStep === 1 
+            {currentStep === 1
               ? "Tafadhali jaza maelezo yako hapa chini ili tuweze kuwasiliana nawe kuhusu ushirika wako."
               : "Tumepokea maelezo yako. Timu yetu itawasiliana nawe hivi karibuni kuhusu njia salama za kukamilisha utoaji wako. Asante kwa kuunga mkono huduma!"}
           </DialogDescription>
         </DialogHeader>
-        
+
         {currentStep === 1 && (
           <form onSubmit={handleSubmitStep1}>
             <div className="grid gap-4 py-4">

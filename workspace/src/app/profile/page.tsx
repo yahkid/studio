@@ -12,13 +12,13 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { db } from '@/lib/firebaseClient'; // Firebase
-import { collection, query, where, getDocs } from 'firebase/firestore'; // Firebase
-import type { FirestoreDocTypes } from '@/types/firestore'; // Updated types
+import { db } from '@/lib/firebaseClient';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import type { FirestoreDocTypes } from '@/types/firestore';
 
 interface EnrichedProgress extends FirestoreDocTypes['user_course_progress'] {
   courseDetails?: Course;
-  docId: string; // Firestore document ID
+  docId: string;
 }
 
 const getInitials = (name?: string) => {
@@ -63,7 +63,7 @@ export default function ProfilePage() {
           where('user_id', '==', user.uid)
         );
         const querySnapshot = await getDocs(progressQuery);
-        
+
         const progressData: EnrichedProgress[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data() as FirestoreDocTypes['user_course_progress'];
@@ -72,7 +72,7 @@ export default function ProfilePage() {
             progressData.push({ ...data, courseDetails, docId: doc.id });
           }
         });
-        
+
         setUserProgress(progressData);
       } catch (error: any) {
         console.error("Error fetching user progress from Firestore:", error);

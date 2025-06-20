@@ -89,9 +89,8 @@ export function ExitIntentModal() {
   const handleJustPray = async () => {
     setIsLoading(true);
     try {
-      // Optionally, still record an anonymous prayer request
        await addDoc(collection(db, 'exit_intent_offers'), {
-         email: 'anonymous_prayer_request', // Or a specific marker
+         email: 'anonymous_prayer_request',
          created_at: serverTimestamp()
        });
       toast({
@@ -115,7 +114,7 @@ export function ExitIntentModal() {
   const handleDialogClose = (openStatus: boolean) => {
     setIsOpen(openStatus);
     if (!openStatus) {
-      setShowOnExit(false); 
+      setShowOnExit(false);
       setEmail('');
       setIsLoading(false);
     }
@@ -163,7 +162,7 @@ export function ExitIntentModal() {
                 variant="outline"
                 className="font-headline"
                 disabled={isLoading}
-                type="button" 
+                type="button"
                 suppressHydrationWarning={true}
               >
                 Funga
@@ -172,9 +171,9 @@ export function ExitIntentModal() {
             <div className="flex flex-col sm:flex-row gap-2">
               <Button
                 type="button"
-                variant="outline" 
+                variant="outline"
                 onClick={handleJustPray}
-                className="font-headline" 
+                className="font-headline"
                 disabled={isLoading}
                 suppressHydrationWarning={true}
               >
