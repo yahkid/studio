@@ -157,10 +157,25 @@ export function ExitIntentModal() {
             </div>
             <p className="text-xs text-muted-foreground mt-1 text-center">Hatutakutumia barua taka. Faragha yako ni muhimu.</p>
           </div>
-          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+          <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+            <Button type="submit" className="font-headline" disabled={isLoading || !email.trim()} suppressHydrationWarning={true}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleJustPray}
+              className="font-headline"
+              disabled={isLoading}
+              suppressHydrationWarning={true}
+            >
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Niombee Tu
+            </Button>
             <DialogClose asChild>
               <Button
-                variant="outline"
+                variant="ghost"
                 className="font-headline"
                 disabled={isLoading}
                 type="button" 
@@ -169,28 +184,9 @@ export function ExitIntentModal() {
                 Funga 
               </Button>
             </DialogClose>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button
-                type="button"
-                variant="outline" 
-                onClick={handleJustPray}
-                className="font-headline" 
-                disabled={isLoading}
-                suppressHydrationWarning={true}
-              >
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Niombee Tu
-              </Button>
-              <Button type="submit" className="font-headline" disabled={isLoading || !email.trim()} suppressHydrationWarning={true}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLoading ? 'Inatuma...' : 'Tuma Ombi na Barua Pepe'}
-              </Button>
-            </div>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
-
-    
