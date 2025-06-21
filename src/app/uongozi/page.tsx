@@ -1,4 +1,3 @@
-
 import { type Metadata } from 'next';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -18,7 +17,7 @@ const fallbackLeaders: LeadershipDoc[] = [
     id: '1',
     name: 'Rev. Innocent Morris',
     title: 'Mchungaji Kiongozi & Mwanzilishi',
-    imageSrc: '/1750433685204.jpg',
+    imageSrc: '/Rev Innocent Morris.png',
     aiHint: 'pastor portrait african man',
     bio: 'Rev. Innocent Morris ni mwanzilishi na mchungaji kiongozi wa HSCM Connect. Ana shauku ya kuona watu wakikutana na Yesu na kugundua kusudi lao.',
     order: 1,
