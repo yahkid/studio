@@ -23,6 +23,16 @@ export interface DecisionDoc {
   user_id: string; 
 }
 
+export interface LeadershipDoc {
+  id?: string;
+  name: string;
+  title: string;
+  imageSrc: string;
+  aiHint?: string;
+  bio: string;
+  order: number; // For sorting leaders on the page
+}
+
 export interface LeadMagnetSignupDoc {
   id?: string;
   created_at: Timestamp;
@@ -122,6 +132,7 @@ export interface UserTestimonyDoc {
 
 export interface FirestoreDocTypes {
   decisions: DecisionDoc;
+  leadership: LeadershipDoc;
   lead_magnet_signups: LeadMagnetSignupDoc;
   visit_requests: VisitRequestDoc;
   exit_intent_offers: ExitIntentOfferDoc;
@@ -132,5 +143,3 @@ export interface FirestoreDocTypes {
   user_course_progress: UserCourseProgressDoc;
   user_testimonies: UserTestimonyDoc;
 }
-
-    
