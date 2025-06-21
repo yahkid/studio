@@ -13,20 +13,32 @@ import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 
-const initialLocalThumbnails = [
-  { id: 'local-thumb-1', src: '/images/video-thumb-1.jpg', alt: 'Video thumbnail 1 - Local' },
-  { id: 'local-thumb-2', src: '/images/video-thumb-2.jpg', alt: 'Video thumbnail 2 - Local' },
-  { id: 'local-thumb-3', src: '/images/video-thumb-3.jpg', alt: 'Video thumbnail 3 - Local' },
+const videoThumbnails = [
+  { 
+    id: 'unsplash-1', 
+    src: 'https://images.unsplash.com/photo-1682263557097-6802ff30e59f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
+    alt: 'Sermon video playing on a screen in a dark room.' 
+  },
+  { 
+    id: 'unsplash-2', 
+    src: 'https://images.unsplash.com/photo-1589320843284-4b70884083a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
+    alt: 'Person watching a sermon on a laptop with headphones.' 
+  },
+  { 
+    id: 'unsplash-3', 
+    src: 'https://images.unsplash.com/photo-1589227864558-dc4ed168ebcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
+    alt: 'Church service being recorded from the back of the room.' 
+  },
 ];
 
 export function WatchAndGrowSectionSw() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [displayedThumbnails, setDisplayedThumbnails] = useState(initialLocalThumbnails);
+  const [displayedThumbnails, setDisplayedThumbnails] = useState(videoThumbnails);
 
   useEffect(() => {
-    const shuffleArray = (array: typeof initialLocalThumbnails) => {
+    const shuffleArray = (array: typeof videoThumbnails) => {
       let currentIndex = array.length;
       let randomIndex;
       const newArray = [...array];
@@ -38,7 +50,7 @@ export function WatchAndGrowSectionSw() {
       }
       return newArray;
     };
-    setDisplayedThumbnails(shuffleArray(initialLocalThumbnails));
+    setDisplayedThumbnails(shuffleArray(videoThumbnails));
   }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
