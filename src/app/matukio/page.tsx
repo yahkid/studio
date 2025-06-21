@@ -169,6 +169,7 @@ export default function MatukioPage() {
             onClick={() => setViewMode('list')}
             className="font-body"
             aria-pressed={viewMode === 'list'}
+            suppressHydrationWarning={true}
           >
             <List className="mr-2 h-4 w-4" /> Mipangilio
           </Button>
@@ -179,6 +180,7 @@ export default function MatukioPage() {
             }}
             className="font-body"
             aria-pressed={viewMode === 'month'}
+            suppressHydrationWarning={true}
           >
             <CalendarIcon className="mr-2 h-4 w-4" /> Mwezi
           </Button>
@@ -187,7 +189,7 @@ export default function MatukioPage() {
         <div className="flex items-center gap-2">
           <Filter className="h-5 w-5 text-muted-foreground" />
           <Select value={filterType} onValueChange={(value) => setFilterType(value as MinistryEvent['eventType'] | 'all')}>
-            <SelectTrigger className="w-full sm:w-[180px] font-body">
+            <SelectTrigger className="w-full sm:w-[180px] font-body" suppressHydrationWarning={true}>
               <SelectValue placeholder="Chuja kwa aina" />
             </SelectTrigger>
             <SelectContent>
@@ -289,6 +291,7 @@ export default function MatukioPage() {
                     required 
                     className="pl-10 font-body"
                     disabled={isEventSignupLoading}
+                    suppressHydrationWarning={true}
                     />
                 </div>
                 </div>
@@ -300,10 +303,11 @@ export default function MatukioPage() {
                     variant="ghost"
                     onClick={() => setEventSignupEmail('')}
                     disabled={isEventSignupLoading}
+                    suppressHydrationWarning={true}
                 >
                 Ghairi
                 </Button>
-                <Button type="submit" className="w-full sm:w-auto font-headline" disabled={isEventSignupLoading}>
+                <Button type="submit" className="w-full sm:w-auto font-headline" disabled={isEventSignupLoading} suppressHydrationWarning={true}>
                 {isEventSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isEventSignupLoading ? 'Inasajili...' : 'Nijulishe Kuhusu Matukio'}
                 </Button>

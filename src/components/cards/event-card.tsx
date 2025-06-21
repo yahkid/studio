@@ -72,6 +72,7 @@ export function EventCard({ event }: EventCardProps) {
                 asChild 
                 className="font-body w-full sm:w-auto"
                 disabled={!event.streamUrl || event.streamUrl === "#"}
+                suppressHydrationWarning={true}
               >
                 <a href={event.streamUrl} target="_blank" rel="noopener noreferrer">
                   <PlayCircle className="mr-2 h-4 w-4" /> Tazama Moja kwa Moja
@@ -81,6 +82,7 @@ export function EventCard({ event }: EventCardProps) {
                 variant="outline" 
                 onClick={handleAddToCalendar} 
                 className="font-body w-full sm:w-auto"
+                suppressHydrationWarning={true}
               >
                 <CalendarPlus className="mr-2 h-4 w-4" /> Ongeza Kwenye Kalenda
               </Button>
