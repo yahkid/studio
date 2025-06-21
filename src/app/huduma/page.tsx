@@ -2,8 +2,8 @@
 "use client";
 
 import { useState } from 'react';
-import { type Metadata } from 'next';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import type { Metadata } from 'next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
 import {
@@ -26,56 +26,82 @@ import {
 //   description: 'Gundua idara mbalimbali za huduma katika HSCM Connect na utafute mahali pako pa kutumika.',
 // };
 
-const departments = [
+export interface Department {
+  name: string;
+  icon: React.ElementType;
+  description: string;
+  roles: string[];
+}
+
+const departments: Department[] = [
   {
     name: 'Utawala (Administration)',
     icon: Briefcase,
     description: 'Husaidia katika uratibu wa kila siku na usimamizi wa shughuli za kanisa ili kuhakikisha kila kitu kinakwenda sawa.',
+    roles: ['Utawala wa Ofisi', 'Uingizaji Data', 'Uratibu wa Matukio', 'Mawasiliano'],
   },
   {
     name: 'Uzalishaji (Production)',
     icon: Clapperboard,
     description: 'Timu ya ubunifu inayosimamia sauti, video, na picha ili kuhakikisha ujumbe wetu unafika kwa ubora wa hali ya juu.',
+    roles: ['Uhandisi wa Sauti', 'Uendeshaji wa Kamera za Video', 'Uhariri wa Video', 'Usanifu wa Picha (Graphics)', 'Uhuishaji (Animation)', 'Uendeshaji wa Taa'],
   },
   {
     name: 'Teknolojia ya Habari (IT)',
     icon: Server,
     description: 'Inasimamia mifumo ya kidijitali ya kanisa, kutoka kwa tovuti hadi mitandao, kuhakikisha muunganiko thabiti.',
+    roles: ['Msaada wa Mtandao', 'Msaada wa Tovuti na App', 'Msaada wa Vifaa', 'Usaidizi wa Matangazo ya Moja kwa Moja (Live Stream)'],
   },
   {
     name: 'Uinjilisti na Ufikiaji (Outreach)',
     icon: Megaphone,
     description: 'Hupeleka Habari Njema kwa jamii yetu kupitia matukio mbalimbali na huduma za ufikiaji.',
+    roles: ['Ufikiaji wa Jamii', 'Timu za Uinjilisti', 'Timu ya Ufuatiliaji', 'Upangaji wa Matukio ya Ufikiaji'],
   },
   {
     name: 'Huduma za Kibinadamu',
     icon: HeartHandshake,
     description: 'Inaonyesha upendo wa Kristo kwa vitendo kwa kusaidia wenye mahitaji katika jamii yetu kupitia programu mbalimbali.',
+    roles: ['Benki ya Chakula', 'Ukusanyaji wa Nguo', 'Msaada kwa Jamii', 'Kutembelea Wagonjwa/Wafungwa'],
   },
   {
     name: 'Mlima wa Maombi',
     icon: Mountain,
     description: 'Nguzo ya maombi ya kanisa, timu hii husimama katika maombi kwa ajili ya kanisa, viongozi, na mahitaji ya watu.',
+    roles: ['Timu ya Maombezi', 'Mlolongo wa Maombi', 'Huduma ya Madhabahuni wakati wa maombi'],
   },
   {
     name: 'Sifa na Kuabudu',
     icon: Music,
     description: 'Huongoza kanisa katika ibada za kusisimua na za kina, na kuunda mazingira ya kukutana na Mungu.',
+    roles: ['Mwimbaji', 'Mpiga Kinanda (Keyboard)', 'Mpiga Gitaa', 'Mpiga Ngoma (Drums)', 'Mpiga Gitaa la Besi (Bass)'],
   },
   {
     name: 'Usafiri na Usalama',
     icon: Shield,
     description: 'Huhakikisha usalama na mpangilio mzuri wa washiriki na wageni wote wakati wa ibada na matukio.',
+    roles: ['Timu ya Maegesho', 'Timu ya Usalama', 'Wakaribishaji na Wasindikizaji', 'Timu ya Huduma ya Kwanza'],
   },
   {
     name: 'Idara ya Maendeleo',
     icon: BarChartBig,
     description: 'Hupanga na kutekeleza mikakati ya ukuaji na maendeleo endelevu ya huduma kwa siku zijazo.',
+    roles: ['Usimamizi wa Miradi', 'Utafutaji wa Fedha na Ruzuku', 'Mipango Mkakati', 'Uendelezaji wa Ushirika'],
   },
 ];
 
 export default function ServePage() {
-  const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
+
+  const handleOpenModal = (department: Department) => {
+    setSelectedDepartment(department);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedDepartment(null);
+  };
+  
+  const isModalOpen = !!selectedDepartment;
 
   return (
     <>
@@ -102,7 +128,7 @@ export default function ServePage() {
                   <p className="font-body text-muted-foreground text-sm leading-relaxed">{dept.description}</p>
                 </CardContent>
                 <CardContent>
-                  <Button onClick={() => setIsVolunteerModalOpen(true)} className="w-full font-headline" suppressHydrationWarning={true}>
+                  <Button onClick={() => handleOpenModal(dept)} className="w-full font-headline" suppressHydrationWarning={true}>
                     Jiunge na Timu Hii
                   </Button>
                 </CardContent>
@@ -115,13 +141,19 @@ export default function ServePage() {
               <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
                 Usijali! Wasiliana nasi na tutakusaidia kugundua karama zako na kupata eneo linalokufaa zaidi.
               </p>
-              <Button onClick={() => setIsVolunteerModalOpen(true)} size="lg" className="font-headline" suppressHydrationWarning={true}>
+              <Button onClick={() => handleOpenModal({ name: 'General Interest', description: '', icon: HandHeart, roles: [] })} size="lg" className="font-headline" suppressHydrationWarning={true}>
                 Ongea Nasi Kuhusu Kujitolea
               </Button>
             </div>
         </div>
       </div>
-      <VolunteerPartnerModal open={isVolunteerModalOpen} onOpenChange={setIsVolunteerModalOpen} />
+      <VolunteerPartnerModal
+        open={isModalOpen}
+        onOpenChange={(open) => !open && handleCloseModal()}
+        department={selectedDepartment}
+      />
     </>
   );
 }
+
+    

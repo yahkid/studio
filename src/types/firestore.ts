@@ -92,6 +92,8 @@ export interface VolunteerPartnerSignupDoc {
   first_name: string;
   last_name: string;
   email: string;
+  department?: string;
+  selected_roles?: string[];
   interests_skills: string | null;
 }
 
