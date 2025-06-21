@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         hostname: 'photos.app.goo.gl', // Added for Google Photos links
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'drive.google.com', // Added for Google Drive images
+        port: '',
+        pathname: '/**',
       }
     ],
   },
