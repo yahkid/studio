@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -15,19 +14,22 @@ import { motion } from 'framer-motion';
 
 const videoThumbnails = [
   { 
-    id: 'unsplash-1', 
-    src: 'https://images.unsplash.com/photo-1682263557097-6802ff30e59f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
-    alt: 'Sermon video playing on a screen in a dark room.' 
+    id: 'local-1', 
+    src: '/DSC00243.jpg', 
+    alt: 'Worshippers in a church service.',
+    aiHint: 'worship church'
   },
   { 
-    id: 'unsplash-2', 
-    src: 'https://images.unsplash.com/photo-1589320843284-4b70884083a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
-    alt: 'Person watching a sermon on a laptop with headphones.' 
+    id: 'local-2', 
+    src: '/herosection.png', 
+    alt: 'Congregation with hands raised during service.',
+    aiHint: 'congregation praise'
   },
   { 
-    id: 'unsplash-3', 
-    src: 'https://images.unsplash.com/photo-1589227864558-dc4ed168ebcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx2aWRlbyUyMHNlcm1vbnxlbnwwfHx8fDE3NTA0MzE5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080', 
-    alt: 'Church service being recorded from the back of the room.' 
+    id: 'local-3', 
+    src: '/Picsart_25-06-19_09-19-42-630.jpg', 
+    alt: 'Exterior view of the church building.',
+    aiHint: 'church building'
   },
 ];
 
@@ -124,7 +126,7 @@ export function WatchAndGrowSectionSw() {
                   width={300} 
                   height={169} 
                   className="w-full h-full object-cover rounded-md group-hover:scale-105 transition-transform duration-300" 
-                  data-ai-hint="video sermon" />
+                  data-ai-hint={thumb.aiHint} />
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <PlayCircle className="w-12 h-12 text-white/80" />
                 </div>
