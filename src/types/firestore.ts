@@ -11,7 +11,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-// Define interfaces for your Firestore document structures
+// --- USER SUBMISSION COLLECTIONS ---
 
 export interface DecisionDoc {
   id?: string; 
@@ -21,16 +21,6 @@ export interface DecisionDoc {
   decision_type: string;
   comments: string | null;
   user_id: string; 
-}
-
-export interface LeadershipDoc {
-  id?: string;
-  name: string;
-  title: string;
-  imageSrc: string;
-  aiHint?: string;
-  bio: string;
-  order: number; // For sorting leaders on the page
 }
 
 export interface LeadMagnetSignupDoc {
@@ -58,23 +48,6 @@ export interface WeeklyUpdateSignupDoc {
   created_at: Timestamp;
   email: string;
   source?: string; // e.g., 'watch_grow_section', 'matukio_page'
-}
-
-// EventDoc is not directly written to by forms currently, but defined for completeness if needed.
-export interface EventDoc {
-  id?: string;
-  created_at: Timestamp;
-  title: string;
-  description: string | null;
-  details: string | null;
-  image_src: string | null;
-  image_alt: string | null;
-  ai_hint: string | null;
-  button_text: string | null;
-  button_link: string | null;
-  event_date: Timestamp;
-  start_time?: string;
-  end_time?: string;
 }
 
 export interface FinancialPartnerSignupDoc {
@@ -107,28 +80,103 @@ export interface VolunteerPartnerSignupDoc {
   interests_skills: string | null;
 }
 
+export interface UserTestimonyDoc {
+  id?: string; 
+  userId: string; 
+  userName: string;
+  userEmail: string;
+  story: string;
+  fileUrl?: string | null; 
+  originalFileName?: string | null; 
+  submittedAt: Timestamp;
+  status: "pending_review" | "approved" | "rejected"; 
+  consentToShare: boolean;
+}
+
+// --- USER DATA COLLECTIONS ---
+
 export interface UserCourseProgressDoc {
-  id?: string; // Firestore document ID
-  created_at?: Timestamp; // Set only on creation
-  user_id: string; // Firebase Auth user.uid
+  id?: string; 
+  created_at?: Timestamp; 
+  user_id: string; 
   course_id: string;
   completed_lessons: number[];
   last_accessed: Timestamp;
   progress_percentage: number;
 }
 
-export interface UserTestimonyDoc {
-  id?: string; // Firestore document ID
-  userId: string; // Firebase Auth user.uid
-  userName: string;
-  userEmail: string;
-  story: string;
-  fileUrl?: string | null; // URL to uploaded photo/document in Firebase Storage
-  originalFileName?: string | null; // Original name of the uploaded file
-  submittedAt: Timestamp;
-  status: "pending_review" | "approved" | "rejected"; // Moderation status
-  consentToShare: boolean;
+
+// --- SITE CONTENT COLLECTIONS ---
+
+export interface LeadershipDoc {
+  id?: string;
+  name: string;
+  title: string;
+  imageSrc: string;
+  aiHint?: string;
+  bio: string;
+  order: number; 
 }
+
+export interface EventDoc {
+  id?: string;
+  title: string;
+  description: string;
+  event_date: Timestamp; // Use a Timestamp for querying
+  start_time: string; // e.g., "20:00"
+  end_time: string; // e.g., "21:30"
+  event_type: 'weekly' | 'monthly' | 'special';
+  platform: string; // e.g., "YouTube Live, Facebook"
+  stream_url: string;
+  audience: string; // e.g., "All", "Youth"
+  is_active: boolean; // To easily show/hide events
+}
+
+export interface LessonDoc {
+  id: number;
+  title: string;
+  videoId: string;
+  duration: string;
+  description?: string;
+}
+
+export interface CourseDoc {
+  id?: string;
+  course_slug: string; // e.g., "kusikia-sauti-ya-mungu"
+  title: string;
+  description: string;
+  instructor: string;
+  image_url: string;
+  lessons: LessonDoc[]; // Array of lesson objects
+  is_published: boolean;
+  order: number;
+}
+
+export interface SermonDoc {
+    id?: string;
+    title: string;
+    description: string;
+    speaker: string;
+    youtube_video_id: string;
+    sermon_date: Timestamp;
+    tags?: string[];
+    is_featured: boolean; // To mark a sermon for the homepage
+}
+
+export interface PublishedTestimonyDoc {
+    id?: string;
+    name: string;
+    location: string;
+    quote: string;
+    story: string;
+    image_url: string;
+    ai_hint?: string;
+    order: number; // For sorting on the page
+}
+
+
+// --- MASTER TYPE INTERFACE ---
+// This interface groups all document types for easy reference.
 
 export interface FirestoreDocTypes {
   decisions: DecisionDoc;
@@ -142,4 +190,10 @@ export interface FirestoreDocTypes {
   volunteer_partner_signups: VolunteerPartnerSignupDoc;
   user_course_progress: UserCourseProgressDoc;
   user_testimonies: UserTestimonyDoc;
+  
+  // Newly added content collections
+  events: EventDoc;
+  courses: CourseDoc;
+  sermons: SermonDoc;
+  published_testimonials: PublishedTestimonyDoc;
 }
