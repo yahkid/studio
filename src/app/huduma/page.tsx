@@ -141,7 +141,7 @@ export default function ServePage() {
               <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
                 Usijali! Wasiliana nasi na tutakusaidia kugundua karama zako na kupata eneo linalokufaa zaidi.
               </p>
-              <Button onClick={() => handleOpenModal({ name: 'General Interest', description: '', icon: HandHeart, roles: [] })} size="lg" className="font-headline" suppressHydrationWarning={true}>
+              <Button onClick={() => handleOpenModal({ name: 'General Interest', description: '', icon: HeartHandshake, roles: [] })} size="lg" className="font-headline" suppressHydrationWarning={true}>
                 Ongea Nasi Kuhusu Kujitolea
               </Button>
             </div>
@@ -155,5 +155,3 @@ export default function ServePage() {
     </>
   );
 }
-
-    
