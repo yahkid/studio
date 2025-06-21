@@ -1,7 +1,8 @@
+
 "use client"; 
 
 import Link from "next/link";
-import { MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Languages, Mail, Loader2 } from 'lucide-react';
+import { MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Languages, Mail, Loader2, Shield } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,7 +86,7 @@ export function Footer() {
                 <p className="flex items-start space-x-3">
                   <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                   <span>
-                    P.O. Box 65409, Ilala<br />
+                    Barabara ya Nyerere, DSM<br />
                     Dar es Salaam, Tanzania
                   </span>
                 </p>
@@ -147,12 +148,12 @@ export function Footer() {
                 Viungo vya Haraka
               </h3>
               <ul className="space-y-2 font-body text-sm">
-                <li><Link href="/#dhamira" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Dhamira Yetu</Link></li>
                 <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Imani Yetu</Link></li>
+                <li><Link href="/uongozi" className="hover:text-white transition-colors flex items-center"><Shield className="mr-2 h-4 w-4 text-primary"/>Uongozi Wetu</Link></li>
                 <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Mimi Mgeni</Link></li>
                 <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Tazama Ujumbe</Link></li>
                 <li><Link href="/podcast" className="hover:text-white transition-colors flex items-center"><MicVocal className="mr-2 h-4 w-4 text-primary"/>Podikasti</Link></li>
-                <li><Link href="/#matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
+                <li><Link href="/matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
                 <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
                 <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>
               </ul>
