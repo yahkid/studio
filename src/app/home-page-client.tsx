@@ -9,7 +9,6 @@ import { WatchAndGrowSectionSw } from "@/components/sections/watch-and-grow-sect
 import { DecisionPathwaySectionSw } from "@/components/sections/decision-pathway-section-sw";
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
-import { PodcastSectionSw } from '@/components/sections/podcast-section-sw';
 
 const LeadMagnetModal = dynamic(() => import('@/components/modals/lead-magnet-modal').then(mod => mod.LeadMagnetModal), { ssr: false });
 const VisitPlannerModal = dynamic(() => import('@/components/modals/visit-planner-modal').then(mod => mod.VisitPlannerModal), { ssr: false });
@@ -28,8 +27,6 @@ export function HomePageClient({ children }: { children: React.ReactNode }) {
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
         <MissionSectionSw />
         <WatchAndGrowSectionSw />
-
-        <PodcastSectionSw />
 
         <DecisionPathwaySectionSw onOpenDecisionModal={() => setIsDecisionModalOpen(true)} />
         
