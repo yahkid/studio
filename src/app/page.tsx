@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -18,11 +19,13 @@ import { PartnershipSectionSw } from "@/components/sections/partnership-section"
 
 import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
 import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
+import { DecisionModal } from "@/components/modals/decision-modal";
 import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
 
 export default function HomePageSwahili() {
   const [isLeadMagnetOpen, setIsLeadMagnetOpen] = useState(false);
   const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
+  const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col items-center">
@@ -55,7 +58,7 @@ export default function HomePageSwahili() {
           </Button>
         </motion.section>
 
-        <DecisionPathwaySectionSw />
+        <DecisionPathwaySectionSw onOpenDecisionModal={() => setIsDecisionModalOpen(true)} />
         <TestimonialsSectionSw />
         <EventsSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
         <PartnershipSectionSw />
@@ -63,6 +66,7 @@ export default function HomePageSwahili() {
 
       <LeadMagnetModal open={isLeadMagnetOpen} onOpenChange={setIsLeadMagnetOpen} />
       <VisitPlannerModal open={isVisitPlannerOpen} onOpenChange={setIsVisitPlannerOpen} />
+      <DecisionModal open={isDecisionModalOpen} onOpenChange={setIsDecisionModalOpen} />
       <ExitIntentModal />
     </div>
   );
