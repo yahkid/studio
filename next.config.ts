@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'drive.google.com', // Added for Google Drive images
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.buzzsprout.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
