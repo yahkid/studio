@@ -46,8 +46,11 @@ export function VolunteerPartnerModal({ open, onOpenChange, department }: Volunt
       setSelectedRoles([]);
       setAdditionalInfo('');
       setIsLoading(false);
+    } else {
+      // Clear roles when department changes while modal is open
+      setSelectedRoles([]); 
     }
-  }, [open]);
+  }, [open, department]);
   
   const handleRoleChange = (role: string, checked: boolean) => {
     setSelectedRoles(prev => 
@@ -187,5 +190,3 @@ export function VolunteerPartnerModal({ open, onOpenChange, department }: Volunt
     </Dialog>
   );
 }
-
-    
