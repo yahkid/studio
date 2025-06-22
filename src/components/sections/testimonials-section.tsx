@@ -1,9 +1,7 @@
-
-import { motion } from 'framer-motion';
 import { db } from '@/lib/firebaseClient';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import type { PublishedTestimonyDoc } from '@/types/firestore';
-import { TestimonialsContent } from './testimonials-content'; // Import the new client component
+import { TestimonialsContent } from './testimonials-content';
 
 // Static fallback data
 const fallbackTestimonials = [
@@ -70,15 +68,6 @@ export async function TestimonialsSectionSw() {
       }));
 
   return (
-    <motion.section
-      id="shuhuda"
-      className="w-full py-16 md:py-24 bg-background"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5 }}
-    >
-      <TestimonialsContent testimonials={testimonials} showFallbackMessage={showFallbackMessage} />
-    </motion.section>
+    <TestimonialsContent testimonials={testimonials} showFallbackMessage={showFallbackMessage} />
   );
 }

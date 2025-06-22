@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { StaticImageData } from 'next/image';
+import { motion } from "framer-motion";
 import {
   Carousel,
   CarouselContent,
@@ -60,7 +61,14 @@ export function TestimonialsContent({ testimonials, showFallbackMessage }: Testi
   );
 
   return (
-    <>
+    <motion.section
+      id="shuhuda"
+      className="w-full py-16 md:py-24 bg-background"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto px-4 text-center">
         <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-4">
           Hadithi za Mabadiliko
@@ -147,6 +155,6 @@ export function TestimonialsContent({ testimonials, showFallbackMessage }: Testi
           </DialogClose>
         </DialogContent>
       </Dialog>
-    </>
+    </motion.section>
   );
 }
