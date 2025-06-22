@@ -86,8 +86,8 @@ export interface UserTestimonyDoc {
   userName: string;
   userEmail: string;
   story: string;
-  fileUrl?: string | null; 
-  originalFileName?: string | null; 
+  fileUrl: string | null; 
+  originalFileName: string | null; 
   submittedAt: Timestamp;
   status: "pending_review" | "approved" | "rejected"; 
   consentToShare: boolean;

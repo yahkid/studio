@@ -1,5 +1,6 @@
+
 import { db } from '@/lib/firebaseClient';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, limit } from 'firebase/firestore';
 import type { PublishedTestimonyDoc } from '@/types/firestore';
 import { TestimonialsContent } from './testimonials-content';
 
@@ -42,7 +43,11 @@ async function getPublishedTestimonials() {
     return [];
   }
   try {
-    const testimonialsQuery = query(collection(db, "published_testimonials"), orderBy("order", "asc"));
+    const testimonialsQuery = query(
+        collection(db, "published_testimonials"), 
+        orderBy("order", "asc"),
+        limit(10) // Limit to 10 testimonials to avoid fetching too many
+    );
     const querySnapshot = await getDocs(testimonialsQuery);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as PublishedTestimonyDoc[];
   } catch (error) {

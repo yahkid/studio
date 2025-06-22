@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -61,13 +62,6 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
       newsletterOptIn: false,
     },
   });
-
-  useEffect(() => {
-    if (user && initialLoadingComplete) {
-      // No fields to pre-fill in the form based on schema.
-    }
-  }, [user, initialLoadingComplete, form.reset]);
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -159,7 +153,7 @@ ${story}
         originalFileName = selectedFile.name;
       }
 
-      const testimonyData: Omit<UserTestimonyDoc, 'aiSuggestedQuote' | 'aiSummary'> = {
+      const testimonyData: Omit<UserTestimonyDoc, 'id' | 'aiSuggestedQuote' | 'aiSummary'> = {
         userId: user.uid,
         userName: user.displayName || 'Mtumiaji Asiyejulikana',
         userEmail: user.email || 'Barua pepe haipo',

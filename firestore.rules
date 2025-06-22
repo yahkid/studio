@@ -1,0 +1,96 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- DEFAULT RULE: Deny all reads and writes by default ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // --- PUBLIC CONTENT: Anyone can read, but only admins (not implemented yet) should write ---
+    match /leadership/{leaderId} {
+      allow read: if true;
+      allow write: if false; // Protect against public writes
+    }
+    
+    match /published_testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if false; // Protect against public writes
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // --- AUTHENTICATED USER SUBMISSIONS: Users must be signed in to create ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Decisions, testimonies, etc., require a logged-in user to create.
+    // No one should be able to read/update/delete others' submissions.
+    match /decisions/{decisionId} {
+      allow create: if isSignedIn();
+      allow read, update, delete: if false;
+    }
+    
+    match /user_testimonies/{testimonyId} {
+      allow create: if isSignedIn();
+      // Allow updates only for adding AI-generated content by backend processes (not users)
+      allow update: if false; 
+      allow read, delete: if false;
+    }
+    
+    match /visit_requests/{requestId} {
+      allow create: if isSignedIn();
+      allow read, update, delete: if false;
+    }
+    
+    match /volunteer_partner_signups/{signupId} {
+        allow create: if true; // Allow anyone to express interest
+        allow read, update, delete: if false;
+    }
+
+    // --- ANONYMOUS SUBMISSIONS: Anyone can write, but no one can read/update ---
+    // This is for "contact drop" style collections where there's no auth.
+    match /lead_magnet_signups/{signupId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    
+    match /exit_intent_offers/{offerId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    
+    match /weekly_updates_signups/{signupId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    
+    match /financial_partner_signups/{signupId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    match /prayer_partner_signups/{signupId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+
+    // --- USER-OWNED DATA: Users can only access their own documents ---
+    match /user_course_progress/{progressId} {
+      // Users can create, read, and update their own progress documents.
+      allow read, write: if isSignedIn() && request.auth.uid == resource.data.user_id;
+    }
+  }
+}
