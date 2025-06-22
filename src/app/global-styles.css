@@ -25,19 +25,18 @@
 }
 
 body {
-  font-family: 'Lato', sans-serif;
+  /* font-family is now applied via 'font-body' class in layout.tsx */
   font-size: 18px; /* Default body font size */
   line-height: 1.6;
-  /* Colors applied via Tailwind theme in globals.css and layout.tsx */
-  @apply bg-background text-muted-foreground; /* text-muted-foreground will use the new body-text color */
+  @apply bg-background text-muted-foreground;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600; /* semibold, as per PRD (lighter than previous 700) */
-  letter-spacing: -0.025em; /* tracking-tight, as per PRD */
-  /* Color applied via Tailwind theme in globals.css and layout.tsx */
-  @apply text-foreground; /* text-foreground will use the new dark-text color */
+  /* Font family is now applied via 'font-headline' class from tailwind.config.ts */
+  @apply font-headline; /* Apply headline font */
+  font-weight: 600; 
+  letter-spacing: -0.025em;
+  @apply text-foreground;
   margin-bottom: 0.5em;
 }
 

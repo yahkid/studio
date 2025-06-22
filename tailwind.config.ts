@@ -11,11 +11,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Lato', 'sans-serif'], // Secondary Typeface (Body) - PRD v6.0
-        headline: ['Montserrat', 'sans-serif'], // Primary Typeface (Headings) - PRD v6.0
-        montserrat: ['Montserrat', 'sans-serif'], // Explicit for direct use if needed
-        lato: ['Lato', 'sans-serif'], // Explicit for direct use if needed
-        code: ['monospace'],
+        // Update to use CSS variables from next/font
+        body: ['var(--font-lato)', 'sans-serif'],
+        headline: ['var(--font-montserrat)', 'sans-serif'],
       },
       colors: {
         // HSCM Brand Colors from PRD

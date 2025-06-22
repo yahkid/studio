@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, MicVocal } from 'lucide-react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 
 import { HeroSectionSw } from "@/components/sections/hero-section";
 import { MissionSectionSw } from "@/components/sections/mission-section-sw";
@@ -17,10 +18,12 @@ import { TestimonialsSectionSw } from "@/components/sections/testimonials-sectio
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
 
-import { LeadMagnetModal } from "@/components/modals/lead-magnet-modal";
-import { VisitPlannerModal } from "@/components/modals/visit-planner-modal";
-import { DecisionModal } from "@/components/modals/decision-modal";
-import { ExitIntentModal } from "@/components/modals/exit-intent-modal";
+// Dynamically import modals to code-split them from the main bundle
+const LeadMagnetModal = dynamic(() => import('@/components/modals/lead-magnet-modal').then(mod => mod.LeadMagnetModal), { ssr: false });
+const VisitPlannerModal = dynamic(() => import('@/components/modals/visit-planner-modal').then(mod => mod.VisitPlannerModal), { ssr: false });
+const DecisionModal = dynamic(() => import('@/components/modals/decision-modal').then(mod => mod.DecisionModal), { ssr: false });
+const ExitIntentModal = dynamic(() => import('@/components/modals/exit-intent-modal').then(mod => mod.ExitIntentModal), { ssr: false });
+
 
 export default function HomePageSwahili() {
   const [isLeadMagnetOpen, setIsLeadMagnetOpen] = useState(false);
