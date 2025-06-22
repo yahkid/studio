@@ -1,4 +1,3 @@
-
 // This file defines types for Firebase Firestore document structures.
 
 import type { Timestamp } from 'firebase/firestore';
@@ -91,6 +90,8 @@ export interface UserTestimonyDoc {
   submittedAt: Timestamp;
   status: "pending_review" | "approved" | "rejected"; 
   consentToShare: boolean;
+  aiSuggestedQuote?: string | null; // AI-generated quote
+  aiSummary?: string | null; // AI-generated summary
 }
 
 // --- USER DATA COLLECTIONS ---

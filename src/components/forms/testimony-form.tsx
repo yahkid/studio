@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -12,13 +11,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper } from 'lucide-react'; // Renamed MailIcon to MailLucide
+import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { db, storage } from '@/lib/firebaseClient';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { UserTestimonyDoc } from '@/types/firestore';
 import { WhatsAppIcon } from '../ui/whatsapp-icon';
+import { summarizeTestimony } from '@/ai/flows/summarize-testimony-flow'; // Import the new AI flow
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -37,7 +37,7 @@ const testimonyFormSchema = z.object({
   consentToShare: z.boolean().refine(value => value === true, {
     message: "Lazima ukubali kushiriki ushuhuda wako.",
   }),
-  newsletterOptIn: z.boolean().optional(), // Added optional newsletter opt-in
+  newsletterOptIn: z.boolean().optional(),
 });
 
 type TestimonyFormValues = z.infer<typeof testimonyFormSchema>;
@@ -58,7 +58,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
     defaultValues: {
       story: '',
       consentToShare: false,
-      newsletterOptIn: false, // Default to false
+      newsletterOptIn: false,
     },
   });
 
@@ -159,7 +159,7 @@ ${story}
         originalFileName = selectedFile.name;
       }
 
-      const testimonyData: UserTestimonyDoc = {
+      const testimonyData: Omit<UserTestimonyDoc, 'aiSuggestedQuote' | 'aiSummary'> = {
         userId: user.uid,
         userName: user.displayName || 'Mtumiaji Asiyejulikana',
         userEmail: user.email || 'Barua pepe haipo',
@@ -171,7 +171,27 @@ ${story}
         consentToShare: values.consentToShare,
       };
 
-      await addDoc(collection(db, 'user_testimonies'), testimonyData);
+      const docRef = await addDoc(collection(db, 'user_testimonies'), testimonyData);
+
+      toast({
+        title: "Ushuhuda Umewasilishwa!",
+        description: "Asante kwa kushiriki hadithi yako. Tunapitia na tunaweza kuwasiliana nawe.",
+      });
+
+      // Run AI summarization in the background. Don't block UI.
+      summarizeTestimony({ story: values.story })
+        .then(aiResult => {
+          updateDoc(docRef, {
+            aiSuggestedQuote: aiResult.suggestedQuote,
+            aiSummary: aiResult.summary,
+          });
+        })
+        .catch(aiError => {
+          console.error("AI Summarization Error:", aiError);
+          // Don't show an error toast to the user, as their main submission was successful.
+          // Just log it for the admin to see.
+        });
+
 
       if (values.newsletterOptIn && user.email) {
         try {
@@ -180,27 +200,11 @@ ${story}
             created_at: serverTimestamp(),
             source: 'testimony_form_opt_in'
           });
-          toast({
-            title: "Umejisajili kwa Taarifa!",
-            description: "Pia umefanikiwa kujiunga na orodha yetu ya barua pepe.",
-            variant: "default" 
-          });
         } catch (newsletterError: any) {
           console.error("Error adding to newsletter from testimony form:", newsletterError);
-          // Don't let newsletter error block testimony success message
-          toast({
-            title: "Hitilafu Kwenye Usajili wa Taarifa",
-            description: "Ushuhuda wako umepokelewa, lakini kulikuwa na tatizo la kukuongeza kwenye orodha ya barua pepe.",
-            variant: "destructive"
-          });
         }
       }
 
-
-      toast({
-        title: "Ushuhuda Umewasilishwa!",
-        description: "Asante kwa kushiriki hadithi yako. Tutapitia na tunaweza kuwasiliana nawe.",
-      });
       form.reset();
       setSelectedFile(null);
       const fileInput = document.getElementById('testimony-file') as HTMLInputElement;
