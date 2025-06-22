@@ -1,5 +1,3 @@
-
-// @/components/sections/podcast-section-sw.tsx
 "use client";
 
 import Link from 'next/link';
