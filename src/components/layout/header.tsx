@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, MicVocal } from "lucide-react"; // Languages icon removed
+import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, MicVocal, ShieldCheck } from "lucide-react"; // Languages icon removed
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,8 @@ import { useState, useEffect } from "react";
 import { auth } from '@/lib/firebaseClient';
 import { signOut } from 'firebase/auth';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
+
+const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
 
 export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -52,6 +54,7 @@ export function Header() {
 
   const userDisplayName = clientUser?.displayName || clientUser?.email;
   const userPhotoURL = clientUser?.photoURL;
+  const isAdmin = clientUser?.uid === ADMIN_UID;
 
   const getInitials = (name?: string | null) => {
     if (!name) return '';
@@ -141,6 +144,17 @@ export function Header() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {isAdmin && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/review-testimonies" className="flex items-center cursor-pointer font-semibold text-primary">
+                        <ShieldCheck className="mr-2 h-4 w-4" />
+                        <span>Admin Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem asChild>
                   <Link href="/profile" className="flex items-center cursor-pointer">
                     <User className="mr-2 h-4 w-4" />

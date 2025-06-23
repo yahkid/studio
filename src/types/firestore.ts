@@ -174,6 +174,8 @@ export interface PublishedTestimonyDoc {
     image_url: string;
     ai_hint?: string;
     order: number; // For sorting on the page
+    original_testimony_id: string; // Link back to the original submission
+    published_at: Timestamp;
 }
 
 
