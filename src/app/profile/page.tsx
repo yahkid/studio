@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import type { Course } from '@/lib/courses-data';
-import { getCourseById } from '@/lib/courses-data';
+import { getAllCourses } from '@/lib/courses-data';
 import { ProgressCourseCard } from '@/components/cards/progress-course-card';
 import { Loader2, User, Edit, KeyRound, BookOpen, CheckSquare, Search } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -56,19 +56,25 @@ export default function ProfilePage() {
       return;
     }
 
-    const fetchProgress = async () => {
+    const fetchProgressAndCourses = async () => {
       setIsProgressLoading(true);
       try {
+        // 1. Fetch all courses from the database
+        const allCourses = await getAllCourses();
+        const coursesMap = new Map(allCourses.map(course => [course.course_slug, course]));
+
+        // 2. Fetch the user's progress for all courses
         const progressQuery = query(
           collection(db, 'user_course_progress'),
           where('user_id', '==', user.uid)
         );
         const querySnapshot = await getDocs(progressQuery);
 
+        // 3. Combine progress with course details using the map for efficiency
         const progressData: EnrichedProgress[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data() as FirestoreDocTypes['user_course_progress'];
-          const courseDetails = getCourseById(data.course_id);
+          const courseDetails = coursesMap.get(data.course_id); // Efficiently find course details
           if (courseDetails) {
             progressData.push({ ...data, courseDetails, docId: doc.id });
           }
@@ -88,7 +94,7 @@ export default function ProfilePage() {
       }
     };
 
-    fetchProgress();
+    fetchProgressAndCourses();
   }, [user, initialLoadingComplete, mounted, toast]);
 
   const totalCoursesStarted = userProgress.length;

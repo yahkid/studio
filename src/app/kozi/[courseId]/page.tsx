@@ -1,5 +1,4 @@
-
-import { getCourseById, type Course } from '@/lib/courses-data';
+import { getCourseBySlug, type Course } from '@/lib/courses-data';
 import { CourseContent } from '@/components/course/course-content';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
@@ -14,8 +13,8 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const courseId = params.courseId;
-  const course = getCourseById(courseId);
+  const courseSlug = params.courseId;
+  const course = await getCourseBySlug(courseSlug);
 
   if (!course) {
     return {
@@ -29,14 +28,14 @@ export async function generateMetadata(
     openGraph: {
       title: course.title,
       description: course.description,
-      images: course.image ? [{ url: course.image }] : [],
+      images: course.image_url ? [{ url: course.image_url }] : [],
     },
   };
 }
 
-export default function CoursePage({ params }: { params: { courseId: string } }) {
-  const courseId = params.courseId;
-  const course = getCourseById(courseId);
+export default async function CoursePage({ params }: { params: { courseId: string } }) {
+  const courseSlug = params.courseId;
+  const course = await getCourseBySlug(courseSlug);
 
   if (!course) {
     return (

@@ -1,85 +1,73 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Default deny all reads and writes
-    match /{document=**} {
-      allow read, write: if false;
+    // PUBLIC-READ COLLECTIONS
+    match /leadership/{leaderId} {
+      allow read: if true;
+      allow write: if false; // Managed via server-side logic/admin SDK
+    }
+    match /published_testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if false; // Managed via server-side logic/admin SDK
+    }
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if false; // Managed via server-side logic/admin SDK
+    }
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if false; // Managed via server-side logic/admin SDK
     }
 
-    // --- USER SUBMISSIONS ---
-    // Allow logged-in users to create documents in these collections.
-    // They cannot read, update, or delete others' submissions.
-    function canSubmitForm() {
+    // USER-SUBMITTED, WRITE-ONLY for authenticated users
+    function isSignedIn() {
       return request.auth != null;
     }
-    
+
     match /decisions/{decisionId} {
-      allow create: if canSubmitForm();
+      allow create: if isSignedIn();
+      allow read, update, delete: if false;
     }
     match /lead_magnet_signups/{signupId} {
-      allow create: if canSubmitForm();
+      allow create: if true; // Anyone can sign up
+      allow read, update, delete: if false;
     }
     match /visit_requests/{requestId} {
-      allow create: if canSubmitForm();
+      allow create: if true; // Anyone can request a visit
+      allow read, update, delete: if false;
     }
-    match /exit_intent_offers/{offerId} {
-      allow create: if true; // Allow anonymous submissions for this form
+     match /exit_intent_offers/{offerId} {
+      allow create: if true;
+      allow read, update, delete: if false;
     }
     match /weekly_updates_signups/{signupId} {
-      allow create: if true; // Allow anonymous submissions for this form
+      allow create: if true;
+      allow read, update, delete: if false;
     }
     match /financial_partner_signups/{signupId} {
-       allow create: if canSubmitForm();
+      allow create: if true;
+      allow read, update, delete: if false;
     }
     match /prayer_partner_signups/{signupId} {
-       allow create: if canSubmitForm();
+      allow create: if true;
+      allow read, update, delete: if false;
     }
     match /volunteer_partner_signups/{signupId} {
-       allow create: if canSubmitForm();
+      allow create: if true;
+      allow read, update, delete: if false;
     }
-    
-    // User Testimonies: Logged-in users can create. Only admins can read/update later.
-    match /user_testimonies/{testimonyId} {
-      allow create: if canSubmitForm() && request.resource.data.userId == request.auth.uid;
-      // Admins (via backend functions) can read and update status.
-      // No client-side read/update access for security.
+     match /user_testimonies/{testimonyId} {
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      // Admins update status via server-side logic, not direct client access
+      allow read, update, delete: if false;
     }
-    
-    // --- USER-SPECIFIC DATA ---
-    // Users can only access their own course progress documents.
+
+    // USER-SPECIFIC DATA
     match /user_course_progress/{progressId} {
-      allow read, write: if request.auth.uid == resource.data.user_id;
-      allow create: if request.auth.uid == request.resource.data.user_id;
-    }
-
-    // --- PUBLIC CONTENT ---
-    // These collections are readable by anyone, but not writable from the client.
-    // Content should be managed from the Firebase Console or an admin SDK.
-    function isPubliclyReadable() {
-      return true;
-    }
-    
-    match /leadership/{leaderId} {
-      allow read: if isPubliclyReadable();
-    }
-    
-    match /published_testimonials/{testimonialId} {
-      allow read: if isPubliclyReadable();
-    }
-
-    match /events/{eventId} {
-      allow read: if isPubliclyReadable();
-    }
-
-    match /courses/{courseId} {
-      allow read: if isPubliclyReadable();
-    }
-    
-    match /sermons/{sermonId} {
-      allow read: if isPubliclyReadable();
+      // User can read, create, and update their own progress document
+      allow read, create, update: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
+      allow delete: if false; // Prevent users from deleting their progress
     }
   }
 }

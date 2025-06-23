@@ -24,10 +24,10 @@ export function ProgressCourseCard({
   return (
     <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="p-0 relative group">
-        <Link href={`/kozi/${course.id}`} aria-label={`Endelea na kozi ${course.title}`}>
+        <Link href={`/kozi/${course.course_slug}`} aria-label={`Endelea na kozi ${course.title}`}>
           <div className="aspect-[16/9] w-full overflow-hidden">
             <Image
-              src={course.image || "https://placehold.co/600x338.png"}
+              src={course.image_url || "https://placehold.co/600x338.png"}
               alt={`Picha ya jalada ya kozi ${course.title}`}
               width={600}
               height={338}
@@ -38,7 +38,7 @@ export function ProgressCourseCard({
         </Link>
       </CardHeader>
       <CardContent className="flex-grow p-4 space-y-3">
-        <Link href={`/kozi/${course.id}`} className="block">
+        <Link href={`/kozi/${course.course_slug}`} className="block">
           <CardTitle className="font-headline text-xl text-foreground hover:text-primary transition-colors duration-200">
             {course.title}
           </CardTitle>
@@ -52,7 +52,7 @@ export function ProgressCourseCard({
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button asChild className="w-full font-headline" variant="outline" size="sm">
-          <Link href={`/kozi/${course.id}`}>
+          <Link href={`/kozi/${course.course_slug}`}>
             Endelea Kujifunza
           </Link>
         </Button>

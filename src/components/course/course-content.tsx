@@ -58,7 +58,7 @@ export function CourseContent({ course }: CourseContentProps) {
         const progressQuery = query(
           collection(db, "user_course_progress"),
           where("user_id", "==", user.uid),
-          where("course_id", "==", course.id)
+          where("course_id", "==", course.course_slug)
         );
         const querySnapshot = await getDocs(progressQuery);
 
@@ -86,7 +86,7 @@ export function CourseContent({ course }: CourseContentProps) {
     };
 
     fetchProgress();
-  }, [user, course.id, toast, initialLoadingComplete]);
+  }, [user, course.course_slug, toast, initialLoadingComplete]);
   
   useEffect(() => {
     if (initialLoadingComplete && !user && currentLesson) {
@@ -118,7 +118,7 @@ export function CourseContent({ course }: CourseContentProps) {
 
     const progressData: Omit<FirestoreDocTypes['user_course_progress'], 'id' | 'created_at'> & { last_accessed: Timestamp, created_at?: Timestamp } = {
         user_id: user.uid,
-        course_id: course.id,
+        course_id: course.course_slug,
         completed_lessons: newCompletedLessons,
         last_accessed: serverTimestamp() as Timestamp,
         progress_percentage: newProgressPercentage,
@@ -160,7 +160,7 @@ export function CourseContent({ course }: CourseContentProps) {
         <div className="md:flex">
           <div className="md:w-1/3 relative">
             <Image
-              src={course.image || "https://placehold.co/600x400.png"}
+              src={course.image_url || "https://placehold.co/600x400.png"}
               alt={course.title}
               width={600}
               height={400}
@@ -303,5 +303,3 @@ export function CourseContent({ course }: CourseContentProps) {
     </div>
   );
 }
-
-    
