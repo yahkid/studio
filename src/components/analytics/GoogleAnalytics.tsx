@@ -28,7 +28,6 @@ export function GoogleAnalytics() {
   }, [pathname, searchParams])
 
   if (!GA_MEASUREMENT_ID) {
-    console.warn("Google Analytics Measurement ID is not set. Analytics will be disabled.");
     return null;
   }
 
