@@ -1,84 +1,85 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Helper function to check if a user is an admin
-    function isAdmin() {
-      // The admin UID is stored in an environment variable in the app,
-      // but for security rules, we list the admin UIDs directly here.
-      // Replace 'ADMIN_USER_UID_PLACEHOLDER' with the actual UID from Firebase Auth.
-      let adminUIDs = ['ADMIN_USER_UID_PLACEHOLDER'];
-      return request.auth != null && request.auth.uid in adminUIDs;
-    }
-
-    // --- PUBLIC-READABLE COLLECTIONS ---
-    // Anyone can read these collections, but only admins can write to them.
-    match /leadership/{leaderId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    match /published_testimonials/{testimonyId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
     
+    // Default deny all reads and writes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
     // --- USER SUBMISSIONS ---
-    // Users must be authenticated to submit forms.
-    function isAuthenticated() {
+    // Allow logged-in users to create documents in these collections.
+    // They cannot read, update, or delete others' submissions.
+    function canSubmitForm() {
       return request.auth != null;
     }
     
     match /decisions/{decisionId} {
-      allow create: if isAuthenticated();
+      allow create: if canSubmitForm();
     }
-    
     match /lead_magnet_signups/{signupId} {
-      allow create: if true; // Open to all visitors
+      allow create: if canSubmitForm();
     }
-    
     match /visit_requests/{requestId} {
-       allow create: if true; // Open to all visitors
+      allow create: if canSubmitForm();
     }
-    
     match /exit_intent_offers/{offerId} {
-       allow create: if true; // Open to all visitors
+      allow create: if true; // Allow anonymous submissions for this form
     }
-    
     match /weekly_updates_signups/{signupId} {
-       allow create: if true; // Open to all visitors
+      allow create: if true; // Allow anonymous submissions for this form
     }
-    
     match /financial_partner_signups/{signupId} {
-       allow create: if true; // Open to all visitors
+       allow create: if canSubmitForm();
     }
-    
     match /prayer_partner_signups/{signupId} {
-       allow create: if true; // Open to all visitors
+       allow create: if canSubmitForm();
+    }
+    match /volunteer_partner_signups/{signupId} {
+       allow create: if canSubmitForm();
     }
     
-    match /volunteer_partner_signups/{signupId} {
-       allow create: if true; // Open to all visitors
-    }
-
-    // --- USER-SPECIFIC DATA ---
-    // Users can only read/write their own data.
-    match /user_course_progress/{progressId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
-    }
-
-    // --- TESTIMONIES WORKFLOW ---
+    // User Testimonies: Logged-in users can create. Only admins can read/update later.
     match /user_testimonies/{testimonyId} {
-      // Any authenticated user can create their own testimony.
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      
-      // Only an admin can read all testimonies or update the status.
-      allow read: if isAdmin();
-      allow update: if isAdmin() && request.resource.data.status != resource.data.status;
+      allow create: if canSubmitForm() && request.resource.data.userId == request.auth.uid;
+      // Admins (via backend functions) can read and update status.
+      // No client-side read/update access for security.
+    }
+    
+    // --- USER-SPECIFIC DATA ---
+    // Users can only access their own course progress documents.
+    match /user_course_progress/{progressId} {
+      allow read, write: if request.auth.uid == resource.data.user_id;
+      allow create: if request.auth.uid == request.resource.data.user_id;
+    }
 
-      // Users cannot delete or update other fields of their own testimony once submitted.
-      allow delete: if false;
+    // --- PUBLIC CONTENT ---
+    // These collections are readable by anyone, but not writable from the client.
+    // Content should be managed from the Firebase Console or an admin SDK.
+    function isPubliclyReadable() {
+      return true;
+    }
+    
+    match /leadership/{leaderId} {
+      allow read: if isPubliclyReadable();
+    }
+    
+    match /published_testimonials/{testimonialId} {
+      allow read: if isPubliclyReadable();
+    }
+
+    match /events/{eventId} {
+      allow read: if isPubliclyReadable();
+    }
+
+    match /courses/{courseId} {
+      allow read: if isPubliclyReadable();
+    }
+    
+    match /sermons/{sermonId} {
+      allow read: if isPubliclyReadable();
     }
   }
 }

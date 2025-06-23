@@ -5,25 +5,30 @@ import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarIcon, List, Filter, Mail, Loader2, Newspaper } from "lucide-react";
+import { Calendar as CalendarIcon, List, Filter, Mail, Loader2, Newspaper, Info, AlertCircle } from "lucide-react";
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
-import { format, parseISO, isSameDay, startOfMonth, isValid } from "date-fns";
+import { format, parseISO, isSameDay, startOfMonth, isValid, fromUnixTime } from "date-fns";
 import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient'; 
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, where, Timestamp } from 'firebase/firestore';
+import type { EventDoc } from '@/types/firestore';
 import { motion } from "framer-motion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const [filterType, setFilterType] = useState<MinistryEvent['eventType'] | 'all'>('all');
-  const [events, setEvents] = useState<MinistryEvent[]>(initialEventsData);
+  const [events, setEvents] = useState<MinistryEvent[]>([]);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date(2025, 5, 1))); // Fixed date, fine for SSR
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date()));
 
   const [eventSignupEmail, setEventSignupEmail] = useState('');
   const [isEventSignupLoading, setIsEventSignupLoading] = useState(false);
@@ -40,6 +45,61 @@ export default function MatukioPage() {
       toYear: currentYear + 5,
     });
   }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (!db) {
+        setFetchError("Database connection not available.");
+        setEvents(initialEventsData);
+        setIsLoadingEvents(false);
+        return;
+      }
+      setIsLoadingEvents(true);
+      try {
+        const eventsQuery = query(
+          collection(db, "events"),
+          where("is_active", "==", true),
+          orderBy("event_date", "asc")
+        );
+        const querySnapshot = await getDocs(eventsQuery);
+        const fetchedEvents = querySnapshot.docs.map(doc => {
+          const data = doc.data() as EventDoc;
+          // Ensure event_date is a Firebase Timestamp and convert it
+          const date = data.event_date instanceof Timestamp 
+            ? data.event_date.toDate() 
+            : new Date(); // Fallback to now if type is wrong
+            
+          return {
+            id: doc.id,
+            title: data.title,
+            description: data.description || '',
+            date: format(date, 'yyyy-MM-dd'),
+            startTime: data.start_time,
+            endTime: data.end_time,
+            eventType: data.event_type,
+            platform: data.platform,
+            streamUrl: data.stream_url,
+            audience: data.audience,
+          } as MinistryEvent;
+        });
+
+        if (fetchedEvents.length > 0) {
+          setEvents(fetchedEvents);
+        } else {
+          setEvents(initialEventsData); // Use fallback if DB is empty
+        }
+        setFetchError(null);
+      } catch (error: any) {
+        console.error("Error fetching events from Firestore:", error);
+        setFetchError("Could not load events from the database. Showing sample events.");
+        setEvents(initialEventsData); // Use fallback on error
+      } finally {
+        setIsLoadingEvents(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
 
   const filteredAndSortedEvents = useMemo(() => {
     let processedEvents = events
@@ -161,6 +221,16 @@ export default function MatukioPage() {
           Gundua na ujiunge na matukio yetu ya kusisimua. Kuna kitu kwa kila mtu!
         </p>
       </header>
+      
+      {fetchError && (
+        <Alert className="mb-8 max-w-2xl mx-auto">
+          <Info className="h-4 w-4" />
+          <AlertTitle>Showing Sample Data</AlertTitle>
+          <AlertDescription>
+            {fetchError}
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 p-4 border rounded-lg bg-card">
         <div className="flex items-center gap-2">
@@ -175,9 +245,7 @@ export default function MatukioPage() {
           </Button>
           <Button
             variant={viewMode === 'month' ? 'default' : 'outline'}
-            onClick={() => {
-              setViewMode('month');
-            }}
+            onClick={() => setViewMode('month')}
             className="font-body"
             aria-pressed={viewMode === 'month'}
             suppressHydrationWarning={true}
@@ -223,24 +291,20 @@ export default function MatukioPage() {
                   day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90",
                   day_today: "bg-accent text-accent-foreground",
                 }}
-                components={{
-                    DayContent: DayContent 
-                }}
+                components={{ DayContent: DayContent }}
                 captionLayout="dropdown-buttons"
                 fromYear={calendarConfig.fromYear} 
                 toYear={calendarConfig.toYear}
             />
         </motion.div>
       )}
-       {viewMode === 'month' && !mounted && (
-        <div className="mb-8 bg-card p-2 sm:p-4 rounded-lg border min-h-[370px] flex justify-center items-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" /> 
-          <p className="ml-2 font-body">Inapakia Kalenda...</p>
+       
+      {isLoadingEvents ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <p className="ml-4 font-body text-muted-foreground">Inapakia matukio...</p>
         </div>
-       )}
-
-
-      {filteredAndSortedEvents.length > 0 ? (
+      ) : filteredAndSortedEvents.length > 0 ? (
         <div className="space-y-6">
           {viewMode === 'month' && selectedDate && (
             <h2 className="font-headline text-2xl text-foreground mb-4">

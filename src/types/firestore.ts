@@ -195,7 +195,7 @@ export interface FirestoreDocTypes {
   user_course_progress: UserCourseProgressDoc;
   user_testimonies: UserTestimonyDoc;
   
-  // Newly added content collections
+  // Content collections
   events: EventDoc;
   courses: CourseDoc;
   sermons: SermonDoc;
