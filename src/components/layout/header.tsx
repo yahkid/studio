@@ -3,7 +3,11 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MicVocal, ShieldCheck } from "lucide-react";
+import { 
+  LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MicVocal, ShieldCheck,
+  LayoutDashboard, HandHeart, Newspaper, Globe, UsersRound, Baby, Shield, 
+  DollarSign, BarChart3 
+} from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -16,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // Firebase imports
 import { auth } from '@/lib/firebaseClient';
@@ -113,64 +117,110 @@ export function Header() {
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </Button>
           ) : user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-accent" aria-label="User menu" suppressHydrationWarning={true}>
-                   <Avatar className="h-8 w-8">
-                    {userPhotoURL && <AvatarImage src={userPhotoURL} alt={userDisplayName || 'User Avatar'} />}
-                    <AvatarFallback>{userDisplayName ? getInitials(userDisplayName) : <User className="h-4 w-4" />}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{userDisplayName}</p>
-                    {user.displayName && user.email && (
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
-                      </p>
-                    )}
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {isAdmin && (
-                  <>
+            <>
+              {isAdmin && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="font-body hidden sm:inline-flex">
+                      <ShieldCheck className="mr-2 h-4 w-4" />
+                      Staff Portal
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64">
+                    <DropdownMenuLabel>Staff Tools</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
+                      <Link href="/staff"><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/review-testimonies"><ShieldCheck className="mr-2 h-4 w-4" />Review Testimonies</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/staff/pastoral"><HandHeart className="mr-2 h-4 w-4" />Pastoral Care</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/staff/content"><Newspaper className="mr-2 h-4 w-4" />Content</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/staff/humanitarian"><Globe className="mr-2 h-4 w-4" />Humanitarian</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/staff/youth"><UsersRound className="mr-2 h-4 w-4" />Youth Ministry</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/staff/children"><Baby className="mr-2 h-4 w-4" />Children's Ministry</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/staff/transport-security"><Shield className="mr-2 h-4 w-4" />Transport & Security</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/staff/finance"><DollarSign className="mr-2 h-4 w-4" />Finance</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/staff/analytics"><BarChart3 className="mr-2 h-4 w-4" />Analytics</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/staff/settings"><SettingsIcon className="mr-2 h-4 w-4" />System Settings</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-accent" aria-label="User menu" suppressHydrationWarning={true}>
+                    <Avatar className="h-8 w-8">
+                      {userPhotoURL && <AvatarImage src={userPhotoURL} alt={userDisplayName || 'User Avatar'} />}
+                      <AvatarFallback>{userDisplayName ? getInitials(userDisplayName) : <User className="h-4 w-4" />}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{userDisplayName}</p>
+                      {user.displayName && user.email && (
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      )}
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <DropdownMenuItem asChild className="sm:hidden">
                       <Link href="/staff" className="flex items-center cursor-pointer font-semibold text-primary">
                         <ShieldCheck className="mr-2 h-4 w-4" />
-                        <span>Staff Dashboard</span>
+                        <span>Staff Portal</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center cursor-pointer">
-                    <SettingsIcon className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/podcast" className="flex items-center cursor-pointer">
-                    <MicVocal className="mr-2 h-4 w-4" />
-                    <span>Podcast</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="cursor-pointer">
-                  {isSigningOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
-                  <span>{isSigningOut ? 'Inatoka...' : 'Toka'}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings" className="flex items-center cursor-pointer">
+                      <SettingsIcon className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/podcast" className="flex items-center cursor-pointer">
+                      <MicVocal className="mr-2 h-4 w-4" />
+                      <span>Podcast</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="cursor-pointer">
+                    {isSigningOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
+                    <span>{isSigningOut ? 'Inatoka...' : 'Toka'}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <Button asChild variant="ghost" className="font-body text-xs sm:text-sm" size="sm" suppressHydrationWarning={true}>
               <Link href="/auth?mode=login">
