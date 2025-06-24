@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "firebase deploy --only firestore": "hsc-website-d7569"
+  },
+  "targets": {},
+  "etags": {}
+}
