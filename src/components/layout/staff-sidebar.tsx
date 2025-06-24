@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 
 import {
-  Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
@@ -35,7 +34,6 @@ import {
   Baby,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from "../ui/button";
 
 export function StaffSidebar() {
   const pathname = usePathname();
@@ -50,16 +48,16 @@ export function StaffSidebar() {
   };
   
   const menuItems = [
-    { href: '/staff', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/review-testimonies', label: 'Review Testimonies', icon: ShieldCheck },
-    { href: '/staff/pastoral', label: 'Pastoral Care', icon: HandHeart },
-    { href: '/staff/content', label: 'Content', icon: Newspaper },
-    { href: '/staff/humanitarian', label: 'Humanitarian', icon: Globe },
-    { href: '/staff/youth', label: 'Youth Ministry', icon: UsersRound },
-    { href: '/staff/children', label: "Children's Ministry", icon: Baby },
-    { href: '/staff/transport-security', label: 'Transport & Security', icon: Shield },
-    { href: '/staff/finance', label: 'Finance', icon: DollarSign },
-    { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
+    { href: '/staff', label: 'Dashibodi', icon: LayoutDashboard },
+    { href: '/admin/review-testimonies', label: 'Pitia Shuhuda', icon: ShieldCheck },
+    { href: '/staff/pastoral', label: 'Huduma za Kichungaji', icon: HandHeart },
+    { href: '/staff/content', label: 'Maudhui', icon: Newspaper },
+    { href: '/staff/humanitarian', label: 'Huduma za Kijamii', icon: Globe },
+    { href: '/staff/youth', label: 'Huduma ya Vijana', icon: UsersRound },
+    { href: '/staff/children', label: "Huduma ya Watoto", icon: Baby },
+    { href: '/staff/transport-security', label: 'Uchukuzi na Usalama', icon: Shield },
+    { href: '/staff/finance', label: 'Fedha', icon: DollarSign },
+    { href: '/staff/analytics', label: 'Takwimu', icon: BarChart3 },
   ];
   
   return (
@@ -74,7 +72,7 @@ export function StaffSidebar() {
                 className="size-8"
             />
             <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
-                HSCM Staff
+                Wafanyakazi wa HSCM
             </span>
         </div>
       </SidebarHeader>
@@ -99,21 +97,21 @@ export function StaffSidebar() {
 
       <SidebarFooter>
         <SidebarGroup>
-          <SidebarGroupLabel>Account</SidebarGroupLabel>
+          <SidebarGroupLabel>Akaunti</SidebarGroupLabel>
           <SidebarMenu>
              <SidebarMenuItem>
               <Link href="/staff/settings">
-                <SidebarMenuButton tooltip="Settings" isActive={pathname === '/staff/settings'}>
+                <SidebarMenuButton tooltip="Mipangilio" isActive={pathname === '/staff/settings'}>
                   <Settings/>
-                  <span>Settings</span>
+                  <span>Mipangilio</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
              <SidebarMenuItem>
               <Link href="/">
-                <SidebarMenuButton tooltip="Return to Site">
+                <SidebarMenuButton tooltip="Rudi Kwenye Tovuti">
                   <Home />
-                  <span>Return to Site</span>
+                  <span>Rudi Kwenye Tovuti</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
@@ -123,11 +121,11 @@ export function StaffSidebar() {
         {user && (
            <div className="flex items-center gap-3 rounded-md p-2 transition-colors">
               <Avatar className="size-8">
-                {user.photoURL && <AvatarImage src={user.photoURL} alt="User avatar" />}
+                {user.photoURL && <AvatarImage src={user.photoURL} alt="Picha ya mtumiaji" />}
                 <AvatarFallback>{getInitials(user.displayName)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
-                <p className="truncate text-sm font-medium">{user.displayName || "Staff Member"}</p>
+                <p className="truncate text-sm font-medium">{user.displayName || "Mtumishi"}</p>
                 <p className="truncate text-xs text-sidebar-foreground/70">{user.email}</p>
               </div>
           </div>

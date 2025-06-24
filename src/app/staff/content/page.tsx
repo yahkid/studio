@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Clapperboard, FileText, CalendarClock, Newspaper, Users, BookOpenCheck, Download } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Content Management | HSCM Staff Portal',
-  description: 'Manage sermons, blog posts, events, and leadership for the HSCM Connect website.',
+  title: 'Usimamizi wa Maudhui | Tovuti ya Wafanyakazi wa HSCM',
+  description: 'Simamia mahubiri, makala za blogu, matukio, na uongozi kwa tovuti ya HSCM Connect.',
 };
 
 interface ManagementCardProps {
@@ -48,55 +48,55 @@ export default function ContentManagementPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3">
           <Newspaper className="h-8 w-8 text-primary" />
-          Content Management
+          Usimamizi wa Maudhui
         </h1>
         <p className="text-muted-foreground font-body">
-          Tools for the Production team to create, edit, and publish content.
+          Zana kwa ajili ya timu ya Uzalishaji kuunda, kuhariri, na kuchapisha maudhui.
         </p>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4">
         <ManagementCard
-          title="Course Manager"
-          description="Build and organize learning courses with multiple video lessons."
+          title="Meneja wa Kozi"
+          description="Jenga na panga kozi za kujifunza zenye masomo ya video."
           icon={BookOpenCheck}
           href="/staff/content/courses"
-          buttonText="Manage Courses"
+          buttonText="Simamia Kozi"
         />
         <ManagementCard
-          title="Event Manager"
-          description="Create, update, and manage the public events calendar."
+          title="Meneja wa Matukio"
+          description="Unda, sasisha, na simamia kalenda ya matukio ya umma."
           icon={CalendarClock}
           href="/staff/content/events"
-          buttonText="Manage Events"
+          buttonText="Simamia Matukio"
         />
         <ManagementCard
-          title="Leadership Manager"
-          description="Add, edit, and reorder leadership profiles on the public site."
+          title="Meneja wa Uongozi"
+          description="Ongeza, hariri, na panga upya wasifu wa viongozi kwenye tovuti."
           icon={Users}
           href="/staff/content/leadership"
-          buttonText="Manage Leaders"
+          buttonText="Simamia Viongozi"
         />
         <ManagementCard
-          title="Sermon Manager"
-          description="Add and manage YouTube sermon links, titles, and speakers."
+          title="Meneja wa Mahubiri"
+          description="Ongeza na simamia viungo vya mahubiri ya YouTube, vichwa, na wazungumzaji."
           icon={Clapperboard}
           href="/staff/content/sermons"
-          buttonText="Manage Sermons"
+          buttonText="Simamia Mahubiri"
         />
         <ManagementCard
-          title="Blog Manager"
-          description="Write, edit, and publish articles for the ministry blog."
+          title="Meneja wa Blogu"
+          description="Andika, hariri, na chapisha makala kwa ajili ya blogu ya huduma."
           icon={FileText}
           href="/staff/content/blog"
-          buttonText="Manage Blog"
+          buttonText="Simamia Blogu"
         />
          <ManagementCard
-          title="Resource Manager"
-          description="Upload and manage downloadable files like guides, notes, and wallpapers."
+          title="Meneja wa Rasilimali"
+          description="Pakia na simamia faili za kupakua kama miongozo, na picha."
           icon={Download}
           href="/staff/content/resources"
-          buttonText="Manage Resources"
+          buttonText="Simamia Rasilimali"
         />
       </div>
     </div>

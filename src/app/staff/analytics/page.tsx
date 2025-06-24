@@ -10,23 +10,23 @@ import { db } from '@/lib/firebaseClient';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
-// Placeholder data for charts
+// Data ya mfano kwa chati
 const monthlyData = [
-  { name: 'Jan', visitors: 400, pageViews: 240 },
-  { name: 'Feb', visitors: 300, pageViews: 139 },
-  { name: 'Mar', visitors: 200, pageViews: 980 },
-  { name: 'Apr', visitors: 278, pageViews: 390 },
-  { name: 'May', visitors: 189, pageViews: 480 },
-  { name: 'Jun', visitors: 239, pageViews: 380 },
-  { name: 'Jul', visitors: 349, pageViews: 430 },
+  { name: 'Jan', wageni: 400, mitazamo: 240 },
+  { name: 'Feb', wageni: 300, mitazamo: 139 },
+  { name: 'Mac', wageni: 200, mitazamo: 980 },
+  { name: 'Apr', wageni: 278, mitazamo: 390 },
+  { name: 'Mei', wageni: 189, mitazamo: 480 },
+  { name: 'Jun', wageni: 239, mitazamo: 380 },
+  { name: 'Jul', wageni: 349, mitazamo: 430 },
 ];
 
 const topPagesData = [
-  { name: 'Home', views: 1200 },
-  { name: 'Sermons', views: 980 },
-  { name: 'Events', views: 750 },
-  { name: 'About', views: 540 },
-  { name: 'Contact', views: 320 },
+  { name: 'Nyumbani', mitazamo: 1200 },
+  { name: 'Mahubiri', mitazamo: 980 },
+  { name: 'Matukio', mitazamo: 750 },
+  { name: 'Kuhusu', mitazamo: 540 },
+  { name: 'Mawasiliano', mitazamo: 320 },
 ];
 
 interface MetricCardProps {
@@ -64,19 +64,19 @@ export default function AnalyticsPage() {
         const decisionsSnap = await getCountFromServer(collection(db, "decisions"));
         const testimoniesSnap = await getCountFromServer(collection(db, "user_testimonies"));
         const coursesSnap = await getCountFromServer(collection(db, "user_course_progress"));
-        // Note: Counting users directly isn't possible via Firestore collections.
-        // This would typically come from Firebase Auth or a mirrored users collection.
-        // We will use a placeholder for now.
+        // Kumbuka: Kuhesabu watumiaji moja kwa moja haiwezekani kupitia makusanyo ya Firestore.
+        // Hii kwa kawaida ingetoka Firebase Auth au mkusanyiko wa watumiaji ulioigwa.
+        // Tutatumia kishika nafasi kwa sasa.
         
         setStats({
           decisions: decisionsSnap.data().count,
           testimonies: testimoniesSnap.data().count,
           courses: coursesSnap.data().count,
-          users: 150, // Placeholder
+          users: 150, // Kishika nafasi
         });
       } catch (error: any) {
-        console.error("Error fetching analytics data:", error);
-        toast({ title: "Error", description: "Could not fetch analytics stats.", variant: "destructive" });
+        console.error("Kosa la kupata data ya takwimu:", error);
+        toast({ title: "Kosa", description: "Imeshindwa kupata takwimu za uchanganuzi.", variant: "destructive" });
       } finally {
         setIsLoading(false);
       }
@@ -88,13 +88,13 @@ export default function AnalyticsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="mb-8">
-        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Back to Staff Dashboard</Link>
+        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Rudi kwenye Dashibodi ya Wafanyakazi</Link>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3 mt-2">
           <BarChart3 className="h-8 w-8 text-primary" />
-          Analytics Dashboard
+          Dashibodi ya Takwimu
         </h1>
         <p className="text-muted-foreground font-body">
-          An overview of website traffic and user engagement.
+          Muhtasari wa trafiki ya tovuti na ushiriki wa watumiaji.
         </p>
       </div>
 
@@ -107,19 +107,19 @@ export default function AnalyticsPage() {
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard title="Total Users" value={stats.users} icon={Users} description="Placeholder value" />
-            <MetricCard title="Faith Decisions" value={stats.decisions} icon={HandHeart} description="Total decisions submitted" />
-            <MetricCard title="Testimonies" value={stats.testimonies} icon={MessageSquareText} description="Total stories shared" />
-            <MetricCard title="Courses Started" value={stats.courses} icon={BookOpen} description="Total course progress records" />
+            <MetricCard title="Jumla ya Watumiaji" value={stats.users} icon={Users} description="Thamani ya kishika nafasi" />
+            <MetricCard title="Maamuzi ya Imani" value={stats.decisions} icon={HandHeart} description="Jumla ya maamuzi yaliyowasilishwa" />
+            <MetricCard title="Shuhuda" value={stats.testimonies} icon={MessageSquareText} description="Jumla ya hadithi zilizoshirikiwa" />
+            <MetricCard title="Kozi Zilizoanzishwa" value={stats.courses} icon={BookOpen} description="Jumla ya rekodi za maendeleo ya kozi" />
         </div>
       )}
 
-      {/* Charts */}
+      {/* Chati */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Visitor Trends (Illustrative)</CardTitle>
-            <CardDescription>Monthly visitors and page views. (Demo data)</CardDescription>
+            <CardTitle>Mwenendo wa Wageni (Mfano)</CardTitle>
+            <CardDescription>Wageni wa kila mwezi na mitazamo ya kurasa. (Data ya maonyesho)</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -129,16 +129,16 @@ export default function AnalyticsPage() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="visitors" stroke="hsl(var(--primary))" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="pageViews" stroke="hsl(var(--secondary))" />
+                <Line type="monotone" dataKey="wageni" name="Wageni" stroke="hsl(var(--primary))" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="mitazamo" name="Mitazamo ya Kurasa" stroke="hsl(var(--secondary))" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Top Pages by Views (Illustrative)</CardTitle>
-            <CardDescription>Most frequently visited pages. (Demo data)</CardDescription>
+            <CardTitle>Kurasa Maarufu kwa Mitazamo (Mfano)</CardTitle>
+            <CardDescription>Kurasa zinazotembelewa mara nyingi zaidi. (Data ya maonyesho)</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -148,7 +148,7 @@ export default function AnalyticsPage() {
                 <YAxis dataKey="name" type="category" width={80} />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="views" fill="hsl(var(--primary))" />
+                <Bar dataKey="mitazamo" name="Mitazamo" fill="hsl(var(--primary))" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

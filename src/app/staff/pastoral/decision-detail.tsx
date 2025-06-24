@@ -9,6 +9,7 @@ import type { EnrichedDecision } from './page';
 import type { ContactLogDoc } from '@/types/firestore';
 import { getContactLogs, logNewContact, updateDecisionStatus } from './actions';
 import { format } from 'date-fns';
+import { sw } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
 import { useTransition } from 'react';
 
@@ -22,7 +23,7 @@ import { Loader2, MessageSquareQuote, Send } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 const logContactSchema = z.object({
-    notes: z.string().min(5, { message: "Notes must be at least 5 characters long." }),
+    notes: z.string().min(5, { message: "Maelezo lazima yawe na herufi angalau 5." }),
 });
 
 type LogContactFormValues = z.infer<typeof logContactSchema>;
@@ -53,11 +54,11 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
         startSubmitTransition(async () => {
             const result = await logNewContact(decision.id, values.notes);
             if (result.success) {
-                toast({ title: "Contact Logged", description: "The new contact has been saved." });
+                toast({ title: "Mawasiliano Yamehifadhiwa", description: "Mawasiliano mapya yamehifadhiwa." });
                 form.reset();
-                await fetchLogs(); // Refresh logs after submitting
+                await fetchLogs(); 
             } else {
-                toast({ title: "Error", description: result.error, variant: "destructive" });
+                toast({ title: "Kosa", description: result.error, variant: "destructive" });
             }
         });
     };
@@ -65,9 +66,9 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
     const handleStatusChange = async (newStatus: 'new' | 'contacted' | 'resolved') => {
         const result = await updateDecisionStatus(decision.id, newStatus);
         if (result.success) {
-            toast({ title: "Status Updated" });
+            toast({ title: "Hali Imesasishwa" });
         } else {
-            toast({ title: "Error", description: result.error, variant: "destructive" });
+            toast({ title: "Kosa", description: result.error, variant: "destructive" });
         }
     };
 
@@ -75,25 +76,25 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
         <div className="h-full flex flex-col pt-4">
             <div className="px-4 space-y-4 mb-4">
                 <div>
-                    <h4 className="text-sm font-semibold text-muted-foreground">Decision</h4>
+                    <h4 className="text-sm font-semibold text-muted-foreground">Uamuzi</h4>
                     <p className="font-medium">{decision.decision_type}</p>
                 </div>
                  {decision.comments && (
                     <div>
-                        <h4 className="text-sm font-semibold text-muted-foreground">Original Comments</h4>
+                        <h4 className="text-sm font-semibold text-muted-foreground">Maoni ya Awali</h4>
                         <blockquote className="mt-1 text-sm italic border-l-2 pl-3">"{decision.comments}"</blockquote>
                     </div>
                 )}
                  <div>
-                    <h4 className="text-sm font-semibold text-muted-foreground">Status</h4>
+                    <h4 className="text-sm font-semibold text-muted-foreground">Hali</h4>
                      <Select defaultValue={decision.status} onValueChange={handleStatusChange}>
                         <SelectTrigger className="w-[180px] h-8 mt-1">
-                            <SelectValue placeholder="Set status" />
+                            <SelectValue placeholder="Weka hali" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="new">New</SelectItem>
-                            <SelectItem value="contacted">Contacted</SelectItem>
-                            <SelectItem value="resolved">Resolved</SelectItem>
+                            <SelectItem value="new">Mpya</SelectItem>
+                            <SelectItem value="contacted">Amewasiliana</SelectItem>
+                            <SelectItem value="resolved">Imetatuliwa</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -102,19 +103,19 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
             <Separator />
 
             <div className="flex-grow flex flex-col min-h-0">
-                <h3 className="p-4 text-lg font-semibold">Contact History</h3>
+                <h3 className="p-4 text-lg font-semibold">Historia ya Mawasiliano</h3>
                 <ScrollArea className="flex-grow px-4">
                     {isLoadingLogs ? (
                         <div className="flex justify-center items-center py-8"><Loader2 className="h-6 w-6 animate-spin"/></div>
                     ) : contactLogs.length === 0 ? (
-                        <p className="text-center text-sm text-muted-foreground py-8">No contact logs yet.</p>
+                        <p className="text-center text-sm text-muted-foreground py-8">Hakuna kumbukumbu za mawasiliano bado.</p>
                     ) : (
                         <div className="space-y-4">
                             {contactLogs.map(log => (
                                 <div key={log.id} className="text-sm p-3 bg-muted/50 rounded-md">
                                     <div className="flex justify-between items-center mb-1">
                                         <p className="font-semibold text-foreground">{log.pastor_name}</p>
-                                        <p className="text-xs text-muted-foreground">{format(log.log_date.toDate(), 'MMM d, yyyy h:mm a')}</p>
+                                        <p className="text-xs text-muted-foreground">{format(log.log_date.toDate(), 'MMM d, yyyy h:mm a', { locale: sw })}</p>
                                     </div>
                                     <p className="text-muted-foreground whitespace-pre-wrap">{log.notes}</p>
                                 </div>
@@ -131,10 +132,10 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
                                 name="notes"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="flex items-center gap-2"><MessageSquareQuote className="h-4 w-4"/> Log New Contact</FormLabel>
+                                        <FormLabel className="flex items-center gap-2"><MessageSquareQuote className="h-4 w-4"/> Hifadhi Mawasiliano Mapya</FormLabel>
                                         <FormControl>
                                             <Textarea
-                                                placeholder="Add notes about your call, email, or visit..."
+                                                placeholder="Ongeza maelezo kuhusu simu, barua pepe, au ziara yako..."
                                                 {...field}
                                                 rows={3}
                                                 disabled={isSubmitting}
@@ -146,7 +147,7 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
                             />
                             <Button type="submit" className="w-full" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                                {isSubmitting ? 'Saving...' : <><Send className="mr-2 h-4 w-4" /> Save Log</>}
+                                {isSubmitting ? 'Inahifadhi...' : <><Send className="mr-2 h-4 w-4" /> Hifadhi Kumbukumbu</>}
                             </Button>
                         </form>
                     </Form>

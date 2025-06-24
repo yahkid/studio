@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
+import { sw } from 'date-fns/locale';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { DecisionDetail } from './decision-detail';
@@ -38,8 +39,8 @@ export default function PastoralCarePage() {
     if (initialLoadingComplete && !authLoading) {
       if (!user || user.uid !== ADMIN_UID) {
         toast({
-          title: "Access Denied",
-          description: "You do not have permission to view this page.",
+          title: "Ufikiaji Umezuiwa",
+          description: "Huna ruhusa ya kuona ukurasa huu.",
           variant: "destructive",
         });
         router.push('/staff');
@@ -60,10 +61,10 @@ export default function PastoralCarePage() {
       })) as EnrichedDecision[];
       setDecisions(fetchedDecisions);
     } catch (error: any) {
-      console.error("Error fetching decisions:", error);
+      console.error("Kosa la kupata maamuzi:", error);
       toast({
-        title: "Error",
-        description: "Could not fetch decisions. " + error.message,
+        title: "Kosa",
+        description: "Imeshindwa kupata maamuzi. " + error.message,
         variant: "destructive",
       });
     } finally {
@@ -79,7 +80,6 @@ export default function PastoralCarePage() {
   const handleSheetClose = () => {
     setIsSheetOpen(false);
     setSelectedDecision(null);
-    // Re-fetch data in case status was updated
     fetchDecisions(); 
   }
 
@@ -92,12 +92,21 @@ export default function PastoralCarePage() {
     }
   };
 
+  const getStatusLabel = (status: DecisionDoc['status']) => {
+    switch (status) {
+      case 'new': return 'Mpya';
+      case 'contacted': return 'Amewasiliana';
+      case 'resolved': return 'Imetatuliwa';
+      default: return status;
+    }
+  };
+
 
   if (authLoading || isLoadingData) {
     return (
       <div className="flex justify-center items-center p-8 min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="ml-4 font-body">Loading Pastoral Dashboard...</p>
+        <p className="ml-4 font-body">Inapakia Dashibodi ya Kichungaji...</p>
       </div>
     );
   }
@@ -107,10 +116,10 @@ export default function PastoralCarePage() {
       <CardHeader className="px-0">
         <CardTitle className="font-headline text-3xl md:text-4xl flex items-center gap-3">
           <HandHeart className="h-8 w-8 text-primary" />
-          Pastoral Dashboard
+          Dashibodi ya Kichungaji
         </CardTitle>
         <CardDescription>
-          Manage new believer decisions, prayer requests, and other pastoral duties.
+          Simamia maamuzi mapya ya waumini, maombi ya maombi, na majukumu mengine ya kichungaji.
         </CardDescription>
       </CardHeader>
       
@@ -118,15 +127,15 @@ export default function PastoralCarePage() {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="decisions" className="font-body">
              <HandHeart className="mr-2 h-4 w-4" />
-             New Decisions ({decisions.filter(d => d.status === 'new').length})
+             Maamuzi Mapya ({decisions.filter(d => d.status === 'new').length})
           </TabsTrigger>
           <TabsTrigger value="prayer_requests" className="font-body">
             <MessagesSquare className="mr-2 h-4 w-4" />
-            Prayer Requests
+            Maombi ya Maombi
           </TabsTrigger>
           <TabsTrigger value="all_contacts" className="font-body">
             <Users className="mr-2 h-4 w-4" />
-            All Contacts ({decisions.length})
+            Anwani Zote ({decisions.length})
           </TabsTrigger>
         </TabsList>
 
@@ -134,9 +143,9 @@ export default function PastoralCarePage() {
           {decisions.filter(d => d.status === 'new').length === 0 ? (
             <Alert>
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>All Clear!</AlertTitle>
+                <AlertTitle>Zote ziko sawa!</AlertTitle>
                 <AlertDescription>
-                    There are no new decisions to follow up on at this time.
+                    Hakuna maamuzi mapya ya kufuatilia kwa sasa.
                 </AlertDescription>
             </Alert>
           ) : (
@@ -149,18 +158,18 @@ export default function PastoralCarePage() {
                             <CardTitle className="font-headline text-xl">{decision.name}</CardTitle>
                             <CardDescription>{decision.email}</CardDescription>
                         </div>
-                        <Badge variant={getStatusBadgeVariant(decision.status)} className="capitalize">{decision.status}</Badge>
+                        <Badge variant={getStatusBadgeVariant(decision.status)} className="capitalize">{getStatusLabel(decision.status)}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow space-y-4">
                     <div>
-                      <p className="text-sm font-semibold text-foreground mb-1">Decision Made:</p>
+                      <p className="text-sm font-semibold text-foreground mb-1">Uamuzi Uliofanywa:</p>
                       <p className="font-body text-muted-foreground">{decision.decision_type}</p>
                     </div>
                   </CardContent>
                   <CardFooter>
                       <p className="text-xs text-muted-foreground">
-                        Received {formatDistanceToNow(decision.created_at.toDate(), { addSuffix: true })}
+                        Imepokelewa {formatDistanceToNow(decision.created_at.toDate(), { addSuffix: true, locale: sw })}
                       </p>
                   </CardFooter>
                 </Card>
@@ -172,11 +181,11 @@ export default function PastoralCarePage() {
         <TabsContent value="prayer_requests" className="mt-6">
            <Card>
             <CardHeader>
-              <CardTitle>Prayer Request Hub</CardTitle>
-              <CardDescription>This feature is under construction. Soon, prayer requests from the website will appear here in real-time for follow-up.</CardDescription>
+              <CardTitle>Kituo cha Maombi</CardTitle>
+              <CardDescription>Kipengele hiki kinajengwa. Hivi karibuni, maombi ya maombi kutoka kwenye tovuti yataonekana hapa kwa wakati halisi kwa ajili ya ufuatiliaji.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Stay tuned for updates!</p>
+              <p className="text-muted-foreground">Endelea kufuatilia kwa masasisho!</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -191,18 +200,18 @@ export default function PastoralCarePage() {
                             <CardTitle className="font-headline text-xl">{decision.name}</CardTitle>
                             <CardDescription>{decision.email}</CardDescription>
                         </div>
-                        <Badge variant={getStatusBadgeVariant(decision.status)} className="capitalize">{decision.status}</Badge>
+                        <Badge variant={getStatusBadgeVariant(decision.status)} className="capitalize">{getStatusLabel(decision.status)}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow space-y-4">
                      <div>
-                      <p className="text-sm font-semibold text-foreground mb-1">Decision Made:</p>
+                      <p className="text-sm font-semibold text-foreground mb-1">Uamuzi Uliofanywa:</p>
                       <p className="font-body text-muted-foreground">{decision.decision_type}</p>
                     </div>
                   </CardContent>
                    <CardFooter>
                       <p className="text-xs text-muted-foreground">
-                        Received {formatDistanceToNow(decision.created_at.toDate(), { addSuffix: true })}
+                        Imepokelewa {formatDistanceToNow(decision.created_at.toDate(), { addSuffix: true, locale: sw })}
                       </p>
                   </CardFooter>
                 </Card>

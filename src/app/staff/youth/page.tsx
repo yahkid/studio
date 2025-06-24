@@ -37,11 +37,11 @@ export default function YouthMinistryPage() {
             id: doc.id,
             ...doc.data()
         })) as EnrichedEvent[];
-        // Filter in the client for case-insensitivity and flexibility
-        setEvents(fetchedEvents.filter(e => e.audience.toLowerCase().includes('youth')));
+        // Chuja kwa upande wa mteja kwa kubadilika kwa herufi ndogo/kubwa
+        setEvents(fetchedEvents.filter(e => e.audience.toLowerCase().includes('youth') || e.audience.toLowerCase().includes('vijana')));
       } catch (error: any) {
-        console.error("Error fetching youth events:", error);
-        toast({ title: "Error", description: "Could not fetch youth events.", variant: "destructive" });
+        console.error("Kosa la kupata matukio ya vijana:", error);
+        toast({ title: "Kosa", description: "Imeshindwa kupata matukio ya vijana.", variant: "destructive" });
       } finally {
         setIsLoading(false);
       }
@@ -52,25 +52,25 @@ export default function YouthMinistryPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-8">
-        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Back to Staff Dashboard</Link>
+        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Rudi kwenye Dashibodi ya Wafanyakazi</Link>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3 mt-2">
           <UsersRound className="h-8 w-8 text-primary" />
-          Youth Ministry
+          Huduma ya Vijana
         </h1>
         <p className="text-muted-foreground font-body">
-          Manage youth events and parent communication.
+          Simamia matukio ya vijana na mawasiliano na wazazi.
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Upcoming Youth Events</CardTitle>
-          <CardDescription>A list of all upcoming events targeted towards the youth.</CardDescription>
+          <CardTitle>Matukio Yajayo ya Vijana</CardTitle>
+          <CardDescription>Orodha ya matukio yote yajayo yaliyolenga vijana.</CardDescription>
         </CardHeader>
         <CardContent>
            {isLoading ? (
                 <div className="flex justify-center items-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
             ) : events.length === 0 ? (
-                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>No Upcoming Youth Events</AlertTitle><AlertDescription>There are no future events specifically for the youth. Add one in the Event Manager.</AlertDescription></Alert>
+                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Matukio Yajayo ya Vijana</AlertTitle><AlertDescription>Hakuna matukio yajayo mahususi kwa vijana. Ongeza moja katika Meneja wa Matukio.</AlertDescription></Alert>
             ) : (
                 <div className="space-y-4">
                     {events.map(event => (

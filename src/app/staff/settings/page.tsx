@@ -30,13 +30,13 @@ export default function SettingsPage() {
       const result = await seedDatabase();
       if (result.success) {
         toast({
-          title: "Database Seeded Successfully",
-          description: "Sample data for courses and leadership has been added.",
+          title: "Database Imejazwa kwa Mafanikio",
+          description: "Data ya mfano kwa kozi na uongozi imeongezwa.",
         });
       } else {
         toast({
-          title: "Error Seeding Database",
-          description: result.error || "An unknown error occurred.",
+          title: "Kosa la Kujaza Database",
+          description: result.error || "Hitilafu isiyojulikana imetokea.",
           variant: "destructive",
         });
       }
@@ -46,13 +46,13 @@ export default function SettingsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="mb-8">
-        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Back to Staff Dashboard</Link>
+        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Rudi kwenye Dashibodi ya Wafanyakazi</Link>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3 mt-2">
           <Settings className="h-8 w-8 text-primary" />
-          System Settings
+          Mipangilio ya Mfumo
         </h1>
         <p className="text-muted-foreground font-body">
-          Manage site-wide settings and perform administrative actions.
+          Simamia mipangilio ya tovuti na fanya vitendo vya kiutawala.
         </p>
       </div>
 
@@ -60,17 +60,17 @@ export default function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <AlertTriangle className="h-6 w-6 text-destructive" />
-            <CardTitle className="text-destructive font-headline text-xl">Dangerous Actions</CardTitle>
+            <CardTitle className="text-destructive font-headline text-xl">Vitendo Hatari</CardTitle>
           </div>
           <CardDescription>
-            These actions can modify or overwrite data in your database. Proceed with caution.
+            Vitendo hivi vinaweza kurekebisha au kufuta data kwenye database yako. Endelea kwa tahadhari.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="font-body text-sm text-muted-foreground mb-4">
-            This tool will populate your `courses` and `leadership` collections with high-quality sample data. It is useful for testing or setting up the site for the first time.
+            Zana hii itajaza makusanyo yako ya `courses` na `leadership` na data ya mfano yenye ubora. Ni muhimu kwa ajili ya majaribio au kuanzisha tovuti kwa mara ya kwanza.
             <br />
-            <strong className="text-destructive">Warning:</strong> Running this will overwrite any existing documents that have the same ID.
+            <strong className="text-destructive">Onyo:</strong> Kufanya hivi kutafuta hati zozote zilizopo zenye ID sawa.
           </p>
         </CardContent>
         <CardFooter>
@@ -78,21 +78,21 @@ export default function SettingsPage() {
             <AlertDialogTrigger asChild>
               <Button variant="destructive" suppressHydrationWarning={true}>
                 <Database className="mr-2 h-4 w-4" />
-                Seed Sample Data
+                Jaza Data ya Mfano
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogTitle>Una uhakika kabisa?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will overwrite documents in the `courses` and `leadership` collections with sample data.
+                  Kitendo hiki hakiwezi kutenduliwa. Hii itafuta na kuandika upya hati katika makusanyo ya `courses` na `leadership` na data ya mfano.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>Ghairi</AlertDialogCancel>
                 <AlertDialogAction onClick={handleSeed} disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Yes, seed the database
+                  Ndio, jaza database
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

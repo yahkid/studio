@@ -16,6 +16,7 @@ import { approveTestimony, rejectTestimony } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
+import { sw } from 'date-fns/locale';
 
 interface EnrichedTestimony extends UserTestimonyDoc {
     id: string;
@@ -32,11 +33,10 @@ export default function ReviewTestimoniesPage() {
 
   useEffect(() => {
     if (initialLoadingComplete && !authLoading) {
-      // Simplified check: is any user logged in?
       if (!user) {
         toast({
-          title: "Access Denied",
-          description: "You do not have permission to view this page.",
+          title: "Ufikiaji Umezuiwa",
+          description: "Huna ruhusa ya kuona ukurasa huu.",
           variant: "destructive",
         });
         router.push('/');
@@ -57,10 +57,10 @@ export default function ReviewTestimoniesPage() {
       })) as EnrichedTestimony[];
       setTestimonies(pendingTestimonies.sort((a, b) => b.submittedAt.toMillis() - a.submittedAt.toMillis()));
     } catch (error: any) {
-      console.error("Error fetching pending testimonies:", error);
+      console.error("Kosa la kupata shuhuda zinazosubiri:", error);
       toast({
-        title: "Error",
-        description: "Could not fetch testimonies. " + error.message,
+        title: "Kosa",
+        description: "Imeshindwa kupata shuhuda. " + error.message,
         variant: "destructive",
       });
     } finally {
@@ -72,10 +72,10 @@ export default function ReviewTestimoniesPage() {
     startTransition(async () => {
       const result = await approveTestimony(id);
       if (result.success) {
-        toast({ title: "Success", description: "Testimony approved and published." });
+        toast({ title: "Imefanikiwa", description: "Ushuhuda umeidhinishwa na kuchapishwa." });
         setTestimonies(prev => prev.filter(t => t.id !== id));
       } else {
-        toast({ title: "Error", description: result.error, variant: "destructive" });
+        toast({ title: "Kosa", description: result.error, variant: "destructive" });
       }
     });
   };
@@ -84,10 +84,10 @@ export default function ReviewTestimoniesPage() {
     startTransition(async () => {
       const result = await rejectTestimony(id);
       if (result.success) {
-        toast({ title: "Success", description: "Testimony rejected." });
+        toast({ title: "Imefanikiwa", description: "Ushuhuda umekataliwa." });
         setTestimonies(prev => prev.filter(t => t.id !== id));
       } else {
-        toast({ title: "Error", description: result.error, variant: "destructive" });
+        toast({ title: "Kosa", description: result.error, variant: "destructive" });
       }
     });
   };
@@ -96,7 +96,7 @@ export default function ReviewTestimoniesPage() {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="ml-4 font-body">Loading Admin Dashboard...</p>
+        <p className="ml-4 font-body">Inapakia Dashibodi ya Utawala...</p>
       </div>
     );
   }
@@ -106,19 +106,19 @@ export default function ReviewTestimoniesPage() {
       <CardHeader className="px-0">
         <CardTitle className="font-headline text-3xl md:text-4xl flex items-center gap-3">
           <ShieldCheck className="h-8 w-8 text-primary" />
-          Testimony Review Dashboard
+          Dashibodi ya Kupitia Shuhuda
         </CardTitle>
         <CardDescription>
-          Review and approve user-submitted testimonies. Approved stories will appear on the homepage.
+          Pitia na uidhinishe shuhuda zilizowasilishwa na watumiaji. Hadithi zilizoidhinishwa zitaonekana kwenye ukurasa wa nyumbani.
         </CardDescription>
       </CardHeader>
       
       {testimonies.length === 0 ? (
         <Alert>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>All Clear!</AlertTitle>
+            <AlertTitle>Zote ziko sawa!</AlertTitle>
             <AlertDescription>
-                There are no pending testimonies to review at this time.
+                Hakuna shuhuda zinazosubiri kupitiwa kwa sasa.
             </AlertDescription>
         </Alert>
       ) : (
@@ -135,21 +135,21 @@ export default function ReviewTestimoniesPage() {
                         </CardDescription>
                     </div>
                     <Badge variant="outline">
-                        {formatDistanceToNow(testimony.submittedAt.toDate(), { addSuffix: true })}
+                        {formatDistanceToNow(testimony.submittedAt.toDate(), { addSuffix: true, locale: sw })}
                     </Badge>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow space-y-4">
                 {testimony.fileUrl && (
                     <div className="relative w-full h-48 rounded-md overflow-hidden border">
-                        <Image src={testimony.fileUrl} alt={`Image for ${testimony.userName}'s testimony`} fill style={{ objectFit: 'cover' }} />
+                        <Image src={testimony.fileUrl} alt={`Picha ya ushuhuda wa ${testimony.userName}`} fill style={{ objectFit: 'cover' }} />
                     </div>
                 )}
                 {testimony.aiSuggestedQuote && (
                   <blockquote className="border-l-4 border-primary pl-4 py-2 bg-muted/50 rounded-r-md">
                      <Quote className="h-5 w-5 text-primary/50 mb-1" />
                     <p className="font-semibold italic text-foreground">{testimony.aiSuggestedQuote}</p>
-                    <p className="text-xs text-muted-foreground mt-1">- AI Suggested Quote</p>
+                    <p className="text-xs text-muted-foreground mt-1">- Nukuu Iliyopendekezwa na AI</p>
                   </blockquote>
                 )}
                 <div className="prose prose-sm dark:prose-invert max-w-none font-body text-muted-foreground h-32 overflow-y-auto p-2 border rounded-md">
@@ -158,10 +158,10 @@ export default function ReviewTestimoniesPage() {
               </CardContent>
               <CardFooter className="flex justify-end gap-2">
                 <Button variant="destructive" onClick={() => handleReject(testimony.id)} disabled={isPending}>
-                  <XIcon className="mr-2 h-4 w-4" /> Reject
+                  <XIcon className="mr-2 h-4 w-4" /> Kataa
                 </Button>
                 <Button onClick={() => handleApprove(testimony.id)} disabled={isPending}>
-                  <Check className="mr-2 h-4 w-4" /> Approve & Publish
+                  <Check className="mr-2 h-4 w-4" /> Idhinisha na Chapisha
                 </Button>
               </CardFooter>
             </Card>

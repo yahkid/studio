@@ -24,10 +24,10 @@ interface BlogFormProps {
 
 const blogFormSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(3, "Title must be at least 3 characters."),
+  title: z.string().min(3, "Kichwa cha habari lazima kiwe na herufi 3 au zaidi."),
   slug: z.string().optional(),
-  author: z.string().min(2, "Author name is required."),
-  content: z.string().min(50, "Content must be at least 50 characters."),
+  author: z.string().min(2, "Jina la mwandishi linahitajika."),
+  content: z.string().min(50, "Maudhui lazima yawe na herufi 50 au zaidi."),
   tags: z.string().optional(),
   is_published: z.boolean().default(false),
   image_url: z.any().optional(),
@@ -53,7 +53,7 @@ export function BlogForm({ onFormSubmit, post }: BlogFormProps) {
       tags: post?.tags?.join(', ') || '',
       is_published: post?.is_published || false,
       currentImageUrl: post?.image_url || '',
-      aiHint: post?.aiHint || '',
+      aiHint: post?.ai_hint || '',
     },
   });
 
@@ -83,10 +83,10 @@ export function BlogForm({ onFormSubmit, post }: BlogFormProps) {
 
         const result = await upsertBlogPost(formData);
         if (result.success) {
-            toast({ title: post ? "Post Updated" : "Post Created", description: "The blog post has been saved." });
+            toast({ title: post ? "Makala Imesasishwa" : "Makala Imeundwa", description: "Makala ya blogu imehifadhiwa." });
             onFormSubmit();
         } else {
-            toast({ title: "Error", description: result.error || "Failed to save blog post.", variant: "destructive" });
+            toast({ title: "Kosa", description: result.error || "Imeshindwa kuhifadhi makala ya blogu.", variant: "destructive" });
         }
     });
   };
@@ -96,36 +96,36 @@ export function BlogForm({ onFormSubmit, post }: BlogFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4 p-1">
           <FormField control={form.control} name="title" render={({ field }) => (
-            <FormItem><FormLabel>Post Title</FormLabel><FormControl><Input placeholder="e.g., The Power of a Renewed Mind" {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Kichwa cha Makala</FormLabel><FormControl><Input placeholder="Mf. Nguvu ya Akili Iliyofanywa Upya" {...field} /></FormControl><FormMessage /></FormItem>
           )} />
            <FormField control={form.control} name="author" render={({ field }) => (
-            <FormItem><FormLabel>Author</FormLabel><FormControl><Input placeholder="e.g., Rev. Innocent Morris" {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Mwandishi</FormLabel><FormControl><Input placeholder="Mf. Mch. Innocent Morris" {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="content" render={({ field }) => (
-            <FormItem><FormLabel>Content</FormLabel><FormControl><Textarea placeholder="Write your blog post content here. Markdown is not yet supported." {...field} rows={15} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Maudhui</FormLabel><FormControl><Textarea placeholder="Andika maudhui ya makala yako hapa..." {...field} rows={15} /></FormControl><FormMessage /></FormItem>
           )} />
            <FormField control={form.control} name="tags" render={({ field }) => (
-            <FormItem><FormLabel>Tags</FormLabel><FormControl><Input placeholder="faith, hope, love" {...field} /></FormControl><FormDescription>Comma-separated list of tags.</FormDescription><FormMessage /></FormItem>
+            <FormItem><FormLabel>Vitambulisho (Tags)</FormLabel><FormControl><Input placeholder="imani, tumaini, upendo" {...field} /></FormControl><FormDescription>Orodha ya vitambulisho iliyotenganishwa kwa koma.</FormDescription><FormMessage /></FormItem>
            )} />
           <FormField control={form.control} name="is_published" render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-2"><div className="space-y-0.5"><FormLabel>Status</FormLabel>
-            <FormDescription>Published posts will be visible on the public site.</FormDescription></div>
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-2"><div className="space-y-0.5"><FormLabel>Hali</FormLabel>
+            <FormDescription>Makala zilizochapishwa zitaonekana kwenye tovuti ya umma.</FormDescription></div>
             <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
             </FormItem>
           )} />
            <FormField control={form.control} name="aiHint" render={({ field }) => (
-            <FormItem><FormLabel>AI Image Hint (Optional)</FormLabel><FormControl><Input placeholder="e.g., sunrise over mountain" {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Kidokezo cha Picha kwa AI (Si lazima)</FormLabel><FormControl><Input placeholder="Mf. jua linachomoza juu ya mlima" {...field} /></FormControl><FormMessage /></FormItem>
            )} />
            <FormItem>
-              <FormLabel>Featured Image</FormLabel>
-              {preview && <Image src={preview} alt="Image preview" width={120} height={67} className="rounded-md object-cover mt-2 aspect-video" />}
+              <FormLabel>Picha ya Makala</FormLabel>
+              {preview && <Image src={preview} alt="Onyesho la picha" width={120} height={67} className="rounded-md object-cover mt-2 aspect-video" />}
               <FormControl><Input type="file" accept="image/*" onChange={handleFileChange} /></FormControl>
               <FormMessage />
           </FormItem>
         </div>
         <Button type="submit" disabled={isPending} className="w-full">
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isPending ? "Saving..." : post ? "Save Changes" : "Create Post"}
+            {isPending ? "Inahifadhi..." : post ? "Hifadhi Mabadiliko" : "Unda Makala"}
         </Button>
       </form>
     </Form>

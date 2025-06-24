@@ -5,8 +5,8 @@ import { Baby, Shield, ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3,
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Staff Dashboard | HSCM Connect',
-  description: 'Manage ministry operations from the Staff Dashboard.',
+  title: 'Dashibodi ya Wafanyakazi | HSCM Connect',
+  description: 'Simamia shughuli za huduma kutoka Dashibodi ya Wafanyakazi.',
 };
 
 interface DashboardCardProps {
@@ -37,71 +37,71 @@ export default function StaffDashboardPage() {
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight font-headline">
-          Staff Dashboard
+          Dashibodi ya Wafanyakazi
         </h1>
         <p className="text-muted-foreground font-body">
-          Welcome! Here are the tools to manage ministry operations.
+          Karibu! Hizi ni zana za kusimamia shughuli za huduma.
         </p>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <DashboardCard
-          title="Review Testimonies"
-          description="Approve and publish user-submitted stories to the homepage."
+          title="Pitia Shuhuda"
+          description="Idhinisha na chapisha hadithi za watumiaji kwenye ukurasa wa nyumbani."
           icon={ShieldCheck}
           href="/admin/review-testimonies"
         />
         <DashboardCard
-          title="Pastoral Care"
-          description="Follow up on decisions, prayer requests, and visit plans."
+          title="Huduma za Kichungaji"
+          description="Fuatilia maamuzi, maombi ya maombi, na mipango ya kutembelewa."
           icon={HandHeart}
           href="/staff/pastoral"
         />
         <DashboardCard
-          title="Content Management"
-          description="Create and edit blog posts, sermons, and event details."
+          title="Usimamizi wa Maudhui"
+          description="Unda na hariri makala za blogu, mahubiri, na maelezo ya matukio."
           icon={Newspaper}
           href="/staff/content"
         />
         <DashboardCard
-          title="Humanitarian Projects"
-          description="Manage outreach projects and coordinate volunteers."
+          title="Miradi ya Kijamii"
+          description="Simamia miradi ya ufikiaji na ratibu wanaojitolea."
           icon={Globe}
           href="/staff/humanitarian"
         />
         <DashboardCard
-          title="Youth Ministry"
-          description="Manage youth events and parent communication."
+          title="Huduma ya Vijana"
+          description="Simamia matukio ya vijana na mawasiliano na wazazi."
           icon={UsersRound}
           href="/staff/youth"
         />
         <DashboardCard
-          title="Children's Ministry"
-          description="Manage check-ins, curriculum, and parent information."
+          title="Huduma ya Watoto"
+          description="Simamia uandikishaji, mtaala, na taarifa za wazazi."
           icon={Baby}
           href="/staff/children"
         />
         <DashboardCard
-          title="Transport & Security"
-          description="View event schedules and coordinate logistics volunteers."
+          title="Uchukuzi na Usalama"
+          description="Tazama ratiba za matukio na ratibu wanaojitolea wa vifaa."
           icon={Shield}
           href="/staff/transport-security"
         />
         <DashboardCard
-          title="Giving & Finance"
-          description="View giving reports and manage financial partner data."
+          title="Utoaji na Fedha"
+          description="Tazama ripoti za utoaji na simamia data ya washirika wa kifedha."
           icon={DollarSign}
           href="/staff/finance"
         />
         <DashboardCard
-          title="Analytics"
-          description="Review website traffic and engagement statistics."
+          title="Takwimu"
+          description="Pitia takwimu za trafiki ya tovuti na ushiriki."
           icon={BarChart3}
           href="/staff/analytics"
         />
         <DashboardCard
-          title="System Settings"
-          description="Manage site settings and user roles."
+          title="Mipangilio ya Mfumo"
+          description="Simamia mipangilio ya tovuti na majukumu ya watumiaji."
           icon={Settings}
           href="/staff/settings"
         />
