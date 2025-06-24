@@ -38,7 +38,7 @@ export async function approveTestimony(testimonyId: string) {
 
     const newPublishedTestimony: Omit<PublishedTestimonyDoc, 'id'> = {
       name: testimonyData.userName,
-      location: 'Unknown', // Location data is not currently collected
+      location: testimonyData.location || 'Unknown Location',
       quote: testimonyData.aiSuggestedQuote || 'A powerful testimony of faith.',
       story: testimonyData.story,
       image_url: testimonyData.fileUrl || `https://placehold.co/400x600.png?text=${testimonyData.userName.charAt(0)}`,

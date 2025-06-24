@@ -86,6 +86,7 @@ export interface UserTestimonyDoc {
   userName: string;
   userEmail: string;
   story: string;
+  location?: string | null;
   fileUrl: string | null; 
   originalFileName: string | null; 
   submittedAt: Timestamp;

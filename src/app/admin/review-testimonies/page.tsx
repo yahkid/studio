@@ -129,7 +129,10 @@ export default function ReviewTestimoniesPage() {
                 <div className="flex justify-between items-start">
                     <div>
                         <CardTitle className="font-headline text-xl">{testimony.userName}</CardTitle>
-                        <CardDescription>{testimony.userEmail}</CardDescription>
+                        <CardDescription>
+                            {testimony.userEmail}
+                            {testimony.location && ` • ${testimony.location}`}
+                        </CardDescription>
                     </div>
                     <Badge variant="outline">
                         {formatDistanceToNow(testimony.submittedAt.toDate(), { addSuffix: true })}

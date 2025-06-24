@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper } from 'lucide-react';
+import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper, MapPin } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { db, storage } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -35,6 +35,7 @@ const ACCEPTED_FILE_TYPES = [
 
 const testimonyFormSchema = z.object({
   story: z.string().min(50, { message: "Tafadhali shiriki zaidi kidogo katika hadithi yako (angalau herufi 50)." }),
+  location: z.string().optional(),
   consentToShare: z.boolean().refine(value => value === true, {
     message: "Lazima ukubali kushiriki ushuhuda wako.",
   }),
@@ -58,6 +59,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
     resolver: zodResolver(testimonyFormSchema),
     defaultValues: {
       story: '',
+      location: '',
       consentToShare: false,
       newsletterOptIn: false,
     },
@@ -158,6 +160,7 @@ ${story}
         userName: user.displayName || 'Mtumiaji Asiyejulikana',
         userEmail: user.email || 'Barua pepe haipo',
         story: values.story,
+        location: values.location || null,
         fileUrl: fileUrl,
         originalFileName: originalFileName,
         submittedAt: serverTimestamp() as any,
@@ -273,9 +276,32 @@ ${story}
             </FormItem>
           )}
         />
+        
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="location" className="font-body">Mahali Ulipo (Hiari)</FormLabel>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <FormControl>
+                  <Input
+                    id="location"
+                    placeholder="Mfano: Mwanza, Tanzania"
+                    className="pl-10 font-body"
+                    disabled={isSubmitting}
+                    {...field}
+                  />
+                </FormControl>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormItem>
-          <FormLabel htmlFor="testimony-file" className="font-body">Weka Picha au Hati (Si lazima)</FormLabel>
+          <FormLabel htmlFor="testimony-file" className="font-body">Weka Picha au Hati (Hiari)</FormLabel>
           <div className="relative">
              <UploadCloud className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <FormControl>
