@@ -1,57 +1,42 @@
 
 package com.hscmconnect.app
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
+import com.hscmconnect.app.databinding.ActivityHomeBinding
+import com.hscmconnect.app.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var homeContentTextView: TextView
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-        homeContentTextView = findViewById(R.id.home_content)
-
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
+        val bottomNavigation: BottomNavigationView = binding.bottomNavigation
+        bottomNavigation.setOnItemSelectedListener { item ->
+            var selectedFragment: Fragment? = null
             when (item.itemId) {
-                R.id.nav_home -> {
-                    homeContentTextView.text = "Home Content"
-                    true
-                }
-                R.id.nav_sermons -> {
-                    homeContentTextView.text = "Sermons Content"
-                    true
-                }
-                R.id.nav_courses -> {
-                    homeContentTextView.text = "Courses Content"
-                    true
-                }
-                R.id.nav_events -> {
-                    homeContentTextView.text = "Events Content"
-                    true
-                }
-                R.id.nav_partner -> {
-                    homeContentTextView.text = "Partner Content"
-                    true
-                }
-                else -> false
+                R.id.nav_home -> selectedFragment = HomeFragment()
+                R.id.nav_sermons -> selectedFragment = SermonsFragment()
+                R.id.nav_courses -> selectedFragment = CoursesFragment()
+                R.id.nav_events -> selectedFragment = EventsFragment()
+                R.id.nav_partner -> selectedFragment = PartnerFragment()
             }
+            if (selectedFragment != null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, selectedFragment).commit()
+            }
+            true
         }
 
-        // Set default selection
-        bottomNavigationView.selectedItemId = R.id.nav_home
-
-        // The logout button is no longer on this main layout.
-        // It will be moved to a profile screen later.
+        // Set default fragment
+        if (savedInstanceState == null) {
+            bottomNavigation.selectedItemId = R.id.nav_home
+        }
     }
 }
