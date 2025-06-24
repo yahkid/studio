@@ -13,8 +13,6 @@ import {
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
-
 export default function StaffLayout({
   children,
 }: {
@@ -27,7 +25,8 @@ export default function StaffLayout({
 
   React.useEffect(() => {
     if (initialLoadingComplete) {
-      if (!user || user.uid !== ADMIN_UID) {
+      // Simplified check: Is the user logged in?
+      if (!user) {
         toast({
           title: "Access Denied",
           description: "You do not have permission to view this page.",

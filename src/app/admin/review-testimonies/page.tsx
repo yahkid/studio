@@ -17,8 +17,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
-
 interface EnrichedTestimony extends UserTestimonyDoc {
     id: string;
 }
@@ -34,7 +32,8 @@ export default function ReviewTestimoniesPage() {
 
   useEffect(() => {
     if (initialLoadingComplete && !authLoading) {
-      if (!user || user.uid !== ADMIN_UID) {
+      // Simplified check: is any user logged in?
+      if (!user) {
         toast({
           title: "Access Denied",
           description: "You do not have permission to view this page.",
