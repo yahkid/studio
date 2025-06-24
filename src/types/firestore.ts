@@ -168,6 +168,19 @@ export interface SermonDoc {
     videoDownloadUrl?: string; // URL for the MP4 file in Firebase Storage
 }
 
+export interface BlogPostDoc {
+  id?: string;
+  title: string;
+  slug: string;
+  author: string;
+  content: string;
+  image_url: string;
+  ai_hint?: string;
+  tags?: string[];
+  is_published: boolean;
+  published_at: Timestamp;
+}
+
 export interface PublishedTestimonyDoc {
     id?: string;
     name: string;
@@ -215,6 +228,7 @@ export interface FirestoreDocTypes {
   events: EventDoc;
   courses: CourseDoc;
   sermons: SermonDoc;
+  blog_posts: BlogPostDoc;
   published_testimonials: PublishedTestimonyDoc;
   resources: ResourceDoc;
 }
