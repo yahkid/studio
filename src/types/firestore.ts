@@ -1,4 +1,3 @@
-
 // This file defines types for Firebase Firestore document structures.
 
 import type { Timestamp } from 'firebase/firestore';
