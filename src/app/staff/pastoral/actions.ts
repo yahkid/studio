@@ -2,18 +2,86 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { db } from '@/lib/firebaseClient';
-import { doc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '@/lib/firebaseClient';
+import {
+  doc,
+  updateDoc,
+  collection,
+  query,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  orderBy,
+  type Timestamp,
+} from 'firebase/firestore';
+import type { ContactLogDoc } from '@/types/firestore';
 
-// This is a simplified check. In a real app, use custom claims or a dedicated admin collection.
 const checkAdminOrPastoralRole = async () => {
     // This server-side check is a placeholder for actual role-based validation.
     // In a full implementation, you would verify the caller's custom claims.
     return true; 
 };
 
+export async function getContactLogs(decisionId: string): Promise<ContactLogDoc[]> {
+  const isAuthorized = await checkAdminOrPastoralRole();
+  if (!isAuthorized) {
+    // In a real app, you might throw an error or return a specific error object
+    return [];
+  }
 
-export async function followUpOnDecision(decisionId: string) {
+  try {
+    const logsQuery = query(
+      collection(db, `decisions/${decisionId}/contact_logs`),
+      orderBy('log_date', 'desc')
+    );
+    const querySnapshot = await getDocs(logsQuery);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContactLogDoc[];
+  } catch (error: any) {
+    console.error("Error fetching contact logs:", error);
+    return [];
+  }
+}
+
+export async function logNewContact(decisionId: string, notes: string) {
+  const isAuthorized = await checkAdminOrPastoralRole();
+  // The client-side auth check should prevent this, but it's good practice to check server-side too
+  const currentUser = auth.currentUser; 
+
+  if (!isAuthorized || !currentUser) {
+    return { success: false, error: 'Permission denied or not logged in.' };
+  }
+  if (!notes.trim()) {
+      return { success: false, error: 'Contact notes cannot be empty.' };
+  }
+
+  try {
+    const decisionRef = doc(db, 'decisions', decisionId);
+    const logsCollectionRef = collection(db, `decisions/${decisionId}/contact_logs`);
+    
+    // Add new log
+    await addDoc(logsCollectionRef, {
+      log_date: serverTimestamp(),
+      notes: notes,
+      pastor_id: currentUser.uid,
+      pastor_name: currentUser.displayName || 'Unknown Staff',
+    });
+
+    // Update parent decision
+    await updateDoc(decisionRef, {
+      status: 'contacted',
+      lastContactedAt: serverTimestamp(),
+    });
+    
+    revalidatePath('/staff/pastoral');
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error logging new contact:", error);
+    return { success: false, error: error.message || 'An unknown error occurred.' };
+  }
+}
+
+export async function updateDecisionStatus(decisionId: string, status: 'new' | 'contacted' | 'resolved') {
   const isAuthorized = await checkAdminOrPastoralRole();
   if (!isAuthorized) {
     return { success: false, error: 'Permission denied.' };
@@ -21,21 +89,11 @@ export async function followUpOnDecision(decisionId: string) {
 
   try {
     const decisionRef = doc(db, 'decisions', decisionId);
-    
-    // Here, you would update a status field, e.g., from 'pending' to 'contacted'.
-    // Since the DecisionDoc doesn't have a status field yet, we'll log this action.
-    // In a real app, add a 'status' field to the DecisionDoc type and Firestore documents.
-    console.log(`Decision ${decisionId} marked as followed up.`);
-    
-    // Example of what the update would look like with a status field:
-    // await updateDoc(decisionRef, { status: 'contacted', followedUpAt: serverTimestamp() });
-
-    // Revalidate the pastoral care page to reflect changes
+    await updateDoc(decisionRef, { status });
     revalidatePath('/staff/pastoral');
-
     return { success: true };
   } catch (error: any) {
-    console.error("Error following up on decision:", error);
+    console.error("Error updating decision status:", error);
     return { success: false, error: error.message || 'An unknown error occurred.' };
   }
 }

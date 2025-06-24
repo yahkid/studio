@@ -21,7 +21,18 @@ export interface DecisionDoc {
   decision_type: string;
   comments: string | null;
   user_id: string; 
+  status: 'new' | 'contacted' | 'resolved'; // Added status
+  lastContactedAt?: Timestamp; // Added for sorting/info
 }
+
+export interface ContactLogDoc {
+    id?: string;
+    log_date: Timestamp;
+    notes: string;
+    pastor_id: string; 
+    pastor_name: string; 
+}
+
 
 export interface LeadMagnetSignupDoc {
   id?: string;
@@ -214,6 +225,7 @@ export interface ResourceDoc {
 
 export interface FirestoreDocTypes {
   decisions: DecisionDoc;
+  contact_logs: ContactLogDoc;
   lead_magnet_signups: LeadMagnetSignupDoc;
   visit_requests: VisitRequestDoc;
   exit_intent_offers: ExitIntentOfferDoc;

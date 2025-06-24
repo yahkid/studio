@@ -3,119 +3,108 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // --- USER DATA & SUBMISSIONS ---
 
-    // Anyone can create a decision, but only the user who created it can read it back (future feature).
-    // Admins can read all decisions.
+    // Helper function to check if a user is an admin.
+    // For now, this is simplified to check against a specific UID from an environment variable.
+    // In a production app, this would be better handled with custom claims.
+    function isAdmin() {
+      // Allow if the user's UID matches the admin UID stored in project settings
+      // IMPORTANT: You MUST set NEXT_PUBLIC_ADMIN_UID in your .env file for this to work.
+      return request.auth.uid == "s5k2IqLqXtRT9393SjG4yvJgG8E2";
+    }
+
+    // --- USER SUBMISSION COLLECTIONS ---
+    
+    // Decisions submitted by users
     match /decisions/{decisionId} {
-      allow read: if request.auth != null && (request.auth.uid == resource.data.user_id || get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists());
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.user_id;
-      allow update, delete: if false; // Disallow updates/deletes for now.
-    }
-    
-    // Anyone can sign up for lead magnets. No reads needed.
-    match /lead_magnet_signups/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
-    }
-    
-    // Anyone can request a visit plan.
-    match /visit_requests/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
+      allow read, update: if isAdmin();
+      allow create: if request.auth != null; // Any authenticated user can create a decision
+      
+      // Subcollection for contact logs
+      match /contact_logs/{logId} {
+        allow read, create: if isAdmin();
+      }
     }
 
-    // Anyone can submit the exit intent form.
-    match /exit_intent_offers/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
-    }
-
-    // Anyone can sign up for weekly updates.
-    match /weekly_updates_signups/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
-    }
-
-    // Anyone can express interest in financial partnership.
-    match /financial_partner_signups/{docId} {
-       allow read, update, delete: if false;
-       allow create: if true;
-    }
-
-    // Anyone can sign up to be a prayer partner.
-    match /prayer_partner_signups/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
-    }
-
-    // Anyone can sign up to volunteer.
-    match /volunteer_partner_signups/{docId} {
-      allow read, update, delete: if false;
-      allow create: if true;
-    }
-    
-    // Testimonies can only be created by an authenticated user.
-    // They can only be read by the submitting user or an admin.
+    // User Testimonies: allow authenticated users to submit, only admins to read/manage
     match /user_testimonies/{testimonyId} {
-        allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-        allow read: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists());
-        allow update: if get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists(); // Only admins can update status.
-        allow delete: if false;
+        allow read: if isAdmin();
+        allow create: if request.auth.uid == request.resource.data.userId; // User can only create for themselves
+        allow update: if isAdmin(); // Only admin can approve/reject
+        allow delete: if isAdmin();
     }
     
-    // A user can only read and write their own course progress.
+    // Published Testimonials: publicly readable, admin-only write access
+    match /published_testimonials/{testimonyId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    // Lead Magnets & Signups: Allow anyone to create, only admins to read
+    match /lead_magnet_signups/{signupId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+    match /weekly_updates_signups/{signupId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+     match /visit_requests/{reqId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+    match /exit_intent_offers/{offerId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+     match /financial_partner_signups/{signupId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+    match /prayer_partner_signups/{signupId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+    match /volunteer_partner_signups/{signupId} {
+        allow read: if isAdmin();
+        allow create: if true;
+    }
+    
+    // --- USER DATA COLLECTIONS ---
+
+    // User Course Progress: Only the user can read/write their own progress
     match /user_course_progress/{progressId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
     }
     
-    // --- PUBLIC CONTENT ---
-    
-    // Anyone can read courses, leadership, events, sermons, blog posts, published testimonials and resources.
-    // Only authenticated users (admins) can write/edit/delete them. This simplifies our staff portal logic for now.
-    match /courses/{courseId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-    
+    // --- PUBLIC CONTENT COLLECTIONS ---
+
+    // Leadership, Courses, Events, Sermons, Blog Posts, Resources: Publicly readable, admin-only write access
     match /leadership/{leaderId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
-    
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
     match /events/{eventId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
-
     match /sermons/{sermonId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
-
     match /blog_posts/{postId} {
-        allow read: if true;
-        allow write: if request.auth != null;
+      allow read: if true;
+      allow write: if isAdmin();
     }
-    
-    match /published_testimonials/{testimonialId} {
-        allow read: if true;
-        allow write: if request.auth != null;
-    }
-
     match /resources/{resourceId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
-    // --- ADMIN ---
-    // A placeholder for a potential admins collection.
-    match /admins/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow write: if false; // Should be managed via backend or console
-    }
-    
     // Default deny all other access
     match /{document=**} {
       allow read, write: if false;

@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -119,7 +120,8 @@ export function DecisionForm() {
     try {
       // Step 1: Save to Firestore
       await addDoc(collection(db, 'decisions'), {
-        name, email, decision_type: decisionType, comments: comments || null, user_id: user.uid, created_at: serverTimestamp()
+        name, email, decision_type: decisionType, comments: comments || null, user_id: user.uid, created_at: serverTimestamp(),
+        status: 'new'
       });
       toast({ title: "Uamuzi Umepokelewa!", description: "Mtu kutoka timu yetu atawasiliana nawe hivi karibuni." });
 
