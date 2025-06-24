@@ -18,8 +18,8 @@ interface DashboardCardProps {
 
 function DashboardCard({ title, description, icon: Icon, href }: DashboardCardProps) {
   return (
-    <Link href={href}>
-      <Card className="h-full hover:border-primary hover:shadow-lg transition-all duration-200">
+    <Link href={href} className="block h-full">
+      <Card className="h-full hover:border-primary hover:shadow-lg transition-all duration-200 ease-in-out">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-lg font-medium font-body">{title}</CardTitle>
           <Icon className="h-6 w-6 text-muted-foreground" />
@@ -52,6 +52,12 @@ export default function StaffDashboardPage() {
           href="/admin/review-testimonies"
         />
         <DashboardCard
+          title="Pastoral Care"
+          description="Follow up on decisions, prayer requests, and visit plans."
+          icon={HandHeart}
+          href="/staff/pastoral"
+        />
+        <DashboardCard
           title="Content Management"
           description="Create and edit blog posts, sermons, and event details."
           icon={Newspaper}
@@ -62,12 +68,6 @@ export default function StaffDashboardPage() {
           description="View giving reports and manage financial partner data."
           icon={DollarSign}
           href="/staff/finance"
-        />
-        <DashboardCard
-          title="Pastoral Care"
-          description="Follow up on decisions, prayer requests, and visit plans."
-          icon={HandHeart}
-          href="/staff/pastoral"
         />
         <DashboardCard
           title="Analytics"
