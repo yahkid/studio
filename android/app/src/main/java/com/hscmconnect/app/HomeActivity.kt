@@ -3,38 +3,55 @@ package com.hscmconnect.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.hscmconnect.app.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var homeContentTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_home)
 
-        auth = Firebase.auth
-        val currentUser = auth.currentUser
+        auth = FirebaseAuth.getInstance()
+        homeContentTextView = findViewById(R.id.home_content)
 
-        if (currentUser == null) {
-            // Not logged in, send back to MainActivity
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            return
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    homeContentTextView.text = "Home Content"
+                    true
+                }
+                R.id.nav_sermons -> {
+                    homeContentTextView.text = "Sermons Content"
+                    true
+                }
+                R.id.nav_courses -> {
+                    homeContentTextView.text = "Courses Content"
+                    true
+                }
+                R.id.nav_events -> {
+                    homeContentTextView.text = "Events Content"
+                    true
+                }
+                R.id.nav_partner -> {
+                    homeContentTextView.text = "Partner Content"
+                    true
+                }
+                else -> false
+            }
         }
 
-        binding.welcomeTextView.text = "Welcome, ${currentUser.displayName ?: currentUser.email}!"
+        // Set default selection
+        bottomNavigationView.selectedItemId = R.id.nav_home
 
-        binding.logoutButton.setOnClickListener {
-            auth.signOut()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+        // The logout button is no longer on this main layout.
+        // It will be moved to a profile screen later.
     }
 }

@@ -3,66 +3,58 @@ package com.hscmconnect.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.hscmconnect.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        // Initialize Firebase Auth
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
 
-        binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
+        // Check if user is already logged in
+        if (auth.currentUser != null) {
+            navigateToHome()
+            return // Skip the rest of the setup for the login screen
+        }
+
+        setContentView(R.layout.activity_main)
+
+        val emailEditText = findViewById<EditText>(R.id.emailEditText)
+        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+        val loginButton = findViewById<Button>(R.id.loginButton)
+
+        loginButton.setOnClickListener {
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Sign in success, update UI and navigate
-                            Log.d("Auth", "signInWithEmail:success")
-                            val user = auth.currentUser
-                            Toast.makeText(baseContext, "Login successful.", Toast.LENGTH_SHORT).show()
-                            
-                            // Navigate to HomeActivity
-                            val intent = Intent(this, HomeActivity::class.java)
-                            startActivity(intent)
-                            finish() // Close the login activity
-
+                            // Sign in success
+                            Toast.makeText(baseContext, "Authentication successful.", Toast.LENGTH_SHORT).show()
+                            navigateToHome()
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("Auth", "signInWithEmail:failure", task.exception)
                             Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                         }
                     }
             } else {
-                Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            // User is already logged in, navigate to HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish() // Call finish() to remove the login activity from the back stack
     }
 }
