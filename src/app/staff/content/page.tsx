@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clapperboard, FileText, CalendarClock, Newspaper } from 'lucide-react';
+import { Clapperboard, FileText, CalendarClock, Newspaper, Users } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Content Management | HSCM Staff Portal',
-  description: 'Manage sermons, blog posts, and events for the HSCM Connect website.',
+  description: 'Manage sermons, blog posts, events, and leadership for the HSCM Connect website.',
 };
 
 interface ManagementCardProps {
@@ -57,6 +57,20 @@ export default function ContentManagementPage() {
 
       <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
         <ManagementCard
+          title="Event Manager"
+          description="Create, update, and manage the public events calendar."
+          icon={CalendarClock}
+          href="/staff/content/events"
+          buttonText="Manage Events"
+        />
+        <ManagementCard
+          title="Leadership Manager"
+          description="Add, edit, and reorder leadership profiles on the public site."
+          icon={Users}
+          href="/staff/content/leadership"
+          buttonText="Manage Leaders"
+        />
+        <ManagementCard
           title="Sermon Manager"
           description="Add and manage YouTube sermon links, titles, and speakers."
           icon={Clapperboard}
@@ -69,13 +83,6 @@ export default function ContentManagementPage() {
           icon={FileText}
           href="/staff/content/blog"
           buttonText="Manage Blog"
-        />
-        <ManagementCard
-          title="Event Manager"
-          description="Create, update, and manage the public events calendar."
-          icon={CalendarClock}
-          href="/staff/content/events"
-          buttonText="Manage Events"
         />
       </div>
     </div>
