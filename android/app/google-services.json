@@ -1,0 +1,33 @@
+{
+  "project_info": {
+    "project_number": "1234567890",
+    "project_id": "hscm-connect-app",
+    "storage_bucket": "hscm-connect-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1234567890:android:abcdef1234567890",
+        "android_client_info": {
+          "package_name": "com.hscmconnect.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+// IMPORTANT: This is a placeholder file. 
+// You must replace this with the actual google-services.json file 
+// downloaded from your Firebase project settings after adding an Android app
+// with the package name 'com.hscmconnect.app'.
