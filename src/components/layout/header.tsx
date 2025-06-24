@@ -29,17 +29,11 @@ export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [clientUser, setClientUser] = useState(user);
-
-  useEffect(() => {
-    setClientUser(user);
-  }, [user]);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
       await signOut(auth);
-      setClientUser(null);
       router.push('/');
     } catch (error) {
       console.error("Error signing out: ", error);
@@ -47,10 +41,6 @@ export function Header() {
       setIsSigningOut(false);
     }
   };
-
-  const userDisplayName = clientUser?.displayName || clientUser?.email;
-  const userPhotoURL = clientUser?.photoURL;
-  const isAdmin = clientUser?.uid === ADMIN_UID;
 
   const getInitials = (name?: string | null) => {
     if (!name) return '';
@@ -65,6 +55,10 @@ export function Header() {
       .toUpperCase()
       .substring(0, 2);
   };
+  
+  const userDisplayName = user?.displayName || user?.email;
+  const userPhotoURL = user?.photoURL;
+  const isAdmin = user?.uid === ADMIN_UID;
 
 
   const HeaderSkeleton = () => (
@@ -92,7 +86,7 @@ export function Header() {
       </header>
   );
 
-  if (!initialLoadingComplete && authLoading) {
+  if (!initialLoadingComplete) {
     return <HeaderSkeleton />;
   }
 
@@ -118,7 +112,7 @@ export function Header() {
             <Button variant="ghost" size="icon" disabled className="rounded-full">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </Button>
-          ) : clientUser ? (
+          ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-accent" aria-label="User menu" suppressHydrationWarning={true}>
@@ -132,9 +126,9 @@ export function Header() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{userDisplayName}</p>
-                    {clientUser.displayName && clientUser.email && (
+                    {user.displayName && user.email && (
                       <p className="text-xs leading-none text-muted-foreground">
-                        {clientUser.email}
+                        {user.email}
                       </p>
                     )}
                   </div>
