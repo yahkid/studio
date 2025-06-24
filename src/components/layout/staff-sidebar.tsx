@@ -30,6 +30,7 @@ import {
   LogOut,
   Home,
   User,
+  Globe,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from "../ui/button";
@@ -51,6 +52,7 @@ export function StaffSidebar() {
     { href: '/admin/review-testimonies', label: 'Review Testimonies', icon: ShieldCheck },
     { href: '/staff/pastoral', label: 'Pastoral Care', icon: HandHeart },
     { href: '/staff/content', label: 'Content', icon: Newspaper },
+    { href: '/staff/humanitarian', label: 'Humanitarian', icon: Globe },
     { href: '/staff/finance', label: 'Finance', icon: DollarSign },
     { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
   ];
