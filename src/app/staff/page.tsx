@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings, Globe, UsersRound } from 'lucide-react';
+import { Baby, ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings, Globe, UsersRound } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -74,6 +74,12 @@ export default function StaffDashboardPage() {
           description="Manage youth events and parent communication."
           icon={UsersRound}
           href="/staff/youth"
+        />
+        <DashboardCard
+          title="Children's Ministry"
+          description="Manage check-ins, curriculum, and parent information."
+          icon={Baby}
+          href="/staff/children"
         />
         <DashboardCard
           title="Giving & Finance"

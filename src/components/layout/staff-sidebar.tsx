@@ -31,6 +31,7 @@ import {
   User,
   Globe,
   UsersRound,
+  Baby,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from "../ui/button";
@@ -54,6 +55,7 @@ export function StaffSidebar() {
     { href: '/staff/content', label: 'Content', icon: Newspaper },
     { href: '/staff/humanitarian', label: 'Humanitarian', icon: Globe },
     { href: '/staff/youth', label: 'Youth Ministry', icon: UsersRound },
+    { href: '/staff/children', label: "Children's Ministry", icon: Baby },
     { href: '/staff/finance', label: 'Finance', icon: DollarSign },
     { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
   ];
