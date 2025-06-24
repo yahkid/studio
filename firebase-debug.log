@@ -146,3 +146,11 @@ INFO: Detected non-HTTP/2 connection.
 [debug] [2025-06-24T19:11:10.279Z] Jun 24, 2025 7:11:10 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
  {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 24, 2025 7:11:10 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2025-06-24T19:11:13.485Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules 200
+[debug] [2025-06-24T19:11:13.491Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules {"issues":[{"sourcePosition":{"fileName":"security.rules","line":69,"column":7,"currentOffset":2264,"endOffset":2268},"description":"Unexpected 'allow'.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":74,"column":11,"currentOffset":2378,"endOffset":2397},"description":"Missing 'match' keyword before path.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":75,"column":7,"currentOffset":2418,"endOffset":2422},"description":"Unexpected 'rules'.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":75,"column":7,"currentOffset":2418,"endOffset":2422},"description":"mismatched input 'rules' expecting {'{', '/', PATH_SEGMENT}","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":77,"column":5,"currentOffset":2467,"endOffset":2471},"description":"Unexpected 'match'.","severity":"ERROR"}]}
+[warn] ⚠  firestore.rules:69:7 - ERROR Unexpected 'allow'. 
+[warn] ⚠  firestore.rules:74:11 - ERROR Missing 'match' keyword before path. 
+[warn] ⚠  firestore.rules:75:7 - ERROR Unexpected 'rules'. 
+[warn] ⚠  firestore.rules:75:7 - ERROR mismatched input 'rules' expecting {'{', '/', PATH_SEGMENT} 
+[warn] ⚠  firestore.rules:77:5 - ERROR Unexpected 'match'. 
+[info] ✔  firestore: Rules updated. 
