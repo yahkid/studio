@@ -8,7 +8,7 @@ import type { FirestoreDocTypes } from '@/types/firestore';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Loader2, PlayCircle, Lock, AlertCircle, X } from 'lucide-react';
+import { CheckCircle, Loader2, PlayCircle, Lock, AlertCircle, X, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -200,6 +200,17 @@ export function CourseContent({ course }: CourseContentProps) {
                 </div>
                 {currentLesson.description && (
                    <p className="font-body text-muted-foreground mb-6">{currentLesson.description}</p>
+                )}
+
+                {currentLesson.pdfDownloadUrl && (
+                  <div className="mt-4 mb-6 pt-4 border-t">
+                    <Button asChild variant="secondary" className="font-body">
+                      <a href={currentLesson.pdfDownloadUrl} download>
+                        <Download className="mr-2 h-4 w-4" />
+                        Download Notes (PDF)
+                      </a>
+                    </Button>
+                  </div>
                 )}
 
                 {user ? (

@@ -140,6 +140,7 @@ export interface LessonDoc {
   videoId: string;
   duration: string;
   description?: string;
+  pdfDownloadUrl?: string; // URL for downloadable PDF notes
 }
 
 export interface CourseDoc {

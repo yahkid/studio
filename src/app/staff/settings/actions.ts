@@ -15,8 +15,8 @@ const sampleCourses = [
     is_published: true,
     order: 1,
     lessons: [
-      { id: 1, title: 'Utangulizi: Kwa Nini Tusikie?', videoId: 'VIDEO_ID_1', duration: '15:00', description: 'Utangulizi wa umuhimu wa kusikia sauti ya Mungu.' },
-      { id: 2, title: 'Njia Nne Mungu Anazungumza', videoId: 'VIDEO_ID_2', duration: '25:30', description: 'Gundua njia kuu ambazo Mungu hutumia kuwasiliana nasi.' },
+      { id: 1, title: 'Utangulizi: Kwa Nini Tusikie?', videoId: 'VIDEO_ID_1', duration: '15:00', description: 'Utangulizi wa umuhimu wa kusikia sauti ya Mungu.', pdfDownloadUrl: '#' },
+      { id: 2, title: 'Njia Nne Mungu Anazungumza', videoId: 'VIDEO_ID_2', duration: '25:30', description: 'Gundua njia kuu ambazo Mungu hutumia kuwasiliana nasi.', pdfDownloadUrl: '#' },
       { id: 3, title: 'Kutambua Sauti ya Mchungaji Mwema', videoId: 'VIDEO_ID_3', duration: '22:15', description: 'Jifunze kutofautisha sauti ya Mungu na sauti zingine.' },
     ],
   },
@@ -29,7 +29,7 @@ const sampleCourses = [
     is_published: true,
     order: 2,
     lessons: [
-      { id: 1, title: 'Maombi ni Nini?', videoId: 'VIDEO_ID_4', duration: '18:00', description: 'Kuelewa asili na madhumuni ya maombi.' },
+      { id: 1, title: 'Maombi ni Nini?', videoId: 'VIDEO_ID_4', duration: '18:00', description: 'Kuelewa asili na madhumuni ya maombi.', pdfDownloadUrl: '#' },
       { id: 2, title: 'Aina za Maombi', videoId: 'VIDEO_ID_5', duration: '28:00', description: 'Jifunze kuhusu maombi ya shukrani, kuabudu, maombezi na dua.' },
       { id: 3, title: 'Kujenga Tabia ya Kuomba', videoId: 'VIDEO_ID_6', duration: '20:00', description: 'Vidokezo vya vitendo vya kufanya maombi kuwa sehemu ya maisha yako ya kila siku.' },
     ],
