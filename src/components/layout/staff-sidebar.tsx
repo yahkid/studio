@@ -15,7 +15,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
   SidebarGroup,
   SidebarGroupLabel
 } from "@/components/ui/sidebar";
@@ -31,6 +30,7 @@ import {
   Home,
   User,
   Globe,
+  UsersRound,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from "../ui/button";
@@ -53,6 +53,7 @@ export function StaffSidebar() {
     { href: '/staff/pastoral', label: 'Pastoral Care', icon: HandHeart },
     { href: '/staff/content', label: 'Content', icon: Newspaper },
     { href: '/staff/humanitarian', label: 'Humanitarian', icon: Globe },
+    { href: '/staff/youth', label: 'Youth Ministry', icon: UsersRound },
     { href: '/staff/finance', label: 'Finance', icon: DollarSign },
     { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
   ];
@@ -80,7 +81,7 @@ export function StaffSidebar() {
             <SidebarMenuItem key={item.href}>
               <Link href={item.href}>
                 <SidebarMenuButton
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/staff' || pathname === '/staff')}
                   tooltip={item.label}
                 >
                   <item.icon />
