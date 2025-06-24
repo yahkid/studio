@@ -1,9 +1,9 @@
-
 'use server';
 
-import { db } from '@/lib/firebaseClient';
-import { doc, setDoc, writeBatch } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
+import { db, storage } from '@/lib/firebaseClient';
+import { doc, setDoc, writeBatch, Timestamp, collection } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const sampleCourses = [
   {
@@ -42,6 +42,31 @@ const sampleLeadership = [
     { id: 'john-peter', name: 'John Peter', title: 'Kiongozi wa Sifa na Kuabudu', imageSrc: '/1750433633252.jpg', bio: 'John anaongoza timu ya sifa na kuabudu, akilenga kuunda mazingira ambapo watu wanaweza kukutana na Mungu kwa njia ya muziki.', order: 3, aiHint: 'worship leader portrait man' },
 ];
 
+const sampleSermons = [
+    {
+        title: "The Power of a Renewed Mind",
+        description: "Discover how changing your mindset through God's Word can transform every area of your life. Based on Romans 12:2.",
+        speaker: "Rev. Innocent Morris",
+        youtube_video_id: "DpA0drOZsKc",
+        sermon_date: Timestamp.fromDate(new Date("2024-07-21")),
+        tags: ["transformation", "mindset", "faith"],
+        is_featured: true,
+        audioDownloadUrl: "#",
+        videoDownloadUrl: "#",
+    },
+    {
+        title: "Living in Abundant Joy",
+        description: "Joy is more than happiness; it's a fruit of the Spirit. Learn how to cultivate unshakable joy, regardless of your circumstances.",
+        speaker: "Pastor Jane Mdoe",
+        youtube_video_id: "SP3FVbEP0ps",
+        sermon_date: Timestamp.fromDate(new Date("2024-07-14")),
+        tags: ["joy", "spiritual growth", "hope"],
+        is_featured: false,
+        audioDownloadUrl: "#",
+        videoDownloadUrl: "#",
+    }
+];
+
 export async function seedDatabase() {
   try {
     const batch = writeBatch(db);
@@ -58,11 +83,22 @@ export async function seedDatabase() {
       batch.set(leaderRef, leader);
     });
 
+    // Seed Sermons
+    sampleSermons.forEach(sermon => {
+        const sermonRef = doc(collection(db, 'sermons'));
+        batch.set(sermonRef, sermon);
+    });
+
     await batch.commit();
     
     // Revalidate paths to show new data
     revalidatePath('/kozi');
     revalidatePath('/uongozi');
+    revalidatePath('/'); // For sermons on homepage
+    revalidatePath('/staff/content/sermons');
+    revalidatePath('/staff/content/courses');
+    revalidatePath('/staff/content/leadership');
+
 
     return { success: true };
   } catch (error: any) {
