@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clapperboard, FileText, CalendarClock, Newspaper, Users } from 'lucide-react';
+import { Clapperboard, FileText, CalendarClock, Newspaper, Users, BookOpenCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Content Management | HSCM Staff Portal',
@@ -55,7 +55,14 @@ export default function ContentManagementPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4">
+        <ManagementCard
+          title="Course Manager"
+          description="Build and organize learning courses with multiple video lessons."
+          icon={BookOpenCheck}
+          href="/staff/content/courses"
+          buttonText="Manage Courses"
+        />
         <ManagementCard
           title="Event Manager"
           description="Create, update, and manage the public events calendar."
