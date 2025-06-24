@@ -1,3 +1,4 @@
+
 // This file defines types for Firebase Firestore document structures.
 
 import type { Timestamp } from 'firebase/firestore';
@@ -177,6 +178,18 @@ export interface PublishedTestimonyDoc {
     published_at: Timestamp;
 }
 
+export interface ResourceDoc {
+  id?: string;
+  title: string;
+  description: string;
+  category: string; // e.g., 'Sermon Notes', 'E-Book', 'Worship Guide'
+  fileUrl: string; // URL to the file in Firebase Storage
+  fileType: 'PDF' | 'DOCX' | 'MP3' | 'MP4' | 'ZIP';
+  thumbnailUrl?: string; // Optional image for the card
+  uploadedAt: Timestamp;
+  order: number;
+}
+
 
 // --- MASTER TYPE INTERFACE ---
 // This interface groups all document types for easy reference.
@@ -199,4 +212,5 @@ export interface FirestoreDocTypes {
   courses: CourseDoc;
   sermons: SermonDoc;
   published_testimonials: PublishedTestimonyDoc;
+  resources: ResourceDoc;
 }
