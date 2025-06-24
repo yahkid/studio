@@ -35,10 +35,10 @@ export default function MimiMgeniPage() {
           <div className="relative z-20 container mx-auto px-4 text-center text-white">
              <Smile className="mx-auto h-16 w-16 text-secondary mb-6" />
             <h1 className="font-headline text-4xl md:text-6xl mb-6">
-              Karibu HSCM Connect!
+              KARIBU NYUMBANI
             </h1>
             <p className="font-body text-xl md:text-2xl text-slate-100 max-w-3xl mx-auto mb-8">
-              Tunafurahi sana umefika hapa na unafikiria kututembelea! Kuingia katika kanisa jipya kunaweza kuwa na msisimko, na tunataka kuhakikisha uzoefu wako wa kwanza nasi ni wa kukaribisha, rahisi, na wenye kuburudisha.
+              Tunajua kutafuta kanisa jipya inaweza kuwa changamoto. Sisi ni familia isiyo kamilifu lakini yenye upendo, na tungependa kukutana nawe. Hapa kuna kila kitu unachohitaji kujua kabla ya kututembelea.
             </p>
             <Button 
               onClick={() => setIsVisitPlannerOpen(true)}

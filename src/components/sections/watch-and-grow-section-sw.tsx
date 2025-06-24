@@ -140,7 +140,7 @@ export function WatchAndGrowSectionSw() {
       <div className="container mx-auto px-4">
         <PlayCircle className="h-16 w-16 text-primary mx-auto mb-6" />
         <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-6">
-          UJUMBE UNAOBADILISHA KILA KITU
+          KUA KATIKA IMANI YAKO
         </h2>
         
         <div className="max-w-4xl mx-auto mb-12">

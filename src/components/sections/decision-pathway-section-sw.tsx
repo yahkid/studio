@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -22,10 +23,10 @@ export function DecisionPathwaySectionSw({ onOpenDecisionModal }: DecisionPathwa
         />
       </div>
       <h2 className="font-headline text-4xl md:text-5xl text-foreground mt-10 mb-4">
-        UMEFANYA UAMUZI LEO?
+        HATUA MUHIMU ZAIDI
       </h2>
       <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-        Hongera kwa uamuzi wako mkuu! Sisi sote katika HSCM Connect tunafurahi pamoja nawe. Tuko hapa kukushika mkono na kukuongoza katika hatua zako za kwanza za safari hii mpya na ya kusisimua.
+        Kufanya uamuzi wa kumfuata Yesu ni hatua muhimu zaidi utakayowahi kuichukua. Tunasherehekea nawe! Bofya hapa chini ili tushiriki furaha hii na tukuongoze katika safari yako mpya.
       </p>
       <Button onClick={onOpenDecisionModal} size="lg" className="text-lg font-headline" suppressHydrationWarning={true}>
         Nimeamua Leo <HandHeart className="ml-2 h-5 w-5" />

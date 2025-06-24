@@ -83,11 +83,11 @@ export function PartnershipSectionSw() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
               <h2 className="font-headline font-bold text-4xl md:text-5xl text-foreground mb-6">
-                KUWA SEHEMU YA
-                <span className="block text-primary">HUDUMA HII</span>
+                SHIRIKIANA NASI
+                <span className="block text-primary">KULETA MABADILIKO</span>
               </h2>
               <p className="font-body text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Ushirika wako ni zaidi ya mchango—ni uwekezaji katika maisha yanayobadilishwa. Kwa pamoja, tunapeleka Injili mbali zaidi na kujenga jamii imara ya waumini.
+                Kila maisha yanayobadilishwa, kila familia inayoponywa, na kila jumuiya inayoinuliwa ni matokeo ya ushirika wetu. Tunapoungana pamoja—kwa maombi, kujitolea, na utoaji—tunaleta nuru ya Kristo kwa uhalisia.
               </p>
             </div>
 

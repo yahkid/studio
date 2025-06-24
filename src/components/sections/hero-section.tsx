@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -40,9 +41,9 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="font-headline text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter text-white mb-6"
           >
-            PATA MATUMAINI.
+            KARIBU KWENYE FAMILIA.
             <br />
-            GUNDUA KUSUDI LAKO KUU.
+            GUNDUA KUSUDI LAKO.
           </motion.h1>
 
           <motion.p 
@@ -51,7 +52,7 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
             className="font-body text-lg md:text-xl font-light text-slate-100 mb-10 max-w-3xl mx-auto leading-relaxed"
           >
-            Karibu kwenye familia ya kimataifa inayojengwa katika tumaini la Yesu. Tuko hapa kukusaidia ugundue kusudi lako na kuishi maisha yaliyojaa furaha na mwelekeo.
+            Hapa, tunakuunganisha na Mungu na jamii inayokujali. Anza safari yako ya imani na ugundue maisha tele aliyokuandalia Yesu.
           </motion.p>
 
           <motion.div 

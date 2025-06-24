@@ -26,10 +26,10 @@ export function MissionSectionSw() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-6">
-              FAMILIA ILIYOJENGWA KATIKA IMANI
+              WEWE NI SEHEMU YA FAMILIA
             </h2>
             <p className="font-body text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              Dhamira yetu ni kukuunganisha: wewe na Mungu, wewe na wengine, na wewe na kusudi lako tukufu. Kama jamii ya kimataifa, tunashiriki nuru ya Yesu na kuleta tumaini, kuanzia hapa Tanzania hadi mwisho wa dunia.
+              Sisi si jengo, bali ni watu. Familia ya kimataifa iliyounganishwa na upendo wa Yesu. Dhamira yetu ni rahisi: kukuunganisha na Mungu, na watu wengine, na kusudi la kipekee alilokuumbia.
             </p>
             <Button asChild size="lg" className="font-headline" suppressHydrationWarning={true}>
               <Link href="/about">
