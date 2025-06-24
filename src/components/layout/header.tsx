@@ -143,9 +143,9 @@ export function Header() {
                 {isAdmin && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin/review-testimonies" className="flex items-center cursor-pointer font-semibold text-primary">
+                      <Link href="/staff" className="flex items-center cursor-pointer font-semibold text-primary">
                         <ShieldCheck className="mr-2 h-4 w-4" />
-                        <span>Admin Dashboard</span>
+                        <span>Staff Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

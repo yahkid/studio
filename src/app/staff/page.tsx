@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings } from 'lucide-react';
