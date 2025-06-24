@@ -91,7 +91,7 @@ export default function ContentManagementPage() {
           href="/staff/content/blog"
           buttonText="Manage Blog"
         />
-        <ManagementCard
+         <ManagementCard
           title="Resource Manager"
           description="Upload and manage downloadable files like guides, notes, and wallpapers."
           icon={Download}
