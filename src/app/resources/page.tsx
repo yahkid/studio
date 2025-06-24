@@ -2,6 +2,7 @@
 import { type Metadata } from 'next';
 import { ResourceCard } from '@/components/cards/resource-card';
 import { Download } from 'lucide-react';
+import type { ResourceDoc } from '@/types/firestore';
 
 export const metadata: Metadata = {
   title: 'Rasilimali | HSCM Connect',
@@ -9,7 +10,27 @@ export const metadata: Metadata = {
 };
 
 // Sample data - in a real app, this would come from Firestore
-const sampleResources = [
+const sampleResources: ResourceDoc[] = [
+  {
+    id: '7',
+    title: 'HSCM Desktop Wallpaper: Hope',
+    description: 'A beautiful wallpaper for your desktop to remind you of the hope we have.',
+    category: 'Wallpapers',
+    fileUrl: 'https://placehold.co/1920x1080.png',
+    thumbnailUrl: 'https://placehold.co/600x400.png',
+    fileType: 'PNG',
+    aiHint: 'inspirational landscape sunrise'
+  },
+  {
+    id: '8',
+    title: 'HSCM Phone Wallpaper: Faith',
+    description: 'Carry a reminder of faith with you on your phone with this inspiring wallpaper.',
+    category: 'Wallpapers',
+    fileUrl: 'https://placehold.co/1080x1920.png',
+    thumbnailUrl: 'https://placehold.co/600x400.png',
+    fileType: 'PNG',
+    aiHint: 'abstract faith light'
+  },
   {
     id: '1',
     title: 'Mwongozo wa Misingi ya Imani',
@@ -26,13 +47,15 @@ const sampleResources = [
     fileUrl: '#',
     fileType: 'PDF' as const,
   },
-  {
-    id: '3',
-    title: 'Orodha ya Nyimbo za Ibada',
-    description: 'Pata orodha ya nyimbo tunazoimba katika ibada zetu za Jumapili ili uweze kuabudu nasi.',
-    category: 'Worship Guides',
-    fileUrl: '#',
-    fileType: 'DOCX' as const,
+    {
+    id: '9',
+    title: 'HSCM Desktop Wallpaper: Purpose',
+    description: 'A daily reminder of your God-given purpose, for your desktop.',
+    category: 'Wallpapers',
+    fileUrl: 'https://placehold.co/1920x1080.png',
+    thumbnailUrl: 'https://placehold.co/600x400.png',
+    fileType: 'PNG',
+    aiHint: 'path mountain journey'
   },
   {
     id: '4',
@@ -41,22 +64,6 @@ const sampleResources = [
     category: 'Audio',
     fileUrl: '#',
     fileType: 'MP3' as const,
-  },
-    {
-    id: '5',
-    title: 'Video ya Mafundisho: Maombi',
-    description: 'Tazama video hii ya mafundisho kuhusu nguvu na umuhimu wa maombi katika maisha ya muumini.',
-    category: 'Video',
-    fileUrl: '#',
-    fileType: 'MP4' as const,
-  },
-  {
-    id: '6',
-    title: 'Picha za Matukio (Zipped)',
-    description: 'Pakua mkusanyiko wa picha za matukio yetu ya hivi karibuni katika faili moja.',
-    category: 'Media',
-    fileUrl: '#',
-    fileType: 'ZIP' as const,
   },
 ];
 

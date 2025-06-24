@@ -185,12 +185,13 @@ export interface ResourceDoc {
   id?: string;
   title: string;
   description: string;
-  category: string; // e.g., 'Sermon Notes', 'E-Book', 'Worship Guide'
+  category: string; // e.g., 'Sermon Notes', 'E-Book', 'Wallpaper'
   fileUrl: string; // URL to the file in Firebase Storage
-  fileType: 'PDF' | 'DOCX' | 'MP3' | 'MP4' | 'ZIP';
+  fileType: 'PDF' | 'DOCX' | 'MP3' | 'MP4' | 'ZIP' | 'PNG' | 'JPG';
   thumbnailUrl?: string; // Optional image for the card
-  uploadedAt: Timestamp;
-  order: number;
+  aiHint?: string; // Optional hint for AI image generation
+  uploadedAt?: Timestamp;
+  order?: number;
 }
 
 
