@@ -9,7 +9,7 @@ import { Calendar as CalendarIcon, List, Filter, Mail, Loader2, Newspaper, Info,
 import { EventCard } from "@/components/cards/event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO, isSameDay, startOfMonth, isValid, fromUnixTime } from "date-fns";
-import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
+import type { MinistryEvent } from '@/lib/events-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,7 +50,6 @@ export default function MatukioPage() {
     const fetchEvents = async () => {
       if (!db) {
         setFetchError("Database connection not available.");
-        setEvents(initialEventsData);
         setIsLoadingEvents(false);
         return;
       }
@@ -64,10 +63,9 @@ export default function MatukioPage() {
         const querySnapshot = await getDocs(eventsQuery);
         const fetchedEvents = querySnapshot.docs.map(doc => {
           const data = doc.data() as EventDoc;
-          // Ensure event_date is a Firebase Timestamp and convert it
           const date = data.event_date instanceof Timestamp 
             ? data.event_date.toDate() 
-            : new Date(); // Fallback to now if type is wrong
+            : new Date();
             
           return {
             id: doc.id,
@@ -83,16 +81,11 @@ export default function MatukioPage() {
           } as MinistryEvent;
         });
 
-        if (fetchedEvents.length > 0) {
-          setEvents(fetchedEvents);
-        } else {
-          setEvents(initialEventsData); // Use fallback if DB is empty
-        }
+        setEvents(fetchedEvents);
         setFetchError(null);
       } catch (error: any) {
         console.error("Error fetching events from Firestore:", error);
-        setFetchError("Could not load events from the database. Showing sample events.");
-        setEvents(initialEventsData); // Use fallback on error
+        setFetchError("Could not load events from the database.");
       } finally {
         setIsLoadingEvents(false);
       }
@@ -223,11 +216,11 @@ export default function MatukioPage() {
       </header>
       
       {fetchError && (
-        <Alert className="mb-8 max-w-2xl mx-auto">
+        <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
           <Info className="h-4 w-4" />
-          <AlertTitle>Showing Sample Data</AlertTitle>
+          <AlertTitle>Error Loading Events</AlertTitle>
           <AlertDescription>
-            {fetchError}
+            {fetchError} Please try refreshing the page.
           </AlertDescription>
         </Alert>
       )}

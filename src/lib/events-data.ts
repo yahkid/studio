@@ -1,6 +1,6 @@
 
 export interface MinistryEvent {
-  id: number;
+  id: string;
   title: string;
   description: string;
   date: string; // YYYY-MM-DD
@@ -15,7 +15,7 @@ export interface MinistryEvent {
 
 export const initialEventsData: MinistryEvent[] = [
   {
-    "id": 2025060101,
+    "id": "sample-2025060101",
     "title": "Maombi ya Kufungua Mwezi",
     "description": "Join Rev. Innocent Morris live as we dedicate the month of June to the Lord, declaring blessings and breakthrough for your life, family, and work.",
     "date": "2025-06-01",
@@ -27,7 +27,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025060102,
+    "id": "sample-2025060102",
     "title": "Sunday Night Service",
     "description": "A powerful time of worship with the HSCM Worship team and a life-changing message from the Word to start your week strong and centered on Christ.",
     "date": "2025-06-01",
@@ -39,7 +39,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025060301,
+    "id": "sample-2025060301",
     "title": "Mafundisho ya Biblia (Bible Study)",
     "description": "Deep dive into the scriptures. This month's series: Foundations of Faith. Tonight's topic: The Role of the Holy Spirit in a Believer's Life.",
     "date": "2025-06-03",
@@ -51,7 +51,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All (Live), Members (Interactive Q&A)"
   },
   {
-    "id": 2025060601,
+    "id": "sample-2025060601",
     "title": "Usiku wa Maombi (All-Night Prayer Vigil)",
     "description": "Join us for a night of powerful intercession, worship, and spiritual warfare. Submit your prayer requests live in the chat.",
     "date": "2025-06-06",
@@ -63,7 +63,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025060801,
+    "id": "sample-2025060801",
     "title": "Sunday Night Service",
     "description": "A powerful time of worship and Word.",
     "date": "2025-06-08",
@@ -75,7 +75,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025061001,
+    "id": "sample-2025061001",
     "title": "Mafundisho ya Biblia (Bible Study)",
     "description": "Foundations of Faith series continues.",
     "date": "2025-06-10",
@@ -87,7 +87,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All (Live), Members (Interactive Q&A)"
   },
    {
-    "id": 2025061501,
+    "id": "sample-2025061501",
     "title": "Sunday Night Service - Special Guest",
     "description": "Join us for a special Sunday Night Service with a guest speaker.",
     "date": "2025-06-15",
@@ -99,7 +99,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025061301, // Example of another event for Friday (matches night prayer pattern)
+    "id": "sample-2025061301",
     "title": "Usiku wa Maombi (All-Night Prayer Vigil)",
     "description": "A night of seeking God's face, intercession for nations, and personal revival.",
     "date": "2025-06-13",
@@ -111,7 +111,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025061701, // Example of another Bible Study
+    "id": "sample-2025061701",
     "title": "Mafundisho ya Biblia (Bible Study)",
     "description": "Continuing our Foundations of Faith series. Topic: The Power of Prayer.",
     "date": "2025-06-17",
@@ -123,7 +123,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All (Live), Members (Interactive Q&A)"
   },
   {
-    "id": 2025062001, 
+    "id": "sample-2025062001", 
     "title": "Usiku wa Maombi (All-Night Prayer Vigil)",
     "description": "Join us for powerful intercession and worship.",
     "date": "2025-06-20",
@@ -135,7 +135,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025062201,
+    "id": "sample-2025062201",
     "title": "Sunday Night Service",
     "description": "Experience God's presence and a timely message.",
     "date": "2025-06-22",
@@ -147,7 +147,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All"
   },
   {
-    "id": 2025062401,
+    "id": "sample-2025062401",
     "title": "Mafundisho ya Biblia (Bible Study)",
     "description": "Concluding the Foundations of Faith series. Topic: Living a Spirit-filled Life.",
     "date": "2025-06-24",
@@ -159,7 +159,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "All (Live), Members (Interactive Q&A)"
   },
   {
-    "id": 2025062801,
+    "id": "sample-2025062801",
     "title": "Youth Ablaze Conference Kick-off",
     "description": "A special event to kick off our annual Youth Ablaze Conference. Worship, special guest, and impartation.",
     "date": "2025-06-28",
@@ -171,7 +171,7 @@ export const initialEventsData: MinistryEvent[] = [
     "audience": "Youth, Young Adults, All Welcome Online"
   },
   {
-    "id": 2025062901,
+    "id": "sample-2025062901",
     "title": "Sunday Night Service - Youth Takeover",
     "description": "The youth lead our Sunday Night Service as part of the Youth Ablaze Conference.",
     "date": "2025-06-29",

@@ -11,7 +11,7 @@ import type { EventDoc } from '@/types/firestore';
 import { format } from 'date-fns';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { EventCard } from '@/components/cards/event-card'; // Re-use the public event card
+import { EventCard } from '@/components/cards/event-card'; 
 
 interface EnrichedEvent extends EventDoc {
   id: string;
@@ -75,9 +75,9 @@ export default function YouthMinistryPage() {
                 <div className="space-y-4">
                     {events.map(event => (
                         <EventCard key={event.id} event={{
-                            id: Number(event.id.substring(0, 8)), // Create a number for the key
+                            id: event.id,
                             title: event.title,
-                            description: event.description,
+                            description: event.description || '',
                             date: format(event.event_date.toDate(), 'yyyy-MM-dd'),
                             startTime: event.start_time,
                             endTime: event.end_time,

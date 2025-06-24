@@ -4,11 +4,15 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Clock, MapPin, Sparkles } from 'lucide-react';
-import { initialEventsData, type MinistryEvent } from '@/lib/events-data';
+import { Calendar, Clock, MapPin, Sparkles, Loader2 } from 'lucide-react';
+import type { MinistryEvent } from '@/lib/events-data';
 import { format, parseISO, isValid } from 'date-fns';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { db } from '@/lib/firebaseClient';
+import { collection, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { EventDoc } from '@/types/firestore';
 
 interface EventsSectionSwProps {
   onOpenVisitPlanner: () => void;
@@ -16,21 +20,55 @@ interface EventsSectionSwProps {
 
 export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
   const [upcomingEvents, setUpcomingEvents] = useState<MinistryEvent[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // This code now runs only on the client, after hydration
-    const events = initialEventsData
-      .map(event => ({
-        ...event,
-        parsedDate: parseISO(event.date)
-      }))
-      .filter(event => isValid(event.parsedDate) && event.parsedDate.getTime() >= new Date().setHours(0,0,0,0))
-      .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime())
-      .slice(0, 3);
-    
-    setUpcomingEvents(events);
-    setMounted(true);
+    const fetchUpcomingEvents = async () => {
+      if (!db) {
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Start of today
+
+        const eventsQuery = query(
+          collection(db, "events"),
+          where("is_active", "==", true),
+          where("event_date", ">=", Timestamp.fromDate(today)),
+          orderBy("event_date", "asc"),
+          limit(3)
+        );
+        const querySnapshot = await getDocs(eventsQuery);
+        const fetchedEvents = querySnapshot.docs.map(doc => {
+            const data = doc.data() as EventDoc;
+            const date = data.event_date instanceof Timestamp 
+              ? data.event_date.toDate() 
+              : new Date(); 
+              
+            return {
+              id: doc.id,
+              title: data.title,
+              description: data.description || '',
+              date: format(date, 'yyyy-MM-dd'),
+              startTime: data.start_time,
+              endTime: data.end_time,
+              eventType: data.event_type,
+              platform: data.platform,
+              streamUrl: data.stream_url,
+              audience: data.audience,
+              parsedDate: date,
+            } as MinistryEvent;
+        });
+        setUpcomingEvents(fetchedEvents);
+      } catch (error) {
+        console.error("Error fetching upcoming events for homepage:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUpcomingEvents();
   }, []);
 
   return (
@@ -136,11 +174,11 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                   </h3>
                   
                   <div className="space-y-4 text-left font-body min-h-[185px]">
-                    {!mounted ? (
+                    {isLoading ? (
                       <div className="space-y-4">
-                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
-                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
-                        <div className="h-[53px] w-full bg-muted/50 rounded-md animate-pulse"></div>
+                        <Skeleton className="h-[53px] w-full" />
+                        <Skeleton className="h-[53px] w-full" />
+                        <Skeleton className="h-[53px] w-full" />
                       </div>
                     ) : upcomingEvents.length > 0 ? (
                       upcomingEvents.map(event => (
@@ -160,7 +198,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
                       <p className="text-muted-foreground text-center pt-8">Hakuna matukio yajayo kwa sasa.</p>
                     )}
                   </div>
-                  {mounted && upcomingEvents.length > 0 && (
+                  {upcomingEvents.length > 0 && (
                      <Button asChild variant="link" className="mt-6 font-body" suppressHydrationWarning={true}>
                        <Link href="/matukio">Tazama Kalenda Kamili &rarr;</Link>
                      </Button>
