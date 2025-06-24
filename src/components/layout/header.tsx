@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
-import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MenuSquare, MicVocal, ShieldCheck } from "lucide-react"; // Languages icon removed
+import { LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MicVocal, ShieldCheck } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
@@ -174,27 +170,6 @@ export function Header() {
                     <span>Podcast</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <MenuSquare className="mr-2 h-4 w-4" />
-                    <span>Demos</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem asChild>
-                        <Link href="/context-menu-demo" className="flex items-center cursor-pointer">
-                           ContextMenu Demo
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/expandable-tabs-demo" className="flex items-center cursor-pointer">
-                           ExpandableTabs Demo
-                        </Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="cursor-pointer">
                   {isSigningOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}

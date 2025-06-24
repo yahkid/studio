@@ -2,11 +2,11 @@
 "use client"; 
 
 import Link from "next/link";
-import { MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Languages, Mail, Loader2, Shield, Heart } from 'lucide-react';
+import { MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Mail, Loader2, Shield, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -14,27 +14,9 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const [currentLanguage, setCurrentLanguage] = useState<'sw' | 'en'>('sw');
-  const [mounted, setMounted] = useState(false);
   const [footerEmail, setFooterEmail] = useState('');
   const [isFooterSignupLoading, setIsFooterSignupLoading] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setMounted(true);
-    const storedLang = localStorage.getItem('hscm-connect-language') as 'sw' | 'en' | null;
-    if (storedLang) {
-      setCurrentLanguage(storedLang);
-    }
-  }, []);
-
-  const toggleLanguage = () => {
-    const newLang = currentLanguage === 'sw' ? 'en' : 'sw';
-    setCurrentLanguage(newLang);
-    if (mounted) {
-      localStorage.setItem('hscm-connect-language', newLang);
-    }
-  };
 
   const handleFooterEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,22 +178,6 @@ export function Footer() {
               </Button>
             </form>
              <p className="text-xs text-zinc-500 mt-3">Hatutakutumia barua taka.</p>
-          </div>
-
-          {/* Language Switch Button */}
-          <div className="my-8 flex justify-center">
-            <Button
-              variant="ghost"
-              size="sm" 
-              className="rounded-md text-xs sm:text-sm text-[#D3D3D3] hover:text-white hover:bg-white/10 transition-colors"
-              title={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
-              aria-label={mounted ? (currentLanguage === 'sw' ? "Switch to English" : "Badilisha kwenda Kiswahili") : "Switch Language"}
-              onClick={toggleLanguage}
-              suppressHydrationWarning={true}
-            >
-              <Languages className="h-5 w-5 mr-2" />
-              {mounted ? (currentLanguage === 'sw' ? "English" : "Kiswahili") : "Language"}
-            </Button>
           </div>
 
           <hr className="border-zinc-700 my-8" />

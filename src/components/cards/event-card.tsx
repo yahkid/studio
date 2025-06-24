@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { format, parseISO } from "date-fns";
 import { CalendarPlus, PlayCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface EventCardProps {
   event: MinistryEvent;
@@ -16,6 +17,7 @@ function isValidDate(date: Date | undefined): date is Date {
 }
 
 export function EventCard({ event }: EventCardProps) {
+  const { toast } = useToast();
   const parsedDate = event.parsedDate || parseISO(event.date);
 
   const getBorderColorClass = () => {
@@ -32,9 +34,11 @@ export function EventCard({ event }: EventCardProps) {
   };
 
   const handleAddToCalendar = () => {
-    // Placeholder for .ics generation or calendar integration
+    toast({
+      title: "Coming Soon!",
+      description: "The 'Add to Calendar' feature is being developed and will be available shortly.",
+    });
     console.log("Add to Calendar clicked for event:", event.title);
-    alert("Kipengele cha 'Ongeza kwenye Kalenda' kitakuja hivi karibuni!");
   };
 
   return (
