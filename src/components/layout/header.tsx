@@ -165,11 +165,6 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-default focus:bg-transparent flex-col items-start px-2 py-1.5">
-                    <div className="text-xs text-muted-foreground">Your User ID (for admin setup)</div>
-                    <div className="font-mono text-xs text-foreground break-all p-1 bg-muted rounded-sm mt-1 w-full">{user.uid}</div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="cursor-pointer">
                   {isSigningOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
                   <span>{isSigningOut ? 'Inatoka...' : 'Toka'}</span>
