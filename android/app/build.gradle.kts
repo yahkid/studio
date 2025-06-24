@@ -46,14 +46,21 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+
+    // AndroidX
     implementation(libs.fragment.ktx)
     implementation(libs.recyclerview)
-    implementation(libs.glide)
 
+    // Image Loading
+    implementation(libs.glide)
+    
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
