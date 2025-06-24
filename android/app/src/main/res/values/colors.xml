@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- HSCM Brand Colors -->
+    <color name="hscm_green">#166534</color>
+    <color name="hscm_green_dark">#052e16</color>
+    <color name="hscm_gold">#FBBF24</color>
+    <color name="hscm_gold_dark">#d97706</color>
+    <color name="hscm_red">#B91C1C</color>
+</resources>

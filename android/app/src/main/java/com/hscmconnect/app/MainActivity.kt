@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
-    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,28 +25,32 @@ class MainActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString().trim()
-            val password = binding.passwordEditText.text.toString().trim()
+            val email = binding.emailEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(baseContext, "Please enter email and password.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI and navigate
+                            Log.d("Auth", "signInWithEmail:success")
+                            val user = auth.currentUser
+                            Toast.makeText(baseContext, "Login successful.", Toast.LENGTH_SHORT).show()
+                            
+                            // Navigate to HomeActivity
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish() // Close the login activity
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success
-                        Log.d(TAG, "signInWithEmail:success")
-                        val user = auth.currentUser
-                        Toast.makeText(baseContext, "Authentication successful. Welcome ${user?.email}", Toast.LENGTH_LONG).show()
-                        // TODO: Navigate to a new activity or update UI for signed-in state.
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Auth", "signInWithEmail:failure", task.exception)
+                            Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
+            } else {
+                Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -56,8 +59,10 @@ class MainActivity : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            Log.d(TAG, "User ${currentUser.email} is already signed in.")
-             // TODO: Potentially skip login screen if user is already authenticated
+            // User is already logged in, navigate to HomeActivity
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
