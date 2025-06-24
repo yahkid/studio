@@ -2,7 +2,6 @@
 "use client";
 
 import './globals.css';
-import './global-styles.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';

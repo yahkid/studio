@@ -14,6 +14,11 @@ interface PodcastPlayerContextType {
   currentTime: number;
   seek: (time: number) => void;
   isLoading: boolean;
+  clearTrack: () => void;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isMuted: boolean;
+  toggleMute: () => void;
 }
 
 const PodcastPlayerContext = createContext<PodcastPlayerContextType | undefined>(undefined);
@@ -24,25 +29,20 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [volume, setVolumeState] = useState(1);
+  const [isMuted, setIsMutedState] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Create audio element if it doesn't exist
     if (!audioRef.current) {
       audioRef.current = new Audio();
     }
     const audio = audioRef.current;
 
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-      setIsLoading(false);
-    };
+    const handleLoadedMetadata = () => setDuration(audio.duration);
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleEnded = () => {
-      setIsPlaying(false);
-      // Potentially play next track here if implementing a queue
-    };
+    const handleEnded = () => setIsPlaying(false);
     const handlePlay = () => {
       setIsPlaying(true);
       setIsLoading(false);
@@ -51,7 +51,6 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleWaiting = () => setIsLoading(true);
     const handleCanPlay = () => setIsLoading(false);
 
-
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('ended', handleEnded);
@@ -59,7 +58,6 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
-
 
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
@@ -72,49 +70,35 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      audioRef.current.muted = isMuted;
+    }
+  }, [volume, isMuted]);
+
   const playTrack = useCallback((track: CurrentTrack) => {
     if (audioRef.current) {
-      if (currentTrack?.id === track.id && isPlaying) {
-        // If same track is playing, do nothing or pause based on preference
-        // For now, let togglePlayPause handle it.
-        // audioRef.current.pause();
-        // setIsPlaying(false);
-        return;
-      }
       if (currentTrack?.id !== track.id) {
         audioRef.current.src = track.audio_url;
-        setCurrentTime(0); // Reset time for new track
+        setCurrentTime(0);
       }
       setCurrentTrack(track);
       setIsLoading(true);
-      audioRef.current.play().then(() => {
-        setIsPlaying(true);
-        setIsLoading(false);
-      }).catch(err => {
-        console.error("Error playing audio:", err);
-        setIsPlaying(false);
-        setIsLoading(false);
-      });
+      audioRef.current.play().catch(err => console.error("Error playing audio:", err));
     }
-  }, [currentTrack, isPlaying]);
+  }, [currentTrack]);
 
   const togglePlayPause = useCallback(() => {
-    if (!audioRef.current || !currentTrack) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      setIsLoading(true);
-      audioRef.current.play().then(() => {
-        setIsLoading(false);
-      }).catch(err => {
-        console.error("Error playing audio:", err);
-        setIsPlaying(false);
-        setIsLoading(false);
-      });
+    if (audioRef.current?.src) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        setIsLoading(true);
+        audioRef.current.play().catch(err => console.error("Error playing audio:", err));
+      }
     }
-    setIsPlaying(!isPlaying);
-  }, [isPlaying, currentTrack]);
+  }, [isPlaying]);
 
   const seek = useCallback((time: number) => {
     if (audioRef.current) {
@@ -122,6 +106,29 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       setCurrentTime(time);
     }
   }, []);
+  
+  const clearTrack = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+    setCurrentTrack(null);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, []);
+
+  const setVolume = useCallback((newVolume: number) => {
+    setVolumeState(newVolume);
+    if (newVolume > 0 && isMuted) {
+      setIsMutedState(false);
+    }
+  }, [isMuted]);
+
+  const toggleMute = useCallback(() => {
+    setIsMutedState(prev => !prev);
+  }, []);
+
 
   return (
     <PodcastPlayerContext.Provider value={{ 
@@ -132,7 +139,12 @@ export const PodcastPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       duration,
       currentTime,
       seek,
-      isLoading
+      isLoading,
+      clearTrack,
+      volume,
+      setVolume,
+      isMuted,
+      toggleMute
     }}>
       {children}
     </PodcastPlayerContext.Provider>
