@@ -12,11 +12,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Settings, User, Loader2, Save, KeyRound, Lock, Image as ImageIcon, UploadCloud } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
-import { auth, storage } from '@/lib/firebaseClient'; // Added storage
+import { auth, storage } from '@/lib/firebaseClient';
 import { updateProfile, updatePassword } from 'firebase/auth';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase Storage functions
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Next.js Image component for preview
+import Image from 'next/image';
 
 const profileSettingsSchema = z.object({
   displayName: z.string()
@@ -66,7 +66,7 @@ export default function SettingsPage() {
       profileForm.reset({ displayName: user.displayName });
     }
     if (user?.photoURL) {
-      setPreviewUrl(user.photoURL); // Set initial preview from user's current photoURL
+      setPreviewUrl(user.photoURL);
     }
   }, [user, profileForm.reset]);
 
@@ -149,7 +149,7 @@ export default function SettingsPage() {
       reader.readAsDataURL(file);
     } else {
       setSelectedFile(null);
-      setPreviewUrl(user?.photoURL || null); // Revert to original if selection is cleared
+      setPreviewUrl(user?.photoURL || null);
     }
   };
 
@@ -165,28 +165,19 @@ export default function SettingsPage() {
 
     setIsPictureSubmitting(true);
     try {
-      // Create a reference to 'profileImages/userId/profilePicture.jpg'
-      // The filename includes a timestamp to avoid caching issues, or you could use a static name and rely on versioning/cache control.
-      // For simplicity, let's use a static name like 'profile.jpg' which will overwrite.
       const fileExtension = selectedFile.name.split('.').pop();
       const profilePicRef = storageRef(storage, `profileImages/${user.uid}/profile.${fileExtension}`);
-
-      // Upload the file
       const snapshot = await uploadBytes(profilePicRef, selectedFile);
-      
-      // Get the download URL
       const downloadURL = await getDownloadURL(snapshot.ref);
 
-      // Update the user's profile
       await updateProfile(auth.currentUser, { photoURL: downloadURL });
 
       toast({
         title: "Profile Picture Updated",
         description: "Your new profile picture has been set.",
       });
-      setSelectedFile(null); // Clear selection after successful upload
-      // The previewUrl is already updated to the new photoURL by the useEffect hook listening to `user`
-      router.refresh(); // Refresh to update user context everywhere
+      setSelectedFile(null);
+      router.refresh(); 
 
     } catch (error: any) {
       console.error("Error uploading profile picture:", error);
@@ -284,7 +275,6 @@ export default function SettingsPage() {
         </Form>
       </Card>
 
-      {/* Profile Picture Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center space-x-3 mb-2">

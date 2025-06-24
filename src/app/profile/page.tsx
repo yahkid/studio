@@ -22,7 +22,7 @@ type EnrichedProgress = FirestoreDocTypes['user_course_progress'] & {
   docId: string;
 };
 
-const getInitials = (name?: string) => {
+const getInitials = (name?: string | null) => {
   if (!name) return '';
   const nameParts = name.trim().split(' ');
   if (nameParts.length === 0 || nameParts[0] === '') return '';
