@@ -123,7 +123,7 @@ export interface LeadershipDoc {
 export interface EventDoc {
   id?: string;
   title: string;
-  description: string;
+  description: string | null;
   event_date: Timestamp; // Use a Timestamp for querying
   start_time: string; // e.g., "20:00"
   end_time: string; // e.g., "21:30"
@@ -213,7 +213,6 @@ export interface ResourceDoc {
 
 export interface FirestoreDocTypes {
   decisions: DecisionDoc;
-  leadership: LeadershipDoc;
   lead_magnet_signups: LeadMagnetSignupDoc;
   visit_requests: VisitRequestDoc;
   exit_intent_offers: ExitIntentOfferDoc;
@@ -225,6 +224,7 @@ export interface FirestoreDocTypes {
   user_testimonies: UserTestimonyDoc;
   
   // Content collections
+  leadership: LeadershipDoc;
   events: EventDoc;
   courses: CourseDoc;
   sermons: SermonDoc;

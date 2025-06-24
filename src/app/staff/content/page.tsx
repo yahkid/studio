@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clapperboard, FileText, CalendarClock, Newspaper, Users, BookOpenCheck } from 'lucide-react';
+import { Clapperboard, FileText, CalendarClock, Newspaper, Users, BookOpenCheck, Download } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Content Management | HSCM Staff Portal',
@@ -90,6 +90,13 @@ export default function ContentManagementPage() {
           icon={FileText}
           href="/staff/content/blog"
           buttonText="Manage Blog"
+        />
+        <ManagementCard
+          title="Resource Manager"
+          description="Upload and manage downloadable files like guides, notes, and wallpapers."
+          icon={Download}
+          href="/staff/content/resources"
+          buttonText="Manage Resources"
         />
       </div>
     </div>
