@@ -6,12 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { PlayCircle, Mail, Loader2 } from 'lucide-react';
+import { PlayCircle, Mail, Loader2, VideoOff, Download, Headphones } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
+import type { SermonDoc } from '@/types/firestore';
 import { motion } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 const videoThumbnails = [
   { 
@@ -39,6 +43,38 @@ export function WatchAndGrowSectionSw() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [displayedThumbnails, setDisplayedThumbnails] = useState(videoThumbnails);
+  
+  const [featuredSermon, setFeaturedSermon] = useState<SermonDoc | null>(null);
+  const [isLoadingSermon, setIsLoadingSermon] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedSermon = async () => {
+      setIsLoadingSermon(true);
+      try {
+        const sermonsQuery = query(
+          collection(db, "sermons"),
+          where("is_featured", "==", true),
+          orderBy("sermon_date", "desc"),
+          limit(1)
+        );
+        const querySnapshot = await getDocs(sermonsQuery);
+        if (!querySnapshot.empty) {
+          const sermonData = querySnapshot.docs[0].data() as SermonDoc;
+          setFeaturedSermon(sermonData);
+        } else {
+          setFeaturedSermon(null);
+        }
+      } catch (error) {
+        console.error("Error fetching featured sermon:", error);
+        setFeaturedSermon(null); // Set to null on error
+      } finally {
+        setIsLoadingSermon(false);
+      }
+    };
+
+    fetchFeaturedSermon();
+  }, []);
+
 
   useEffect(() => {
     const shuffleArray = (array: typeof videoThumbnails) => {
@@ -108,38 +144,59 @@ export function WatchAndGrowSectionSw() {
         </h2>
         
         <div className="max-w-4xl mx-auto mb-12">
-          <div className="aspect-video bg-slate-300 dark:bg-slate-700 rounded-lg border overflow-hidden mb-6 flex items-center justify-center">
-             <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/DpA0drOZsKc" 
-              title="Ujumbe Maalum wa Video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              loading="lazy"
-            ></iframe>
-          </div>
-
-          <div className="mt-6 pt-6 border-t text-left">
-            <h4 className="font-headline text-lg font-semibold mb-3 text-foreground">Download Resources:</h4>
-            <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0">
-              <a 
-                href="#" 
-                download="Sermon_Audio.mp3" 
-                className="flex items-center gap-2 text-primary hover:underline font-body"
-              >
-                <span role="img" aria-label="headphones emoji">🎧</span>
-                <span>Download Audio (MP3)</span>
-              </a>
-              <a 
-                href="#" 
-                download="Sermon_Video.mp4" 
-                className="flex items-center gap-2 text-primary hover:underline font-body"
-              >
-                <span role="img" aria-label="movie camera emoji">🎬</span>
-                <span>Download Video (MP4)</span>
-              </a>
-            </div>
-          </div>
+           {isLoadingSermon ? (
+             <Skeleton className="aspect-video w-full rounded-lg" />
+           ) : featuredSermon ? (
+            <>
+              <div className="aspect-video bg-slate-800 rounded-lg border overflow-hidden mb-6 flex items-center justify-center">
+                 <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${featuredSermon.youtube_video_id}`}
+                  title={featuredSermon.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+              <div className="mt-6 pt-6 border-t text-left">
+                <h4 className="font-headline text-lg font-semibold mb-3 text-foreground">Download Resources:</h4>
+                <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0">
+                  <Button asChild variant="link" className="p-0 h-auto justify-start" disabled={!featuredSermon.audioDownloadUrl}>
+                    <a 
+                      href={featuredSermon.audioDownloadUrl || '#'} 
+                      download={`${featuredSermon.title}.mp3`}
+                      className="flex items-center gap-2 text-primary hover:underline font-body aria-disabled:text-muted-foreground aria-disabled:no-underline aria-disabled:cursor-not-allowed"
+                      aria-disabled={!featuredSermon.audioDownloadUrl}
+                      onClick={(e) => !featuredSermon.audioDownloadUrl && e.preventDefault()}
+                    >
+                      <Headphones />
+                      <span>Download Audio (MP3)</span>
+                    </a>
+                  </Button>
+                  <Button asChild variant="link" className="p-0 h-auto justify-start" disabled={!featuredSermon.videoDownloadUrl}>
+                    <a 
+                      href={featuredSermon.videoDownloadUrl || '#'} 
+                      download={`${featuredSermon.title}.mp4`}
+                      className="flex items-center gap-2 text-primary hover:underline font-body aria-disabled:text-muted-foreground aria-disabled:no-underline aria-disabled:cursor-not-allowed"
+                      aria-disabled={!featuredSermon.videoDownloadUrl}
+                      onClick={(e) => !featuredSermon.videoDownloadUrl && e.preventDefault()}
+                    >
+                      <PlayCircle />
+                      <span>Download Video (MP4)</span>
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </>
+           ) : (
+             <Alert className="text-left">
+                <VideoOff className="h-4 w-4" />
+                <AlertTitle>Hakuna Ujumbe wa Kuangaziwa</AlertTitle>
+                <AlertDescription>
+                  Tafadhali angalia tena hivi karibuni kwa ujumbe mpya.
+                </AlertDescription>
+              </Alert>
+           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
             {displayedThumbnails.map((thumb) => (
