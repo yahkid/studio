@@ -34,9 +34,9 @@ export async function upsertBlogPost(formData: FormData) {
     slug: formData.get('slug') || slugify(formData.get('title') as string),
     author: formData.get('author'),
     content: formData.get('content'),
-    tags: formData.get('tags'),
+    tags: (formData.get('tags') as string | null) ?? undefined,
     is_published: formData.get('is_published') === 'true',
-    aiHint: formData.get('aiHint'),
+    aiHint: (formData.get('aiHint') as string | null) ?? undefined,
   };
 
   const validatedFields = blogPostSchema.safeParse(rawData);
