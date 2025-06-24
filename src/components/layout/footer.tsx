@@ -136,7 +136,7 @@ export function Footer() {
                 <li><Link href="/kozi" className="hover:text-white transition-colors flex items-center"><BookOpen className="mr-2 h-4 w-4 text-primary"/>Kozi za Kujifunza</Link></li>
                 <li><Link href="/huduma" className="hover:text-white transition-colors flex items-center"><Heart className="mr-2 h-4 w-4 text-primary"/>Kutumika</Link></li>
                 <li><Link href="/resources" className="hover:text-white transition-colors flex items-center"><Download className="mr-2 h-4 w-4 text-primary"/>Rasilimali</Link></li>
-                <li><Link href="/#tazama-na-ukue" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Tazama Ujumbe</Link></li>
+                <li><Link href="/sermons" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Mahubiri</Link></li>
                 <li><Link href="/podcast" className="hover:text-white transition-colors flex items-center"><MicVocal className="mr-2 h-4 w-4 text-primary"/>Podikasti</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors flex items-center"><FileText className="mr-2 h-4 w-4 text-primary"/>Blog</Link></li>
                 <li><Link href="/matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
