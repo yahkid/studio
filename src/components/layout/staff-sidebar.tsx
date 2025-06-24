@@ -19,6 +19,7 @@ import {
   SidebarGroupLabel
 } from "@/components/ui/sidebar";
 import {
+  Shield,
   ShieldCheck,
   Newspaper,
   DollarSign,
@@ -56,6 +57,7 @@ export function StaffSidebar() {
     { href: '/staff/humanitarian', label: 'Humanitarian', icon: Globe },
     { href: '/staff/youth', label: 'Youth Ministry', icon: UsersRound },
     { href: '/staff/children', label: "Children's Ministry", icon: Baby },
+    { href: '/staff/transport-security', label: 'Transport & Security', icon: Shield },
     { href: '/staff/finance', label: 'Finance', icon: DollarSign },
     { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
   ];
