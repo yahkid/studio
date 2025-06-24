@@ -30,18 +30,6 @@ export function Header() {
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
 
-  // --- Diagnostic Log ---
-  useEffect(() => {
-    if (initialLoadingComplete && user) {
-      console.log("--- Admin Access Check ---");
-      console.log("User UID from Auth:", user.uid);
-      console.log("Admin UID from .env:", ADMIN_UID);
-      console.log("Do they match?:", user.uid === ADMIN_UID);
-      console.log("--------------------------");
-    }
-  }, [user, initialLoadingComplete]);
-  // --- End Diagnostic Log ---
-
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
