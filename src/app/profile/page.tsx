@@ -50,6 +50,16 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
+    // This logs the user's UID to the console to help with admin setup.
+    if (user) {
+      console.log('--- ADMIN SETUP ---');
+      console.log('Your User ID (UID) is:', user.uid);
+      console.log('Copy this UID and add it to your .env file as NEXT_PUBLIC_ADMIN_UID to get staff portal access.');
+      console.log('-------------------');
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (!mounted || !initialLoadingComplete || !user) {
       setIsProgressLoading(false);
       if (initialLoadingComplete && !user) setUserProgress([]);
