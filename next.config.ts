@@ -52,6 +52,12 @@ const nextConfig: NextConfig = {
         hostname: 'storage.buzzsprout.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com', // For user-uploaded profile pictures
+        port: '',
+        pathname: '/**',
       }
     ],
   },
