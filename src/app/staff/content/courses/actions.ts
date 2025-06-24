@@ -24,7 +24,16 @@ const courseSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters long.'),
   order: z.coerce.number().int().min(0, 'Order must be a positive number.'),
   is_published: z.coerce.boolean(),
-  lessons: z.array(lessonSchema),
+  lessons: z.preprocess((val) => {
+    if (typeof val !== 'string') return val;
+    try {
+      // Safely parse the JSON string for lessons
+      return JSON.parse(val);
+    } catch (error) {
+      // If parsing fails, return the original value to let Zod handle the type error
+      return val;
+    }
+  }, z.array(lessonSchema).min(1, "At least one lesson is required.")),
 });
 
 
@@ -37,7 +46,7 @@ export async function upsertCourse(formData: FormData) {
     description: formData.get('description'),
     order: formData.get('order'),
     is_published: formData.get('is_published') === 'true',
-    lessons: JSON.parse(formData.get('lessons') as string),
+    lessons: formData.get('lessons'), // Pass the string directly for Zod to process
   };
 
   const validatedFields = courseSchema.safeParse(rawData);

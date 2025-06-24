@@ -11,7 +11,7 @@ const sermonSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   speaker: z.string().min(2, 'Speaker name is required.'),
   youtube_video_id: z.string().min(11, 'Must be a valid YouTube Video ID.'),
-  sermon_date: z.date({ required_error: 'Sermon date is required.' }),
+  sermon_date: z.coerce.date({ required_error: 'Sermon date is required.' }),
   is_featured: z.coerce.boolean().default(false),
   tags: z.string().optional(),
   audioDownloadUrl: z.string().url().optional().or(z.literal('')),
@@ -25,11 +25,11 @@ export async function upsertSermon(formData: FormData) {
         description: formData.get('description'),
         speaker: formData.get('speaker'),
         youtube_video_id: formData.get('youtube_video_id'),
-        sermon_date: new Date(formData.get('sermon_date') as string),
-        is_featured: formData.get('is_featured') === 'true',
-        tags: formData.get('tags') as string,
-        audioDownloadUrl: formData.get('audioDownloadUrl') as string,
-        videoDownloadUrl: formData.get('videoDownloadUrl') as string,
+        sermon_date: formData.get('sermon_date'),
+        is_featured: formData.get('is_featured'),
+        tags: formData.get('tags'),
+        audioDownloadUrl: formData.get('audioDownloadUrl'),
+        videoDownloadUrl: formData.get('videoDownloadUrl'),
     };
 
     const validatedFields = sermonSchema.safeParse(rawData);
