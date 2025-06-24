@@ -1,73 +1,90 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // PUBLIC-READ COLLECTIONS
+
+    // Helper function to check for admin or specific roles
+    function isRole(role) {
+      return request.auth.token.role == role || request.auth.token.role == 'admin';
+    }
+    
+    // Anyone can read public content like leadership profiles, published events, courses and testimonials.
+    // Only admins can write to this content.
     match /leadership/{leaderId} {
       allow read: if true;
-      allow write: if false; // Managed via server-side logic/admin SDK
+      allow write: if isRole('admin');
     }
-    match /published_testimonials/{testimonialId} {
-      allow read: if true;
-      allow write: if false; // Managed via server-side logic/admin SDK
-    }
+    
     match /events/{eventId} {
       allow read: if true;
-      allow write: if false; // Managed via server-side logic/admin SDK
+      allow write: if isRole('admin') || isRole('content_editor');
     }
+
     match /courses/{courseId} {
       allow read: if true;
-      allow write: if false; // Managed via server-side logic/admin SDK
+      allow write: if isRole('admin') || isRole('content_editor');
     }
 
-    // USER-SUBMITTED, WRITE-ONLY for authenticated users
-    function isSignedIn() {
-      return request.auth != null;
+    match /published_testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isRole('admin');
     }
 
+    // Authenticated users can create their own submissions (decisions, testimonies, etc.).
+    // Only specific roles can read/write them afterwards.
     match /decisions/{decisionId} {
-      allow create: if isSignedIn();
-      allow read, update, delete: if false;
-    }
-    match /lead_magnet_signups/{signupId} {
-      allow create: if true; // Anyone can sign up
-      allow read, update, delete: if false;
-    }
-    match /visit_requests/{requestId} {
-      allow create: if true; // Anyone can request a visit
-      allow read, update, delete: if false;
-    }
-     match /exit_intent_offers/{offerId} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-    match /weekly_updates_signups/{signupId} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-    match /financial_partner_signups/{signupId} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-    match /prayer_partner_signups/{signupId} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-    match /volunteer_partner_signups/{signupId} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-     match /user_testimonies/{testimonyId} {
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      // Admins update status via server-side logic, not direct client access
-      allow read, update, delete: if false;
+      allow create: if request.auth != null;
+      // Only pastoral care and admins can read or update decision documents.
+      allow read, update, delete: if isRole('pastoral_care');
     }
 
-    // USER-SPECIFIC DATA
+    match /user_testimonies/{testimonyId} {
+      allow create: if request.auth.uid == request.resource.data.userId;
+      // Admins can read/update testimonies during the review process.
+      allow read, update, delete: if isRole('admin');
+    }
+    
+    // Users can only read and write their own course progress.
     match /user_course_progress/{progressId} {
-      // User can read, create, and update their own progress document
-      allow read, create, update: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
-      allow delete: if false; // Prevent users from deleting their progress
+      allow read, write: if request.auth.uid == resource.data.user_id;
+      allow create: if request.auth.uid == request.resource.data.user_id;
+    }
+
+    // Form submissions are write-only for any user. No one should read them directly
+    // except via a secure admin/backend process.
+    match /lead_magnet_signups/{docId} {
+      allow read: if isRole('admin'); // Admins can see signups
+      allow create: if true; // Anyone can sign up
+    }
+    match /visit_requests/{docId} {
+      allow read: if isRole('admin');
+      allow create: if true;
+    }
+    match /exit_intent_offers/{docId} {
+      allow read: if isRole('admin');
+      allow create: if true;
+    }
+    match /weekly_updates_signups/{docId} {
+      allow read: if isRole('admin');
+      allow create: if true;
+    }
+    match /financial_partner_signups/{docId} {
+      allow read: if isRole('admin') || isRole('finance_manager');
+      allow create: if true;
+    }
+     match /prayer_partner_signups/{docId} {
+      allow read: if isRole('admin') || isRole('pastoral_care');
+      allow create: if true;
+    }
+    match /volunteer_partner_signups/{docId} {
+      allow read: if isRole('admin');
+      allow create: if true;
+    }
+
+    // Default deny all other reads/writes
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

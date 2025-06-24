@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -48,9 +49,9 @@ export function StaffSidebar() {
   const menuItems = [
     { href: '/staff', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/review-testimonies', label: 'Review Testimonies', icon: ShieldCheck },
+    { href: '/staff/pastoral', label: 'Pastoral Care', icon: HandHeart },
     { href: '/staff/content', label: 'Content', icon: Newspaper },
     { href: '/staff/finance', label: 'Finance', icon: DollarSign },
-    { href: '/staff/pastoral', label: 'Pastoral Care', icon: HandHeart },
     { href: '/staff/analytics', label: 'Analytics', icon: BarChart3 },
   ];
   
