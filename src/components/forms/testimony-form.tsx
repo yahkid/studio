@@ -19,7 +19,7 @@ import { collection, addDoc, serverTimestamp, updateDoc } from 'firebase/firesto
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { UserTestimonyDoc } from '@/types/firestore';
 import { WhatsAppIcon } from '../ui/whatsapp-icon';
-import { summarizeTestimony } from '@/ai/flows/summarize-testimony-flow'; // Import the new AI flow
+import { summarizeTestimony } from '@/ai/flows/summarize-testimony-flow';
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
