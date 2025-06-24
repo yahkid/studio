@@ -62,8 +62,7 @@ export function Header() {
   
   const userDisplayName = user?.displayName || user?.email;
   const userPhotoURL = user?.photoURL;
-  // Simplified admin check: is there any logged-in user?
-  const isAdmin = !!user;
+  const isAdmin = user?.uid === ADMIN_UID;
 
 
   const HeaderSkeleton = () => (
