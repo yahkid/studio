@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -117,7 +118,30 @@ export function WatchAndGrowSectionSw() {
               loading="lazy"
             ></iframe>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+          <div className="mt-6 pt-6 border-t text-left">
+            <h4 className="font-headline text-lg font-semibold mb-3 text-foreground">Download Resources:</h4>
+            <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0">
+              <a 
+                href="#" 
+                download="Sermon_Audio.mp3" 
+                className="flex items-center gap-2 text-primary hover:underline font-body"
+              >
+                <span role="img" aria-label="headphones emoji">🎧</span>
+                <span>Download Audio (MP3)</span>
+              </a>
+              <a 
+                href="#" 
+                download="Sermon_Video.mp4" 
+                className="flex items-center gap-2 text-primary hover:underline font-body"
+              >
+                <span role="img" aria-label="movie camera emoji">🎬</span>
+                <span>Download Video (MP4)</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
             {displayedThumbnails.map((thumb) => (
               <div key={thumb.id} className="group relative aspect-video overflow-hidden rounded-md border">
                 <Image 

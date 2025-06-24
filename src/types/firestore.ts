@@ -163,6 +163,8 @@ export interface SermonDoc {
     sermon_date: Timestamp;
     tags?: string[];
     is_featured: boolean; // To mark a sermon for the homepage
+    audioDownloadUrl?: string; // URL for the MP3 file in Firebase Storage
+    videoDownloadUrl?: string; // URL for the MP4 file in Firebase Storage
 }
 
 export interface PublishedTestimonyDoc {
