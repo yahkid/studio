@@ -14,13 +14,13 @@ export type Json =
 // --- USER SUBMISSION COLLECTIONS ---
 
 export interface DecisionDoc {
-  id?: string; 
+  id?: string;
   created_at: Timestamp;
   name: string;
   email: string;
   decision_type: string;
   comments: string | null;
-  user_id: string; 
+  user_id: string;
   status: 'new' | 'contacted' | 'resolved'; // Added status
   lastContactedAt?: Timestamp; // Added for sorting/info
 }
@@ -29,8 +29,8 @@ export interface ContactLogDoc {
     id?: string;
     log_date: Timestamp;
     notes: string;
-    pastor_id: string; 
-    pastor_name: string; 
+    pastor_id: string;
+    pastor_name: string;
 }
 
 
@@ -82,27 +82,27 @@ export interface VolunteerPartnerSignupDoc {
 }
 
 export interface UserTestimonyDoc {
-  id?: string; 
-  userId: string; 
+  id?: string;
+  userId: string;
   userName: string;
   userEmail: string;
   story: string;
   location?: string | null;
-  fileUrl: string | null; 
-  originalFileName: string | null; 
+  fileUrl: string | null;
+  originalFileName: string | null;
   submittedAt: Timestamp;
-  status: "pending_review" | "approved" | "rejected"; 
+  status: "pending_review" | "approved" | "rejected";
   consentToShare: boolean;
-  aiSuggestedQuote?: string | null; // AI-generated quote
-  aiSummary?: string | null; // AI-generated summary
+  aiSuggestedQuote?: string | null;
+  aiSummary?: string | null;
 }
 
 // --- USER DATA COLLECTIONS ---
 
 export interface UserCourseProgressDoc {
-  id?: string; 
-  created_at?: Timestamp; 
-  user_id: string; 
+  id?: string;
+  created_at?: Timestamp;
+  user_id: string;
   course_id: string;
   completed_lessons: number[];
   last_accessed: Timestamp;
@@ -144,7 +144,7 @@ export interface LeadershipDoc {
   imageSrc: string;
   aiHint?: string;
   bio: string;
-  order: number; 
+  order: number;
 }
 
 export interface EventDoc {
@@ -251,7 +251,7 @@ export interface FirestoreDocTypes {
   user_course_progress: UserCourseProgressDoc;
   user_testimonies: UserTestimonyDoc;
   community_needs: CommunityNeedDoc;
-  
+
   // Content collections
   leadership: LeadershipDoc;
   events: EventDoc;
