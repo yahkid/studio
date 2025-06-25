@@ -9,6 +9,7 @@
     <string name="dont_have_account">"Don't have an account? "</string>
     <string name="sign_up">Sign Up</string>
     <string name="sermon_details_title">Sermon Details</string>
+    <string name="course_details_title">Course Details</string>
     <string name="description">Description</string>
 
     <!-- Partner Screen Strings -->
