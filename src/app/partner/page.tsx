@@ -8,11 +8,10 @@ import { z } from 'zod';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
-import { HandCoins, Smartphone, CreditCard, Loader2, Heart, CheckCircle, Info, User, Mail, Repeat, CalendarCheck, ArrowRight } from 'lucide-react';
+import { HandCoins, Smartphone, CreditCard, Loader2, Heart, CheckCircle, Info, User, Mail, Repeat, CalendarCheck } from 'lucide-react';
 import { createPaymentIntent } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -111,9 +110,12 @@ export default function PartnerPage() {
       return;
     }
 
-    // Step 2: In a real app, use the clientSecret with a frontend payment SDK
-    // (e.g., Stripe.js, Flutterwave SDK) to show the payment form to the user.
-    
+    // Step 2: Use the clientSecret to process the payment with the SDK.
+    // This is where you would integrate the real payment SDK (e.g., Stripe, Flutterwave).
+    // The `Elements` provider from `@stripe/react-stripe-js` would wrap your checkout form.
+    // `useStripe()` and `useElements()` hooks would be used to submit the payment.
+    // Example: `const { error } = await stripe.confirmPayment({ elements, clientSecret, ... })`
+    //
     // For this simulation, we'll assume the payment was successful.
     toast({ title: "Inachakata Malipo...", description: "Tafadhali subiri tunapothibitisha mchango wako." });
 
