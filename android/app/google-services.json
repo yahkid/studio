@@ -1,27 +1,43 @@
-
 {
   "project_info": {
-    "project_number": "1234567890",
-    "project_id": "hscm-connect-app",
-    "storage_bucket": "hscm-connect-app.appspot.com"
+    "project_number": "386290307127",
+    "project_id": "hsc-website-d7569",
+    "storage_bucket": "hsc-website-d7569.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1234567890:android:abcdef1234567890",
+        "mobilesdk_app_id": "1:386290307127:android:aaf1bf5ade09d40309afb2",
         "android_client_info": {
-          "package_name": "com.hscmconnect.app"
+          "package_name": "com.holyspiritconnect.hscapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "386290307127-84nllak3mdpi2gg71tnvq4on3no86co9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "YOUR_API_KEY_HERE"
+          "current_key": "AIzaSyB6LhyNwQCO4D9NyHzxzCb0ayoGPoZMBy0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386290307127-84nllak3mdpi2gg71tnvq4on3no86co9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "386290307127-0sjcnro9tvvfpr82e0kfgir4j6556n5k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.holyspiritconnect.hscapp"
+              }
+            }
+          ]
         }
       }
     }
