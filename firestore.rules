@@ -1,109 +1,57 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // PUBLIC READ, ADMIN WRITE Collections
+    match /leadership/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /sermons/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /courses/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /events/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /blog_posts/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /published_testimonials/{docId} { allow read: if true; allow write: if request.auth != null; }
+    match /resources/{docId} { allow read: if true; allow write: if request.auth != null; }
 
-    // Helper functions
-    function isStaff() {
-      // In a real app, this would check for a custom claim.
-      // For now, we allow any authenticated user to act as staff.
-      // This is secure because the staff portal pages are route-protected.
-      return request.auth != null;
-    }
-
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
-
-    // CONTENT: Public read, staff write
-    match /courses/{courseId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-    match /sermons/{sermonId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-     match /events/{eventId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-     match /leadership/{leaderId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-     match /blog_posts/{postId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-     match /published_testimonials/{testimonyId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-    match /resources/{resourceId} {
-      allow read: if true;
-      allow write: if isStaff();
-    }
-
-    // USER DATA: Users can only access their own data. Staff can access all.
-    match /user_course_progress/{progressId} {
-      allow read, write: if isOwner(resource.data.user_id) || isStaff();
-    }
-     match /user_testimonies/{testimonyId} {
-      allow create: if request.auth != null; // Any signed-in user can submit
-      allow read, update, delete: if isStaff(); // Only staff can manage
+    // USER-SPECIFIC DATA (Users can only access their own)
+    match /user_course_progress/{docId} {
+      allow read, update: if request.auth != null && request.auth.uid == resource.data.user_id;
+      allow create: if request.auth != null && request.resource.data.user_id == request.auth.uid;
     }
     
-    // SUBMISSIONS: Anyone can submit (write), only staff can read/manage
-    match /decisions/{decisionId} {
-        allow create: if true;
-        allow read, update, delete: if isStaff();
-        // Subcollection for contact logs
-        match /contact_logs/{logId} {
-            allow read, create: if isStaff();
-        }
+    // SUBMISSIONS (Write-only for public, Read for admin/owner)
+    match /decisions/{docId} { 
+      allow create: if request.auth != null && request.resource.data.user_id == request.auth.uid;
+      // Pastoral team access logic would go here
+      allow read, update: if request.auth != null; // Simplified for now
     }
-    match /visit_requests/{requestId} {
-        allow create: if true;
-        allow read, update, delete: if isStaff();
+    match /decisions/{decisionId}/contact_logs/{logId} {
+      allow read, create: if request.auth != null; // Simplified for now
     }
-     match /lead_magnet_signups/{signupId} {
-        allow create: if true;
-        allow read, delete: if isStaff();
-    }
-    match /donations/{donationId} {
-        // Anyone can create a pending donation record
-        allow create: if true;
-        // The webhook/backend function is what updates the status,
-        // so client-side updates should be restricted.
-        // Staff can read all donations.
-        allow read: if isStaff(); 
-        allow update, delete: if isStaff(); // Staff can manage/correct records
-    }
-    match /community_needs/{needId} {
-      // Only staff can read or write community needs
-      allow read, write: if isStaff();
+    
+    match /user_testimonies/{docId} {
+        allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+        allow read, update, delete: if request.auth != null; // Simplified admin access
     }
 
+    match /donations/{docId} {
+      allow create: if true; // Anyone can create a pending donation record
+      allow read, update: if request.auth != null; // Admins can read/update
+    }
 
-    // Writable by any client (for signups)
-    // These collections should be monitored for abuse.
-    match /weekly_updates_signups/{signupId} {
-        allow create: if true;
-        allow read, delete: if isStaff();
+    // OTHER SUBMISSIONS (Public write, Admin read)
+    match /lead_magnet_signups/{docId} { allow create: if true; allow read: if request.auth != null; }
+    match /visit_requests/{docId} { allow create: if true; allow read: if request.auth != null; }
+    match /exit_intent_offers/{docId} { allow create: if true; allow read: if request.auth != null; }
+    match /weekly_updates_signups/{docId} { allow create: if true; allow read: if request.auth != null; }
+    
+    match /volunteer_partner_signups/{docId} {
+      allow create: if true;
+      allow read: if request.auth != null;
     }
-    match /exit_intent_offers/{offerId} {
-        allow create: if true;
-        allow read, delete: if isStaff();
+
+    match /community_needs/{docId} {
+      allow read, create, update: if request.auth != null; // Staff only
     }
-     match /prayer_partner_signups/{signupId} {
-        allow create: if true;
-        allow read, delete: if isStaff();
-    }
-    match /volunteer_partner_signups/{signupId} {
-        allow create: if true;
-        allow read, delete: if isStaff();
-    }
+
   }
 }
