@@ -1,9 +1,8 @@
-
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
-import { getStorage, type FirebaseStorage } from 'firebase/storage';
+import { getAuth, connectAuthEmulator, type Auth } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator, type Firestore } from 'firebase/firestore';
+import { getStorage, connectStorageEmulator, type FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, type Analytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
 
 // Your web app's Firebase configuration using environment variables
@@ -58,6 +57,14 @@ if (missingKeys.length > 0) {
     auth = getAuth(app);
     db = getFirestore(app);
     storage = getStorage(app);
+    
+    // Connect to emulators if running locally
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+      console.log("Development environment detected. Connecting to Firebase Emulators.");
+      connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+      connectFirestoreEmulator(db, 'localhost', 8080);
+      connectStorageEmulator(storage, 'localhost', 9199);
+    }
 
     // Initialize Analytics only on the client-side if measurementId exists
     if (typeof window !== 'undefined' && cleanConfig.measurementId) {
