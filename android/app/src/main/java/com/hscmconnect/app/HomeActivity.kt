@@ -5,19 +5,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.hscmconnect.app.databinding.ActivityHomeBinding
+import com.hscmconnect.app.R
 import com.hscmconnect.app.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_home)
 
-        val bottomNavigation: BottomNavigationView = binding.bottomNavigation
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnItemSelectedListener { item ->
             var selectedFragment: Fragment? = null
             when (item.itemId) {
@@ -28,8 +25,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_partner -> selectedFragment = PartnerFragment()
             }
             if (selectedFragment != null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
             }
             true
         }

@@ -7,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.hscmconnect.app.R
 
 class PartnerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val textView = TextView(activity)
-        textView.text = "Partner Fragment (Coming Soon)"
-        textView.gravity = android.view.Gravity.CENTER
-        return textView
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        view.findViewById<TextView>(R.id.welcome_text).text = "Partner With Us Coming Soon"
+        return view
     }
 }

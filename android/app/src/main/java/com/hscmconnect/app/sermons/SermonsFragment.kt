@@ -5,64 +5,46 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.hscmconnect.app.databinding.FragmentSermonsBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.hscmconnect.app.R
 
-open class SermonsFragment : Fragment() {
+class SermonsFragment : Fragment() {
 
-    private var _binding: FragmentSermonsBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var db: FirebaseFirestore
-    private lateinit var sermonAdapter: SermonAdapter
+    private val viewModel: SermonsViewModel by viewModels()
+    private lateinit var sermonsAdapter: SermonsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSermonsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_sermons, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val recyclerView: RecyclerView = view.findViewById(R.id.sermonsRecyclerView)
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
 
-        db = FirebaseFirestore.getInstance()
-        setupRecyclerView()
-        fetchSermons()
-    }
+        sermonsAdapter = SermonsAdapter(emptyList())
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = sermonsAdapter
 
-    private fun setupRecyclerView() {
-        sermonAdapter = SermonAdapter(emptyList())
-        binding.sermonsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = sermonAdapter
+        viewModel.sermons.observe(viewLifecycleOwner) { sermons ->
+            sermonsAdapter.updateSermons(sermons)
         }
-    }
 
-    private fun fetchSermons() {
-        binding.progressBar.visibility = View.VISIBLE
-        db.collection("sermons")
-            .orderBy("sermon_date", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                val sermons = result.toObjects(Sermon::class.java).mapIndexed { index, sermon ->
-                    sermon.copy(id = result.documents[index].id)
-                }
-                sermonAdapter.updateSermons(sermons)
-                binding.progressBar.visibility = View.GONE
-            }
-            .addOnFailureListener { exception ->
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(context, "Error getting sermons: ${exception.message}", Toast.LENGTH_LONG).show()
-            }
-    }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                Toast.makeText(context, "Error: $error", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        return view
     }
 }
