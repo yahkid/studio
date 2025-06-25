@@ -1,42 +1,23 @@
-
 "use client"
 
 import * as React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { BarChart3, Users, Eye, ArrowUpRight, HandHeart, MessageSquareText, BookOpen, Loader2 } from "lucide-react";
+import { BarChart3, Users, HandHeart, MessageSquareText, BookOpen, Loader2, DollarSign } from "lucide-react";
 import Link from 'next/link';
-import { db } from '@/lib/firebaseClient';
-import { collection, getCountFromServer } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-
-// Data ya mfano kwa chati
-const monthlyData = [
-  { name: 'Jan', wageni: 400, mitazamo: 240 },
-  { name: 'Feb', wageni: 300, mitazamo: 139 },
-  { name: 'Mac', wageni: 200, mitazamo: 980 },
-  { name: 'Apr', wageni: 278, mitazamo: 390 },
-  { name: 'Mei', wageni: 189, mitazamo: 480 },
-  { name: 'Jun', wageni: 239, mitazamo: 380 },
-  { name: 'Jul', wageni: 349, mitazamo: 430 },
-];
-
-const topPagesData = [
-  { name: 'Nyumbani', mitazamo: 1200 },
-  { name: 'Mahubiri', mitazamo: 980 },
-  { name: 'Matukio', mitazamo: 750 },
-  { name: 'Kuhusu', mitazamo: 540 },
-  { name: 'Mawasiliano', mitazamo: 320 },
-];
+import { getAnalyticsData } from './actions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface MetricCardProps {
   title: string;
-  value: number;
+  value: string | number;
   icon: React.ElementType;
   description?: string;
+  isLoading: boolean;
 }
 
-function MetricCard({ title, value, icon: Icon, description }: MetricCardProps) {
+function MetricCard({ title, value, icon: Icon, description, isLoading }: MetricCardProps) {
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -44,112 +25,109 @@ function MetricCard({ title, value, icon: Icon, description }: MetricCardProps) 
                 <Icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{value.toLocaleString()}</div>
+                {isLoading ? (
+                  <Skeleton className="h-8 w-3/4" />
+                ) : (
+                  <div className="text-2xl font-bold">{value}</div>
+                )}
                 {description && <p className="text-xs text-muted-foreground">{description}</p>}
             </CardContent>
         </Card>
     )
 }
 
+const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
 
 export default function AnalyticsPage() {
-  const [stats, setStats] = React.useState({ decisions: 0, testimonies: 0, courses: 0, users: 0 });
+  const [data, setData] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const { toast } = useToast();
+  const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
-    const fetchStats = async () => {
-      setIsLoading(true);
-      try {
-        const decisionsSnap = await getCountFromServer(collection(db, "decisions"));
-        const testimoniesSnap = await getCountFromServer(collection(db, "user_testimonies"));
-        const coursesSnap = await getCountFromServer(collection(db, "user_course_progress"));
-        // Kumbuka: Kuhesabu watumiaji moja kwa moja haiwezekani kupitia makusanyo ya Firestore.
-        // Hii kwa kawaida ingetoka Firebase Auth au mkusanyiko wa watumiaji ulioigwa.
-        // Tutatumia kishika nafasi kwa sasa.
-        
-        setStats({
-          decisions: decisionsSnap.data().count,
-          testimonies: testimoniesSnap.data().count,
-          courses: coursesSnap.data().count,
-          users: 150, // Kishika nafasi
-        });
-      } catch (error: any) {
-        console.error("Kosa la kupata data ya takwimu:", error);
-        toast({ title: "Kosa", description: "Imeshindwa kupata takwimu za uchanganuzi.", variant: "destructive" });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchStats();
-  }, [toast]);
-  
+    setIsClient(true);
+  }, []);
 
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const result = await getAnalyticsData();
+      if (result.success) {
+        setData(result);
+      } else {
+        toast({ title: "Error", description: "Failed to load analytics data.", variant: "destructive" });
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [toast]);
+
+  const stats = data?.stats || {};
+  const chartData = data?.chartData || {};
+  
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="mb-8">
-        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Rudi kwenye Dashibodi ya Wafanyakazi</Link>
+        <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Back to Staff Dashboard</Link>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3 mt-2">
           <BarChart3 className="h-8 w-8 text-primary" />
-          Dashibodi ya Takwimu
+          Analytics Dashboard
         </h1>
         <p className="text-muted-foreground font-body">
-          Muhtasari wa trafiki ya tovuti na ushiriki wa watumiaji.
+          An overview of website traffic and user engagement.
         </p>
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader></Card>
-            <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader></Card>
-            <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader></Card>
-            <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader></Card>
-        </div>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard title="Jumla ya Watumiaji" value={stats.users} icon={Users} description="Thamani ya kishika nafasi" />
-            <MetricCard title="Maamuzi ya Imani" value={stats.decisions} icon={HandHeart} description="Jumla ya maamuzi yaliyowasilishwa" />
-            <MetricCard title="Shuhuda" value={stats.testimonies} icon={MessageSquareText} description="Jumla ya hadithi zilizoshirikiwa" />
-            <MetricCard title="Kozi Zilizoanzishwa" value={stats.courses} icon={BookOpen} description="Jumla ya rekodi za maendeleo ya kozi" />
-        </div>
-      )}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard title="Total Users" value={stats.totalUsers?.toLocaleString() || '...'} icon={Users} description="Placeholder value" isLoading={isLoading} />
+          <MetricCard title="Faith Decisions" value={stats.totalDecisions?.toLocaleString() || '...'} icon={HandHeart} description="Total decisions submitted" isLoading={isLoading} />
+          <MetricCard title="Testimonies" value={stats.totalTestimonies?.toLocaleString() || '...'} icon={MessageSquareText} description="Total stories shared" isLoading={isLoading} />
+          <MetricCard title="Donation Amount" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('en-US') || '...'}` : 'Loading...'} icon={DollarSign} description="Total successful donations" isLoading={isLoading} />
+      </div>
 
-      {/* Chati */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Mwenendo wa Wageni (Mfano)</CardTitle>
-            <CardDescription>Wageni wa kila mwezi na mitazamo ya kurasa. (Data ya maonyesho)</CardDescription>
+            <CardTitle>Decisions Over Time</CardTitle>
+            <CardDescription>Monthly count of submitted faith decisions.</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="wageni" name="Wageni" stroke="hsl(var(--primary))" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="mitazamo" name="Mitazamo ya Kurasa" stroke="hsl(var(--secondary))" />
-              </LineChart>
+              {isLoading || !chartData.decisionsTimeSeries ? (
+                 <div className="flex h-full w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary"/></div>
+              ) : (
+                <LineChart data={chartData.decisionsTimeSeries}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" tickFormatter={(val) => new Date(val + '-02').toLocaleDateString('en-US', { month: 'short' })} />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="Decisions" stroke="hsl(var(--primary))" activeDot={{ r: 8 }} />
+                </LineChart>
+              )}
             </ResponsiveContainer>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Kurasa Maarufu kwa Mitazamo (Mfano)</CardTitle>
-            <CardDescription>Kurasa zinazotembelewa mara nyingi zaidi. (Data ya maonyesho)</CardDescription>
+            <CardTitle>Decision Types</CardTitle>
+            <CardDescription>Breakdown of all decisions made.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={topPagesData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={80} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="mitazamo" name="Mitazamo" fill="hsl(var(--primary))" />
-              </BarChart>
+             <ResponsiveContainer width="100%" height={300}>
+               {isLoading || !chartData.decisionTypeData ? (
+                 <div className="flex h-full w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary"/></div>
+              ) : (
+                <PieChart>
+                    <Pie data={chartData.decisionTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                       {chartData.decisionTypeData.map((entry: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                </PieChart>
+              )}
             </ResponsiveContainer>
           </CardContent>
         </Card>
