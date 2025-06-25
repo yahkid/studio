@@ -1,23 +1,12 @@
+
 # Add project specific ProGuard rules here.
-# By default, the flags in this file are applied to recesses of your
-# project.
+# By default, the flags in this file are applied to all build types.
 #
-# You can find general ProGuard rules for popular libraries at
-# https://www.guardsquare.com/proguard/manual/examples
+# You can find more details on how to obfuscate your code at
+#   http://developer.android.com/guide/developing/tools/proguard.html
 #
-# If you are using Kotlin coroutines, be sure to include the following rules:
-# -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
-# -keepnames class kotlinx.coroutines.flow.internal.ChannelFlow { *; }
-# -keepnames class kotlinx.coroutines.flow.internal.ChannelFlow* { *; }
-# -keepclassmembers class kotlinx.coroutines.flow.internal.ChannelFlow* {
-#   private final kotlinx.coroutines.channels.ReceiveChannel channel;
-# }
-# -keepclassmembers class kotlinx.coroutines.selects.SelectBuilderImpl {
-#   private final java.util.List clauses;
-# }
-# -keepclassmembers class kotlinx.coroutines.internal.Segment {
-#   private final java.util.concurrent.atomic.AtomicReferenceArray data;
-# }
-# -keepclassmembers class kotlinx.coroutines.internal.FastServiceLoader {
-#   private final java.util.List a;
-# }
+# To enable ProGuard, edit build.gradle.kts and set
+# 'isMinifyEnabled' to true in your release build type.
+#
+# -keep class com.google.android.gms.common.** { *; }
+# -keep class com.google.android.gms.ads.initialization.** { *; }
