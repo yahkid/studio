@@ -1,11 +1,10 @@
-
 package com.hscmconnect.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.hscmconnect.app.R
+import com.hscmconnect.app.courses.CoursesFragment
 import com.hscmconnect.app.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
@@ -15,24 +14,31 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        // Load the default fragment
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment())
+            bottomNavigation.selectedItemId = R.id.nav_home
+        }
+
         bottomNavigation.setOnItemSelectedListener { item ->
-            var selectedFragment: Fragment? = null
+            var fragment: Fragment? = null
             when (item.itemId) {
-                R.id.nav_home -> selectedFragment = HomeFragment()
-                R.id.nav_sermons -> selectedFragment = SermonsFragment()
-                R.id.nav_courses -> selectedFragment = CoursesFragment()
-                R.id.nav_events -> selectedFragment = EventsFragment()
-                R.id.nav_partner -> selectedFragment = PartnerFragment()
+                R.id.nav_home -> fragment = HomeFragment()
+                R.id.nav_sermons -> fragment = SermonsFragment()
+                R.id.nav_courses -> fragment = CoursesFragment()
+                // TODO: Add cases for nav_events and nav_partner
             }
-            if (selectedFragment != null) {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
+            if (fragment != null) {
+                loadFragment(fragment)
             }
             true
         }
+    }
 
-        // Set default fragment
-        if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.nav_home
-        }
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }
