@@ -64,7 +64,7 @@ export async function upsertResource(formData: FormData) {
       thumbnailUrl = await getDownloadURL(await uploadBytes(thumbRef, thumbnailFile));
     }
     
-    const dataToSave = {
+    const dataToSave: Omit<ResourceDoc, 'id' | 'uploadedAt'> = {
       ...validatedFields.data,
       fileUrl,
       thumbnailUrl,

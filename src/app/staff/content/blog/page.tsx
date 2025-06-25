@@ -130,7 +130,7 @@ export default function BlogManagerPage() {
                                 <Badge variant={post.is_published ? "default" : "secondary"} className="absolute top-2 right-2">{post.is_published ? "Imechapishwa" : "Rasimu"}</Badge>
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
-                                <p className="text-xs text-muted-foreground">{format(post.published_at.toDate(), 'PPP', { locale: sw })}</p>
+                                <p className="text-xs text-muted-foreground">{post.published_at ? format(post.published_at.toDate(), 'PPP', { locale: sw }) : ''}</p>
                                 <CardTitle className="font-headline text-lg mt-1">{post.title}</CardTitle>
                                 <CardDescription className="text-xs mt-1">Na: {post.author}</CardDescription>
                             </CardContent>

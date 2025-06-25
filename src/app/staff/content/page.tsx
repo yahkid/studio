@@ -55,7 +55,21 @@ export default function ContentManagementPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ManagementCard
+          title="Meneja wa Mahubiri"
+          description="Ongeza na simamia viungo vya mahubiri ya YouTube, vichwa, na wazungumzaji."
+          icon={Clapperboard}
+          href="/staff/content/sermons"
+          buttonText="Simamia Mahubiri"
+        />
+        <ManagementCard
+          title="Meneja wa Blogu"
+          description="Andika, hariri, na chapisha makala kwa ajili ya blogu ya huduma."
+          icon={FileText}
+          href="/staff/content/blog"
+          buttonText="Simamia Blogu"
+        />
         <ManagementCard
           title="Meneja wa Kozi"
           description="Jenga na panga kozi za kujifunza zenye masomo ya video."
@@ -78,20 +92,6 @@ export default function ContentManagementPage() {
           buttonText="Simamia Viongozi"
         />
         <ManagementCard
-          title="Meneja wa Mahubiri"
-          description="Ongeza na simamia viungo vya mahubiri ya YouTube, vichwa, na wazungumzaji."
-          icon={Clapperboard}
-          href="/staff/content/sermons"
-          buttonText="Simamia Mahubiri"
-        />
-        <ManagementCard
-          title="Meneja wa Blogu"
-          description="Andika, hariri, na chapisha makala kwa ajili ya blogu ya huduma."
-          icon={FileText}
-          href="/staff/content/blog"
-          buttonText="Simamia Blogu"
-        />
-         <ManagementCard
           title="Meneja wa Rasilimali"
           description="Pakia na simamia faili za kupakua kama miongozo, na picha."
           icon={Download}

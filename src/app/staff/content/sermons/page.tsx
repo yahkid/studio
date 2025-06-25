@@ -128,7 +128,7 @@ export default function SermonManagerPage() {
                                 {sermon.is_featured && <Badge variant="default" className="absolute top-2 right-2"><BadgeCheck className="mr-1 h-3 w-3" /> Featured</Badge>}
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
-                                <p className="text-xs text-muted-foreground">{format(sermon.sermon_date.toDate(), 'PPP')}</p>
+                                <p className="text-xs text-muted-foreground">{sermon.sermon_date ? format(sermon.sermon_date.toDate(), 'PPP') : ''}</p>
                                 <CardTitle className="font-headline text-lg mt-1">{sermon.title}</CardTitle>
                                 <CardDescription className="text-xs mt-1">Speaker: {sermon.speaker}</CardDescription>
                                 <a href={`https://youtu.be/${sermon.youtube_video_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary mt-2">
