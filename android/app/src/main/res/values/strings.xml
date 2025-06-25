@@ -8,4 +8,12 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="dont_have_account">"Don't have an account? "</string>
     <string name="sign_up">Sign Up</string>
+
+    <!-- Partner Screen Strings -->
+    <string name="partner_title">Kuwa Mshirika wa Maono</string>
+    <string name="partner_description">Utoaji wako unatuwezesha kueneza Injili, kuhudumia jamii, na kubadilisha maisha. Asante kwa kuwa sehemu ya kile Mungu anachofanya kupitia HSCM Connect.</string>
+    <string name="give_online_button_text">Toa Mchango Salama Mtandaoni</string>
+    <string name="other_ways_to_give">Njia Nyingine za Kutoa</string>
+    <string name="other_ways_description">Unaweza pia kutoa kupitia M-Pesa, Tigo Pesa, au uhamisho wa benki. Tafadhali wasiliana na ofisi ya kanisa kwa maelezo zaidi.</string>
+
 </resources>

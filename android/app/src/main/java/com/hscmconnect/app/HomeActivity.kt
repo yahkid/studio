@@ -1,4 +1,3 @@
-
 package com.hscmconnect.app
 
 import android.os.Bundle
@@ -7,35 +6,34 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hscmconnect.app.courses.CoursesFragment
 import com.hscmconnect.app.events.EventsFragment
+import com.hscmconnect.app.partner.PartnerFragment
 import com.hscmconnect.app.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNav = findViewById(R.id.bottom_navigation)
 
-        // Set the default fragment
+        // Set initial fragment
         if (savedInstanceState == null) {
             loadFragment(HomeFragment())
         }
 
-        bottomNavigation.setOnItemSelectedListener { item ->
-            var selectedFragment: Fragment? = null
-            when (item.itemId) {
-                R.id.nav_home -> selectedFragment = HomeFragment()
-                R.id.nav_sermons -> selectedFragment = SermonsFragment()
-                R.id.nav_courses -> selectedFragment = CoursesFragment()
-                R.id.nav_events -> selectedFragment = EventsFragment()
-                R.id.nav_partner -> {
-                    // TODO: Implement PartnerFragment or Activity
-                }
+        bottomNav.setOnItemSelectedListener { item ->
+            val fragment: Fragment = when (item.itemId) {
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_sermons -> SermonsFragment()
+                R.id.nav_courses -> CoursesFragment()
+                R.id.nav_events -> EventsFragment()
+                R.id.nav_partner -> PartnerFragment()
+                else -> HomeFragment()
             }
-            if (selectedFragment != null) {
-                loadFragment(selectedFragment)
-            }
+            loadFragment(fragment)
             true
         }
     }
