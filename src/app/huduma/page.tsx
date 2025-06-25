@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from 'react';
-import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
@@ -16,15 +15,10 @@ import {
   Music,
   Shield,
   BarChartBig,
-  Users
+  Users,
+  UsersRound, // New
+  Baby,       // New
 } from 'lucide-react';
-
-// Client components cannot export metadata directly.
-// If needed, move to a parent Server Component or layout.
-// export const metadata: Metadata = {
-//   title: 'Kutumika | HSCM Connect',
-//   description: 'Gundua idara mbalimbali za huduma katika HSCM Connect na utafute mahali pako pa kutumika.',
-// };
 
 export interface Department {
   name: string;
@@ -45,6 +39,18 @@ const departments: Department[] = [
     icon: Users,
     description: 'Inasimamia ustawi wa wafanyakazi na wanaojitolea, ikiwa ni pamoja na kuajiri, mafunzo, na kukuza utamaduni mzuri wa huduma.',
     roles: ['Uajiri wa Wanaojitolea', 'Mafunzo na Maendeleo', 'Mahusiano ya Wafanyakazi', 'Utunzaji wa Rekodi'],
+  },
+  {
+    name: 'Huduma ya Vijana (Youth)',
+    icon: UsersRound,
+    description: 'Waongoze na kuwatia moyo kizazi kijacho kupitia matukio, mafundisho, na ushauri unaohusiana na maisha yao.',
+    roles: ['Kiongozi wa Kikundi Kidogo', 'Mshauri (Mentor)', 'Mpangaji wa Matukio', 'Msaidizi wa Ibada'],
+  },
+  {
+    name: 'Huduma ya Watoto (Children)',
+    icon: Baby,
+    description: 'Panda mbegu za imani kwa watoto wadogo kupitia masomo ya Biblia ya kufurahisha, michezo, na ibada.',
+    roles: ['Mwalimu wa Shule ya Jumapili', 'Msaidizi wa Darasa', 'Kiongozi wa Michezo', 'Mtu wa Usajili (Check-in)'],
   },
   {
     name: 'Uzalishaji (Production)',
