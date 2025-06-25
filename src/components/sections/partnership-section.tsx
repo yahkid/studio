@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
-import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
 import { HandCoins, Sparkles, HandHeart, Users, TrendingUp, Heart, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -29,16 +28,15 @@ interface ImpactStat {
 
 export function PartnershipSectionSw() {
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
-  const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
 
   const partnershipOptions: PartnershipOption[] = [
     { 
       id: 'financial', 
-      title: 'Mshirika wa Kifedha', 
+      title: 'Kuwa Mshirika wa Maono', 
       icon: HandCoins, 
-      description: 'Saidia dhamira yetu kwa mchango wako wa kifedha ili kupanua athari zetu.', 
+      description: 'Saidia kueneza Injili na kuhudumia jamii kupitia mchango wako wa kifedha.', 
       action: '/partner', 
-      buttonText: 'Changia Sasa',
+      buttonText: 'Toa Mchango Salama',
       buttonVariant: 'default',
     },
     { 
@@ -55,8 +53,8 @@ export function PartnershipSectionSw() {
       title: 'Mshirika wa Kujitolea', 
       icon: HandHeart, 
       description: 'Tumia vipawa vyako kutumika katika huduma na kuleta mabadiliko maishani.', 
-      action: () => setIsVolunteerModalOpen(true), 
-      buttonText: 'Jitolee Leo', 
+      action: '/huduma', 
+      buttonText: 'Gundua Fursa za Kutumika', 
       buttonVariant: 'outline', 
     }
   ];
@@ -145,7 +143,7 @@ export function PartnershipSectionSw() {
         </div>
       </motion.section>
       <PrayerPartnerModal open={isPrayerModalOpen} onOpenChange={setIsPrayerModalOpen} />
-      <VolunteerPartnerModal open={isVolunteerModalOpen} onOpenChange={setIsVolunteerModalOpen} />
+      {/* Remove VolunteerPartnerModal since the button now links to the /huduma page */}
     </>
   );
 }

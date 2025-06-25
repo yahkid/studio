@@ -113,10 +113,12 @@ export interface DonationDoc {
     id?: string;
     created_at: Timestamp;
     amount: number;
-    method: 'mpesa' | 'card' | 'bank' | 'cash';
+    frequency: 'onetime' | 'monthly';
+    name: string;
+    email: string;
+    method: 'mpesa' | 'tigopesa' | 'card' | 'bank' | 'cash';
     status: 'initiated' | 'completed' | 'failed';
     userId?: string; // Firebase Auth user.uid
-    userName?: string;
 }
 
 

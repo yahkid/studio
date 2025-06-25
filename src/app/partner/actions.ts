@@ -7,10 +7,12 @@ import { z } from 'zod';
 
 const donationSchema = z.object({
   amount: z.number().positive(),
-  method: z.enum(['mpesa', 'card', 'bank', 'cash']),
+  frequency: z.enum(['onetime', 'monthly']),
+  name: z.string(),
+  email: z.string().email(),
+  method: z.enum(['mpesa', 'tigopesa', 'card', 'bank', 'cash']),
   status: z.enum(['initiated', 'completed', 'failed']),
   userId: z.string().optional(),
-  userName: z.string().optional(),
 });
 
 type DonationInput = z.infer<typeof donationSchema>;
