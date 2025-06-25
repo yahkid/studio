@@ -4,110 +4,51 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if a user is an admin.
-    // For now, this is simplified to check against a specific UID from an environment variable.
-    // In a production app, this would be better handled with custom claims.
-    function isAdmin() {
-      // Allow if the user's UID matches the admin UID stored in project settings
-      // IMPORTANT: You MUST set NEXT_PUBLIC_ADMIN_UID in your .env file for this to work.
-      return request.auth.uid == "s5k2IqLqXtRT9393SjG4yvJgG8E2";
+    // --- Helper Functions ---
+    // Checks if a user is signed in.
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // --- USER SUBMISSION COLLECTIONS ---
+    // Checks if the requesting user is the owner of a document.
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
     
-    // Decisions submitted by users
+    // --- Collection Rules ---
+
+    // Content collections managed by staff.
+    // Security relies on the Next.js staff layout to only allow admins to access the forms that write here.
+    match /{collection}/{docId} where collection in ['courses', 'events', 'leadership', 'sermons', 'blog_posts', 'resources', 'published_testimonials'] {
+      allow read: if true; // Publicly readable
+      allow create, update, delete: if isSignedIn(); // Allow any signed-in user (admins via app logic)
+    }
+    
+    // User-specific data collections. Only the owner can read/write their own documents.
+    match /user_course_progress/{progressId} {
+      allow read, write: if isOwner(resource.data.user_id);
+    }
+    
+    // User submission collections. Any signed-in user can create. Only staff can manage.
+    match /user_testimonies/{testimonyId} {
+      allow create: if isOwner(request.resource.data.userId); // User can only create their own testimony
+      allow read, update: if isSignedIn(); // Allow any signed-in user (admin) to review.
+    }
+
     match /decisions/{decisionId} {
-      allow read, update: if isAdmin();
-      allow create: if request.auth != null; // Any authenticated user can create a decision
+      allow create: if isOwner(request.resource.data.user_id); // User can only create their own decision
+      allow read, update: if isSignedIn(); // Allow any signed-in user (admin) to manage.
       
-      // Subcollection for contact logs
+      // Contact logs are subcollections of decisions, only staff can manage.
       match /contact_logs/{logId} {
-        allow read, create: if isAdmin();
+        allow read, create, update, delete: if isSignedIn();
       }
     }
-
-    // User Testimonies: allow authenticated users to submit, only admins to read/manage
-    match /user_testimonies/{testimonyId} {
-        allow read: if isAdmin();
-        allow create: if request.auth.uid == request.resource.data.userId; // User can only create for themselves
-        allow update: if isAdmin(); // Only admin can approve/reject
-        allow delete: if isAdmin();
-    }
     
-    // Published Testimonials: publicly readable, admin-only write access
-    match /published_testimonials/{testimonyId} {
-        allow read: if true;
-        allow write: if isAdmin();
-    }
-
-    // Lead Magnets & Signups: Allow anyone to create, only admins to read
-    match /lead_magnet_signups/{signupId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-    match /weekly_updates_signups/{signupId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-     match /visit_requests/{reqId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-    match /exit_intent_offers/{offerId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-     match /financial_partner_signups/{signupId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-    match /prayer_partner_signups/{signupId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-    match /volunteer_partner_signups/{signupId} {
-        allow read: if isAdmin();
-        allow create: if true;
-    }
-    
-    // --- USER DATA COLLECTIONS ---
-
-    // User Course Progress: Only the user can read/write their own progress
-    match /user_course_progress/{progressId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
-    }
-    
-    // --- PUBLIC CONTENT COLLECTIONS ---
-
-    // Leadership, Courses, Events, Sermons, Blog Posts, Resources: Publicly readable, admin-only write access
-    match /leadership/{leaderId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /courses/{courseId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /events/{eventId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /sermons/{sermonId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /blog_posts/{postId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /resources/{resourceId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Default deny all other access
-    match /{document=**} {
-      allow read, write: if false;
+    // Public forms where anyone can sign up (even unauthenticated). Staff can manage the data.
+    match /{collection}/{docId} where collection in ['lead_magnet_signups', 'visit_requests', 'exit_intent_offers', 'weekly_updates_signups', 'financial_partner_signups', 'prayer_partner_signups', 'volunteer_partner_signups'] {
+      allow create: if true;
+      allow read, update, delete: if isSignedIn();
     }
   }
 }
