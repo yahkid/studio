@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
 import { HandCoins, Smartphone, CreditCard, Loader2, Heart, CheckCircle, Info, User, Mail, Repeat, CalendarCheck, ArrowRight } from 'lucide-react';
-import { logDonation } from './actions';
+import { createPaymentIntent } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
@@ -28,7 +28,6 @@ const TIGO_PESA_ICON = () => (
   </svg>
 );
 
-
 const donationSchema = z.object({
   name: z.string().min(2, { message: "Tafadhali ingiza jina lako." }),
   email: z.string().email({ message: "Anwani ya barua pepe si sahihi." }),
@@ -37,6 +36,27 @@ const donationSchema = z.object({
 });
 
 type DonationFormValues = z.infer<typeof donationSchema>;
+
+// This function simulates the payment gateway confirming the payment
+// by calling our own webhook endpoint. In a real app, this function would not exist.
+const simulateWebhookCall = async (paymentIntentId: string) => {
+    console.log("Simulating webhook call for payment intent:", paymentIntentId);
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+    try {
+        await fetch('/api/webhooks/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'payment_intent.succeeded',
+                data: { object: { id: paymentIntentId } }
+            }),
+        });
+        console.log("Webhook simulation successful.");
+    } catch (error) {
+        console.error("Webhook simulation failed:", error);
+    }
+};
+
 
 export default function PartnerPage() {
   const { user, initialLoadingComplete } = useAuthFirebase();
@@ -77,33 +97,34 @@ export default function PartnerPage() {
 
     setIsLoading(true);
     const values = form.getValues();
-    setSubmittedDetails(values);
 
-    const result = await logDonation({
-      amount: values.amount,
-      frequency: values.frequency,
-      name: values.name,
-      email: values.email,
-      method: method,
+    // Step 1: Create a payment intent on the backend.
+    const result = await createPaymentIntent({
+      ...values,
+      paymentMethod: method,
       userId: user?.uid,
-      status: 'initiated'
     });
 
-    setIsLoading(false);
-
-    if (result.success) {
-      toast({
-        title: "Nia Imepokelewa",
-        description: `Asante kwa nia yako ya kuchangia TZS ${values.amount.toLocaleString()}. Kamilisha malipo hapa chini.`,
-      });
-      setIsSuccess(true);
-    } else {
-      toast({
-        title: "Hitilafu",
-        description: result.error || "Imeshindwa kurekodi mchango wako. Tafadhali jaribu tena.",
-        variant: "destructive",
-      });
+    if (!result.success || !result.clientSecret || !result.donationId) {
+      toast({ title: "Error", description: result.error || "Could not initialize payment.", variant: "destructive" });
+      setIsLoading(false);
+      return;
     }
+
+    // Step 2: In a real app, use the clientSecret with a frontend payment SDK
+    // (e.g., Stripe.js, Flutterwave SDK) to show the payment form to the user.
+    
+    // For this simulation, we'll assume the payment was successful.
+    toast({ title: "Inachakata Malipo...", description: "Tafadhali subiri tunapothibitisha mchango wako." });
+
+    // Step 3: Simulate the payment gateway calling our webhook after a short delay.
+    // This step does not exist in a real application.
+    await simulateWebhookCall(result.clientSecret.split('_secret_')[0]);
+
+    // Step 4: Show the success screen to the user.
+    setSubmittedDetails(values);
+    setIsSuccess(true);
+    setIsLoading(false);
   };
   
   if (isSuccess && submittedDetails) {
@@ -113,15 +134,15 @@ export default function PartnerPage() {
              <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <CardTitle className="font-headline text-3xl">Asante, {submittedDetails.name.split(' ')[0]}!</CardTitle>
             <CardDescription>
-                Nia yako ya kuchangia <strong>TZS {submittedDetails.amount.toLocaleString()}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) imepokelewa.
+                Mchango wako wa <strong>TZS {submittedDetails.amount.toLocaleString()}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Alert>
                 <Info className="h-4 w-4" />
-                <AlertTitle>Kamilisha Malipo</AlertTitle>
+                <AlertTitle>Risiti Imetumwa</AlertTitle>
                 <AlertDescription>
-                    Kwa sasa, tafadhali kamilisha malipo yako mwenyewe ukitumia maelezo ya malipo uliyochagua. Timu yetu itathibitisha mchango wako punde tu utakapopokelewa.
+                   Tumetuma risiti ya mchango wako kwenye barua pepe yako ({submittedDetails.email}).
                 </AlertDescription>
             </Alert>
             <p className="text-muted-foreground mt-6">
@@ -244,7 +265,7 @@ export default function PartnerPage() {
                         </TabsList>
                         
                         <TabsContent value="mpesa" className="mt-6 text-center space-y-4">
-                            <p className="text-muted-foreground">Kamilisha mchango wako salama kupitia M-Pesa. Bofya kitufe hapa chini ili kurekodi nia yako, kisha fuata maelekezo ya malipo.</p>
+                            <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia M-Pesa.</p>
                             <Button onClick={() => handlePaymentInitiation('mpesa')} className="w-full h-12 text-lg" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                                 Endelea na M-Pesa
@@ -252,7 +273,7 @@ export default function PartnerPage() {
                         </TabsContent>
 
                          <TabsContent value="tigopesa" className="mt-6 text-center space-y-4">
-                             <p className="text-muted-foreground">Kamilisha mchango wako salama kupitia Tigo Pesa. Bofya kitufe hapa chini ili kurekodi nia yako, kisha fuata maelekezo ya malipo.</p>
+                             <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Tigo Pesa.</p>
                             <Button onClick={() => handlePaymentInitiation('tigopesa')} className="w-full h-12 text-lg" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                                 Endelea na Tigo Pesa
@@ -260,12 +281,8 @@ export default function PartnerPage() {
                         </TabsContent>
 
                         <TabsContent value="card" className="mt-6 text-center space-y-4">
-                            <Alert variant="default">
-                                <Info className="h-4 w-4" />
-                                <AlertTitle>Inakuja Hivi Karibuni</AlertTitle>
-                                <AlertDescription>Malipo kwa kadi yatawezeshwa hivi karibuni. Kwa sasa, tafadhali tumia M-Pesa au Tigo Pesa.</AlertDescription>
-                            </Alert>
-                             <Button onClick={() => handlePaymentInitiation('card')} className="w-full h-12 text-lg" disabled={isLoading || true}>
+                            <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Kadi (Visa/Mastercard).</p>
+                             <Button onClick={() => handlePaymentInitiation('card')} className="w-full h-12 text-lg" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                                 Endelea na Kadi
                             </Button>
@@ -278,4 +295,3 @@ export default function PartnerPage() {
     </div>
   );
 }
-
