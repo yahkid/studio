@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -29,9 +28,10 @@ import {
   LogOut,
   Home,
   User,
-  Globe,
+  HeartHandshake,
   UsersRound,
   Baby,
+  Users,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
@@ -52,7 +52,8 @@ export function StaffSidebar() {
     { href: '/admin/review-testimonies', label: 'Pitia Shuhuda', icon: ShieldCheck },
     { href: '/staff/pastoral', label: 'Huduma za Kichungaji', icon: HandHeart },
     { href: '/staff/content', label: 'Maudhui', icon: Newspaper },
-    { href: '/staff/humanitarian', label: 'Huduma za Kijamii', icon: Globe },
+    { href: '/staff/humanitarian', label: 'Ukarimu', icon: HeartHandshake },
+    { href: '/staff/human-resource', label: 'Rasilimali Watu', icon: Users },
     { href: '/staff/youth', label: 'Huduma ya Vijana', icon: UsersRound },
     { href: '/staff/children', label: "Huduma ya Watoto", icon: Baby },
     { href: '/staff/transport-security', label: 'Uchukuzi na Usalama', icon: Shield },

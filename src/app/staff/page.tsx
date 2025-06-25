@@ -1,7 +1,6 @@
-
 import type { Metadata } from 'next';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Baby, Shield, ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings, HeartHandshake, UsersRound } from 'lucide-react';
+import { Baby, Shield, ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings, HeartHandshake, UsersRound, Users } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -68,6 +67,12 @@ export default function StaffDashboardPage() {
           description="Simamia timu ya ukarimu na huduma kwa wageni."
           icon={HeartHandshake}
           href="/staff/humanitarian"
+        />
+        <DashboardCard
+          title="Rasilimali Watu (HR)"
+          description="Simamia maombi ya wanaojitolea na orodha ya wafanyakazi."
+          icon={Users}
+          href="/staff/human-resource"
         />
         <DashboardCard
           title="Huduma ya Vijana"
