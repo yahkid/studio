@@ -116,7 +116,7 @@ export interface DonationDoc {
     frequency: 'onetime' | 'monthly';
     name: string;
     email: string;
-    method: 'mpesa' | 'tigopesa' | 'card' | 'bank' | 'cash';
+    method: 'mpesa' | 'tigopesa' | 'card';
     status: 'initiated' | 'completed' | 'failed';
     userId?: string; // Firebase Auth user.uid
 }

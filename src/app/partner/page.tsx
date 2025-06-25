@@ -12,12 +12,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
-import { HandCoins, Smartphone, CreditCard, Banknote, Building, Loader2, Heart, CheckCircle, Info, User, Mail, Repeat, ArrowRight } from 'lucide-react';
+import { HandCoins, Smartphone, CreditCard, Loader2, Heart, CheckCircle, Info, User, Mail, Repeat, CalendarCheck, ArrowRight } from 'lucide-react';
 import { logDonation } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const TIGO_PESA_ICON = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,13 +64,20 @@ export default function PartnerPage() {
 
   const presetAmounts = [10000, 25000, 50000, 100000];
 
-  const onSubmit = async (values: DonationFormValues, method: 'mpesa' | 'tigopesa' | 'card' | 'bank' | 'cash') => {
-    setIsLoading(true);
-    setSubmittedDetails(values);
-
-    if (method === 'card') {
-        await new Promise(resolve => setTimeout(resolve, 1500));
+  const handlePaymentInitiation = async (method: 'mpesa' | 'tigopesa' | 'card') => {
+    const isFormValid = await form.trigger();
+    if (!isFormValid) {
+        toast({
+            title: "Tafadhali Kagua Fomu",
+            description: "Jaza maelezo yako na uchague kiasi kabla ya kuendelea.",
+            variant: "destructive"
+        });
+        return;
     }
+
+    setIsLoading(true);
+    const values = form.getValues();
+    setSubmittedDetails(values);
 
     const result = await logDonation({
       amount: values.amount,
@@ -86,10 +94,9 @@ export default function PartnerPage() {
     if (result.success) {
       toast({
         title: "Nia Imepokelewa",
-        description: `Asante kwa nia yako ya kuchangia TZS ${values.amount.toLocaleString()}.`,
+        description: `Asante kwa nia yako ya kuchangia TZS ${values.amount.toLocaleString()}. Kamilisha malipo hapa chini.`,
       });
       setIsSuccess(true);
-      form.reset();
     } else {
       toast({
         title: "Hitilafu",
@@ -110,13 +117,22 @@ export default function PartnerPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-6">
-                Ushirika wako wa ukarimu unaleta mabadiliko ya kweli. Tafadhali kamilisha malipo kupitia njia uliyoichagua. Mungu akubariki kwa wingi!
+            <Alert>
+                <Info className="h-4 w-4" />
+                <AlertTitle>Kamilisha Malipo</AlertTitle>
+                <AlertDescription>
+                    Kwa sasa, tafadhali kamilisha malipo yako mwenyewe ukitumia maelezo ya malipo uliyochagua. Timu yetu itathibitisha mchango wako punde tu utakapopokelewa.
+                </AlertDescription>
+            </Alert>
+            <p className="text-muted-foreground mt-6">
+                Ushirika wako wa ukarimu unaleta mabadiliko ya kweli. Mungu akubariki kwa wingi!
             </p>
-            <Button onClick={() => { setIsSuccess(false); setSubmittedDetails(null); }}>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={() => { setIsSuccess(false); setSubmittedDetails(null); }} className="w-full">
                 Toa Mchango Mwingine
             </Button>
-          </CardContent>
+          </CardFooter>
         </Card>
     )
   }
@@ -139,31 +155,27 @@ export default function PartnerPage() {
       </motion.div>
 
       <Form {...form}>
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
             <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader>
                 <CardTitle className="font-headline text-2xl flex items-center">
-                    <HandCoins className="mr-3 h-7 w-7 text-primary"/>
-                    Toa Mchango Wako
+                    <span className="flex items-center justify-center h-8 w-8 rounded-full bg-primary text-primary-foreground mr-3">1</span>
+                    Chagua Athari Yako
                 </CardTitle>
-                <CardDescription>
-                    Fuata hatua hizi rahisi ili kutoa mchango wako salama.
-                </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
-                  {/* Step 1: Frequency */}
                   <div>
-                    <Label className="text-lg font-semibold mb-3 block">Hatua ya 1: Chagua Marudio</Label>
+                    <Label className="text-lg font-semibold mb-3 block">Chagua Marudio</Label>
                     <Controller
                         name="frequency"
                         control={form.control}
                         render={({ field }) => (
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
-                            <Label className={cn("flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground", field.value === 'onetime' && "border-primary")}>
+                            <Label className={cn("flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer", field.value === 'onetime' && "border-primary")}>
                                 <RadioGroupItem value="onetime" className="sr-only" />
                                 <Repeat className="mb-3 h-6 w-6" /> Mara Moja
                             </Label>
-                            <Label className={cn("flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground", field.value === 'monthly' && "border-primary")}>
+                            <Label className={cn("flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer", field.value === 'monthly' && "border-primary")}>
                                 <RadioGroupItem value="monthly" className="sr-only" />
                                 <CalendarCheck className="mb-3 h-6 w-6" /> Kila Mwezi
                             </Label>
@@ -172,12 +184,11 @@ export default function PartnerPage() {
                     />
                   </div>
                   
-                  {/* Step 2: Amount */}
                   <div>
-                    <Label htmlFor="amount" className="text-lg font-semibold">Hatua ya 2: Chagua Kiasi (TZS)</Label>
+                    <Label htmlFor="amount" className="text-lg font-semibold">Chagua Kiasi (TZS)</Label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
                         {presetAmounts.map(preset => (
-                            <Button key={preset} type="button" variant="outline" onClick={() => form.setValue('amount', preset, { shouldValidate: true })}>
+                            <Button key={preset} type="button" variant={form.watch('amount') === preset ? 'default' : 'outline'} onClick={() => form.setValue('amount', preset, { shouldValidate: true })}>
                                 {preset.toLocaleString()}
                             </Button>
                         ))}
@@ -189,77 +200,76 @@ export default function PartnerPage() {
                         <Input
                             id="amount"
                             type="number"
-                            className="text-2xl h-14 mt-3"
+                            className="text-2xl h-14 mt-3 text-center"
                             {...field}
                         />
                         )}
                     />
-                    {form.formState.errors.amount && <p className="text-destructive text-sm mt-1">{form.formState.errors.amount.message}</p>}
+                    {form.formState.errors.amount && <p className="text-destructive text-sm mt-1 text-center">{form.formState.errors.amount.message}</p>}
                   </div>
-
-                  {/* Step 3: Details */}
-                   <div>
-                        <Label className="text-lg font-semibold mb-3 block">Hatua ya 3: Maelezo Yako</Label>
-                        <div className="grid grid-cols-1 gap-4">
-                             <FormField control={form.control} name="name" render={({ field }) => (
-                                <FormItem><FormLabel>Jina Kamili</FormLabel><div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><FormControl><Input className="pl-10" {...field} /></FormControl></div><FormMessage /></FormItem>
-                             )}/>
-                             <FormField control={form.control} name="email" render={({ field }) => (
-                                <FormItem><FormLabel>Barua Pepe</FormLabel><div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><FormControl><Input type="email" className="pl-10" {...field} /></FormControl></div><FormMessage /></FormItem>
-                             )}/>
-                        </div>
-                   </div>
-
                 </CardContent>
-                 <CardFooter>
-                  <p className="text-muted-foreground text-sm flex items-center">
-                    <ArrowRight className="h-4 w-4 mr-2"/> Endelea hapa chini kuchagua njia ya malipo.
-                  </p>
-                </CardFooter>
+            </Card>
+
+            <Card className="w-full max-w-2xl mx-auto mt-8">
+                 <CardHeader>
+                    <CardTitle className="font-headline text-2xl flex items-center">
+                        <span className="flex items-center justify-center h-8 w-8 rounded-full bg-primary text-primary-foreground mr-3">2</span>
+                        Maelezo Yako
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 gap-4">
+                     <FormField control={form.control} name="name" render={({ field }) => (
+                        <FormItem><FormLabel>Jina Kamili</FormLabel><div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><FormControl><Input className="pl-10" {...field} /></FormControl></div><FormMessage /></FormItem>
+                     )}/>
+                     <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem><FormLabel>Barua Pepe</FormLabel><div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><FormControl><Input type="email" className="pl-10" {...field} /></FormControl></div><FormMessage /></FormItem>
+                     )}/>
+                </CardContent>
             </Card>
 
             <Card className="w-full max-w-2xl mx-auto mt-8">
                 <CardHeader>
-                     <Label className="text-lg font-semibold">Hatua ya 4: Chagua Njia ya Malipo</Label>
+                     <CardTitle className="font-headline text-2xl flex items-center">
+                        <span className="flex items-center justify-center h-8 w-8 rounded-full bg-primary text-primary-foreground mr-3">3</span>
+                        Chagua Njia ya Malipo
+                    </CardTitle>
+                     <CardDescription>Baada ya kuchagua, fuata maelekezo ili kukamilisha mchango wako.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="mpesa" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="mpesa"><Smartphone className="mr-2 h-4 w-4"/>M-Pesa</TabsTrigger>
                             <TabsTrigger value="tigopesa"><TIGO_PESA_ICON /> Tigo Pesa</TabsTrigger>
-                            <TabsTrigger value="card" className="hidden md:flex"><CreditCard className="mr-2 h-4 w-4"/>Kadi</TabsTrigger>
+                            <TabsTrigger value="card"><CreditCard className="mr-2 h-4 w-4"/>Kadi</TabsTrigger>
                         </TabsList>
                         
-                        <TabsContent value="mpesa" className="mt-4">
-                            <Button onClick={form.handleSubmit(v => onSubmit(v, 'mpesa'))} className="w-full h-12 text-lg" disabled={isLoading}>
+                        <TabsContent value="mpesa" className="mt-6 text-center space-y-4">
+                            <p className="text-muted-foreground">Kamilisha mchango wako salama kupitia M-Pesa. Bofya kitufe hapa chini ili kurekodi nia yako, kisha fuata maelekezo ya malipo.</p>
+                            <Button onClick={() => handlePaymentInitiation('mpesa')} className="w-full h-12 text-lg" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Lipa kwa M-Pesa
+                                Endelea na M-Pesa
                             </Button>
-                            <p className="text-xs text-center text-muted-foreground mt-2">Utabonyeza *150*00# kukamilisha malipo (Hii ni simulizi).</p>
                         </TabsContent>
 
-                         <TabsContent value="tigopesa" className="mt-4">
-                            <Button onClick={form.handleSubmit(v => onSubmit(v, 'tigopesa'))} className="w-full h-12 text-lg" disabled={isLoading}>
+                         <TabsContent value="tigopesa" className="mt-6 text-center space-y-4">
+                             <p className="text-muted-foreground">Kamilisha mchango wako salama kupitia Tigo Pesa. Bofya kitufe hapa chini ili kurekodi nia yako, kisha fuata maelekezo ya malipo.</p>
+                            <Button onClick={() => handlePaymentInitiation('tigopesa')} className="w-full h-12 text-lg" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Lipa kwa Tigo Pesa
+                                Endelea na Tigo Pesa
                             </Button>
-                            <p className="text-xs text-center text-muted-foreground mt-2">Utabonyeza *150*01# kukamilisha malipo (Hii ni simulizi).</p>
                         </TabsContent>
 
-                        <TabsContent value="card" className="mt-4 space-y-4">
-                            <Alert variant="destructive">
+                        <TabsContent value="card" className="mt-6 text-center space-y-4">
+                            <Alert variant="default">
                                 <Info className="h-4 w-4" />
-                                <AlertTitle>Njia ya Mfano</AlertTitle>
-                                <AlertDescription>
-                                    Fomu hii ni kwa ajili ya maonyesho tu. <strong>Usiweke taarifa halisi za kadi yako.</strong>
-                                </AlertDescription>
+                                <AlertTitle>Inakuja Hivi Karibuni</AlertTitle>
+                                <AlertDescription>Malipo kwa kadi yatawezeshwa hivi karibuni. Kwa sasa, tafadhali tumia M-Pesa au Tigo Pesa.</AlertDescription>
                             </Alert>
-                             <Button onClick={form.handleSubmit(v => onSubmit(v, 'card'))} className="w-full h-12 text-lg" disabled={isLoading}>
+                             <Button onClick={() => handlePaymentInitiation('card')} className="w-full h-12 text-lg" disabled={isLoading || true}>
                                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Toa kwa Kadi
+                                Endelea na Kadi
                             </Button>
                         </TabsContent>
-
                     </Tabs>
                 </CardContent>
             </Card>
