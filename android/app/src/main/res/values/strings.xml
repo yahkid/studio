@@ -8,6 +8,8 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="dont_have_account">"Don't have an account? "</string>
     <string name="sign_up">Sign Up</string>
+    <string name="sermon_details_title">Sermon Details</string>
+    <string name="description">Description</string>
 
     <!-- Partner Screen Strings -->
     <string name="partner_title">Kuwa Mshirika wa Maono</string>
