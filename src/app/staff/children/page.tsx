@@ -65,7 +65,7 @@ export default function ChildrensMinistryPage() {
            {isLoading ? (
                 <div className="flex justify-center items-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
             ) : volunteers.length === 0 ? (
-                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Wanaojitolea Waliopatikana</AlertTitle><AlertDescription>Hakuna aliyejisajili mahususi kwa Huduma ya Watoto bado. Angalia orodha kuu ya <Link href="/staff/humanitarian" className="underline">wanaojitolea</Link> kwa nia ya jumla.</AlertDescription></Alert>
+                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Wanaojitolea Waliopatikana</AlertTitle><AlertDescription>Hakuna aliyejisajili mahususi kwa Huduma ya Watoto bado. Angalia orodha kuu ya <Link href="/staff/human-resource" className="underline">wanaojitolea</Link> kwa nia ya jumla.</AlertDescription></Alert>
             ) : (
                 <div className="border rounded-md">
                     <Table>
