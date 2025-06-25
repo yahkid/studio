@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { FinancialPartnerModal } from '@/components/modals/financial-partner-modal';
+import { PaymentOptionsModal } from '@/components/modals/payment-options-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
 import { HandCoins, Sparkles, HandHeart, Users, TrendingUp, Heart, CheckCircle } from 'lucide-react';
@@ -28,7 +28,7 @@ interface ImpactStat {
 }
 
 export function PartnershipSectionSw() {
-  const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
 
@@ -38,7 +38,7 @@ export function PartnershipSectionSw() {
       title: 'Mshirika wa Kifedha', 
       icon: HandCoins, 
       description: 'Saidia dhamira yetu kwa mchango wako wa kifedha ili kupanua athari zetu.', 
-      action: () => setIsFinancialModalOpen(true), 
+      action: () => setIsPaymentModalOpen(true), 
       buttonText: 'Changia Sasa',
       buttonVariant: 'default',
     },
@@ -139,7 +139,7 @@ export function PartnershipSectionSw() {
           </div>
         </div>
       </motion.section>
-      <FinancialPartnerModal open={isFinancialModalOpen} onOpenChange={setIsFinancialModalOpen} />
+      <PaymentOptionsModal open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen} />
       <PrayerPartnerModal open={isPrayerModalOpen} onOpenChange={setIsPrayerModalOpen} />
       <VolunteerPartnerModal open={isVolunteerModalOpen} onOpenChange={setIsVolunteerModalOpen} />
     </>

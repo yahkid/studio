@@ -434,3 +434,22 @@ INFO: Detected non-HTTP/2 connection.
 [debug] [2025-06-25T05:42:43.928Z] Jun 25, 2025 5:42:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
  {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 25, 2025 5:42:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2025-06-25T05:42:48.196Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules 200
+[debug] [2025-06-25T05:42:48.201Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules {"issues":[{"sourcePosition":{"fileName":"security.rules","line":22,"column":11,"currentOffset":595,"endOffset":595},"description":"Missing 'match' keyword before path.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":22,"column":33,"currentOffset":617,"endOffset":621},"description":"Unexpected 'where'.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":22,"column":33,"currentOffset":617,"endOffset":621},"description":"mismatched input 'where' expecting {'{', '/', PATH_SEGMENT}","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":49,"column":11,"currentOffset":1986,"endOffset":1986},"description":"Missing 'match' keyword before path.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":49,"column":33,"currentOffset":2008,"endOffset":2012},"description":"Unexpected 'where'.","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":49,"column":33,"currentOffset":2008,"endOffset":2012},"description":"mismatched input 'where' expecting {'{', '/', PATH_SEGMENT}","severity":"ERROR"},{"sourcePosition":{"fileName":"security.rules","line":53,"column":3,"currentOffset":2292,"endOffset":2292},"description":"Unexpected '}'.","severity":"ERROR"}]}
+[warn] ⚠  firestore.rules:22:11 - ERROR Missing 'match' keyword before path. 
+[warn] ⚠  firestore.rules:22:33 - ERROR Unexpected 'where'. 
+[warn] ⚠  firestore.rules:22:33 - ERROR mismatched input 'where' expecting {'{', '/', PATH_SEGMENT} 
+[warn] ⚠  firestore.rules:49:11 - ERROR Missing 'match' keyword before path. 
+[warn] ⚠  firestore.rules:49:33 - ERROR Unexpected 'where'. 
+[warn] ⚠  firestore.rules:49:33 - ERROR mismatched input 'where' expecting {'{', '/', PATH_SEGMENT} 
+[warn] ⚠  firestore.rules:53:3 - ERROR Unexpected '}'. 
+[info] ✔  firestore: Rules updated. 
+[debug] [2025-06-25T05:43:13.255Z] Jun 25, 2025 5:43:13 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 25, 2025 5:43:13 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2025-06-25T05:44:04.365Z] Jun 25, 2025 5:44:04 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 25, 2025 5:44:04 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2025-06-25T05:45:13.115Z] Jun 25, 2025 5:45:13 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 25, 2025 5:45:13 AM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
