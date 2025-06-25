@@ -1,17 +1,23 @@
-
 # Add project specific ProGuard rules here.
-# By default, the flags in this file are applied to all build types.
-# For more information, see the ProGuard documentation:
-# https://www.guardsquare.com/manual/configuration/usage
-
-# If you are using Glide, you may need to add the following rules:
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$ImageType {
-  **[] $VALUES;
-  public *;
-}
-
-# If you use Gson with models that are obfuscated, you might need:
-# -keep class com.google.gson.annotations.SerializedName
-# -keep @com.google.gson.annotations.SerializedName class * {*;}
+# By default, the flags in this file are applied to recesses of your
+# project.
+#
+# You can find general ProGuard rules for popular libraries at
+# https://www.guardsquare.com/proguard/manual/examples
+#
+# If you are using Kotlin coroutines, be sure to include the following rules:
+# -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
+# -keepnames class kotlinx.coroutines.flow.internal.ChannelFlow { *; }
+# -keepnames class kotlinx.coroutines.flow.internal.ChannelFlow* { *; }
+# -keepclassmembers class kotlinx.coroutines.flow.internal.ChannelFlow* {
+#   private final kotlinx.coroutines.channels.ReceiveChannel channel;
+# }
+# -keepclassmembers class kotlinx.coroutines.selects.SelectBuilderImpl {
+#   private final java.util.List clauses;
+# }
+# -keepclassmembers class kotlinx.coroutines.internal.Segment {
+#   private final java.util.concurrent.atomic.AtomicReferenceArray data;
+# }
+# -keepclassmembers class kotlinx.coroutines.internal.FastServiceLoader {
+#   private final java.util.List a;
+# }

@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,17 +5,20 @@ plugins {
 }
 
 android {
-    namespace = "com.hscmconnect.app"
+    namespace = "com.holyspiritconnect.hscapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.hscmconnect.app"
+        applicationId = "com.holyspiritconnect.hscapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -46,21 +48,14 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-
-    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-
-    // AndroidX
     implementation(libs.fragment.ktx)
     implementation(libs.recyclerview)
-
-    // Image Loading
     implementation(libs.glide)
-    
-    // Testing
+    implementation(libs.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
