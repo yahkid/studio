@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface EnrichedDonation extends DonationDoc {
   id: string;
@@ -64,7 +65,12 @@ export default function FinancePage() {
     totalDonations: 0,
   });
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isClient, setIsClient] = React.useState(false);
   const { toast } = useToast();
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   React.useEffect(() => {
     const fetchDonations = async () => {
@@ -130,7 +136,7 @@ export default function FinancePage() {
           </div>
       ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <MetricCard title="Jumla ya Michango (Imefanikiwa)" value={`TZS ${stats.totalAmount.toLocaleString()}`} icon={TrendingUp} description={`Kutoka kwa michango ${stats.totalDonations}`} />
+              <MetricCard title="Jumla ya Michango (Imefanikiwa)" value={isClient ? `TZS ${stats.totalAmount.toLocaleString('en-US')}` : `TZS ${stats.totalAmount}`} icon={TrendingUp} description={`Kutoka kwa michango ${stats.totalDonations}`} />
               <MetricCard title="Michango ya Mara Moja" value={stats.oneTimeCount} icon={Repeat} description="Jumla ya michango ya mara moja" />
               <MetricCard title="Washirika wa Kila Mwezi" value={stats.monthlyCount} icon={CalendarCheck} description="Jumla ya michango ya kila mwezi" />
               <MetricCard title="Jumla ya Miamala" value={donations.length} icon={DollarSign} description="Ikiwemo inayosubiri na iliyoshindwa" />
@@ -166,7 +172,7 @@ export default function FinancePage() {
                             <TableRow key={donation.id}>
                                 <TableCell className="text-xs">{format(donation.created_at.toDate(), 'PPp', { locale: sw })}</TableCell>
                                 <TableCell className="font-medium">{donation.name}<br/><span className="text-xs text-muted-foreground">{donation.email}</span></TableCell>
-                                <TableCell>{donation.amount.toLocaleString()} {donation.currency}</TableCell>
+                                <TableCell>{isClient ? donation.amount.toLocaleString('en-US') : donation.amount} {donation.currency}</TableCell>
                                 <TableCell className="capitalize">{donation.frequency === 'onetime' ? 'Mara Moja' : 'Kila Mwezi'}</TableCell>
                                 <TableCell className="capitalize">{donation.paymentMethod}</TableCell>
                                 <TableCell>{getStatusBadge(donation.status)}</TableCell>

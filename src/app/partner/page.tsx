@@ -64,6 +64,11 @@ export default function PartnerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedDetails, setSubmittedDetails] = useState<DonationFormValues | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(donationSchema),
@@ -137,7 +142,7 @@ export default function PartnerPage() {
              <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <CardTitle className="font-headline text-3xl">Asante, {submittedDetails.name.split(' ')[0]}!</CardTitle>
             <CardDescription>
-                Mchango wako wa <strong>TZS {submittedDetails.amount.toLocaleString()}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
+                Mchango wako wa <strong>TZS {isClient ? submittedDetails.amount.toLocaleString('en-US') : submittedDetails.amount}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -213,7 +218,7 @@ export default function PartnerPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
                         {presetAmounts.map(preset => (
                             <Button key={preset} type="button" variant={form.watch('amount') === preset ? 'default' : 'outline'} onClick={() => form.setValue('amount', preset, { shouldValidate: true })}>
-                                {preset.toLocaleString()}
+                                {isClient ? preset.toLocaleString('en-US') : preset.toString()}
                             </Button>
                         ))}
                     </div>
