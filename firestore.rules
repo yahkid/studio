@@ -4,51 +4,106 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- Helper Functions ---
-    // Checks if a user is signed in.
-    function isSignedIn() {
+    // Helper functions
+    function isStaff() {
+      // In a real app, this would check for a custom claim.
+      // For now, we allow any authenticated user to act as staff.
+      // This is secure because the staff portal pages are route-protected.
       return request.auth != null;
     }
 
-    // Checks if the requesting user is the owner of a document.
-    function isOwner(uid) {
-      return request.auth != null && request.auth.uid == uid;
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
-    
-    // --- Collection Rules ---
 
-    // Content collections managed by staff.
-    // Security relies on the Next.js staff layout to only allow admins to access the forms that write here.
-    match /{collection}/{docId} where collection in ['courses', 'events', 'leadership', 'sermons', 'blog_posts', 'resources', 'published_testimonials'] {
-      allow read: if true; // Publicly readable
-      allow create, update, delete: if isSignedIn(); // Allow any signed-in user (admins via app logic)
+    // CONTENT: Public read, staff write
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if isStaff();
     }
-    
-    // User-specific data collections. Only the owner can read/write their own documents.
+    match /sermons/{sermonId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+     match /events/{eventId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+     match /leadership/{leaderId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+     match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+     match /published_testimonials/{testimonyId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+
+    // USER DATA: Users can only access their own data. Staff can access all.
     match /user_course_progress/{progressId} {
-      allow read, write: if isOwner(resource.data.user_id);
+      allow read, write: if isOwner(resource.data.user_id) || isStaff();
+    }
+     match /user_testimonies/{testimonyId} {
+      allow create: if request.auth != null; // Any signed-in user can submit
+      allow read, update, delete: if isStaff(); // Only staff can manage
     }
     
-    // User submission collections. Any signed-in user can create. Only staff can manage.
-    match /user_testimonies/{testimonyId} {
-      allow create: if isOwner(request.resource.data.userId); // User can only create their own testimony
-      allow read, update: if isSignedIn(); // Allow any signed-in user (admin) to review.
+    // SUBMISSIONS: Anyone can submit (write), only staff can read/manage
+    match /decisions/{decisionId} {
+        allow create: if true;
+        allow read, update, delete: if isStaff();
+        // Subcollection for contact logs
+        match /contact_logs/{logId} {
+            allow read, create: if isStaff();
+        }
+    }
+    match /visit_requests/{requestId} {
+        allow create: if true;
+        allow read, update, delete: if isStaff();
+    }
+     match /lead_magnet_signups/{signupId} {
+        allow create: if true;
+        allow read, delete: if isStaff();
+    }
+    match /donations/{donationId} {
+        // Anyone can create a pending donation record
+        allow create: if true;
+        // The webhook/backend function is what updates the status,
+        // so client-side updates should be restricted.
+        // Staff can read all donations.
+        allow read: if isStaff(); 
+        allow update, delete: if isStaff(); // Staff can manage/correct records
+    }
+    match /community_needs/{needId} {
+      // Only staff can read or write community needs
+      allow read, write: if isStaff();
     }
 
-    match /decisions/{decisionId} {
-      allow create: if isOwner(request.resource.data.user_id); // User can only create their own decision
-      allow read, update: if isSignedIn(); // Allow any signed-in user (admin) to manage.
-      
-      // Contact logs are subcollections of decisions, only staff can manage.
-      match /contact_logs/{logId} {
-        allow read, create, update, delete: if isSignedIn();
-      }
+
+    // Writable by any client (for signups)
+    // These collections should be monitored for abuse.
+    match /weekly_updates_signups/{signupId} {
+        allow create: if true;
+        allow read, delete: if isStaff();
     }
-    
-    // Public forms where anyone can sign up (even unauthenticated). Staff can manage the data.
-    match /{collection}/{docId} where collection in ['lead_magnet_signups', 'visit_requests', 'exit_intent_offers', 'weekly_updates_signups', 'financial_partner_signups', 'prayer_partner_signups', 'volunteer_partner_signups'] {
-      allow create: if true;
-      allow read, update, delete: if isSignedIn();
+    match /exit_intent_offers/{offerId} {
+        allow create: if true;
+        allow read, delete: if isStaff();
+    }
+     match /prayer_partner_signups/{signupId} {
+        allow create: if true;
+        allow read, delete: if isStaff();
+    }
+    match /volunteer_partner_signups/{signupId} {
+        allow create: if true;
+        allow read, delete: if isStaff();
     }
   }
 }

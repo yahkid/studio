@@ -1,3 +1,4 @@
+
 // This file defines types for Firebase Firestore document structures.
 
 import type { Timestamp } from 'firebase/firestore';
@@ -122,6 +123,17 @@ export interface DonationDoc {
     paymentMethod: 'mpesa' | 'tigopesa' | 'card';
 }
 
+export interface CommunityNeedDoc {
+  id?: string;
+  created_at: Timestamp;
+  submitted_by_name: string; // Name of staff who logged it
+  submitted_by_id: string;   // UID of staff who logged it
+  need_description: string;
+  status: 'new' | 'in_progress' | 'resolved';
+  contact_person?: string; // Person who has the need
+  contact_info?: string;  // Phone/email of person with need
+}
+
 
 // --- SITE CONTENT COLLECTIONS ---
 
@@ -238,6 +250,7 @@ export interface FirestoreDocTypes {
   volunteer_partner_signups: VolunteerPartnerSignupDoc;
   user_course_progress: UserCourseProgressDoc;
   user_testimonies: UserTestimonyDoc;
+  community_needs: CommunityNeedDoc;
   
   // Content collections
   leadership: LeadershipDoc;
