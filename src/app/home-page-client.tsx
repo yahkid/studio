@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 
 import { HeroSectionSw } from "@/components/sections/hero-section";
 import { MissionSectionSw } from "@/components/sections/mission-section-sw";
-import { WatchAndGrowSectionSw } from "@/components/sections/watch-and-grow-section-sw";
 import { DecisionPathwaySectionSw } from "@/components/sections/decision-pathway-section-sw";
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
@@ -26,11 +25,11 @@ export function HomePageClient({ children }: { children: React.ReactNode }) {
 
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
         <MissionSectionSw />
-        <WatchAndGrowSectionSw />
-        <DecisionPathwaySectionSw onOpenDecisionModal={() => setIsDecisionModalOpen(true)} />
         
+        {/* The new "Stories & Media" section will be rendered here from page.tsx */}
         {children}
 
+        <DecisionPathwaySectionSw onOpenDecisionModal={() => setIsDecisionModalOpen(true)} />
         <EventsSectionSw onOpenVisitPlanner={() => setIsVisitPlannerOpen(true)} />
         <PartnershipSectionSw />
       </div>
