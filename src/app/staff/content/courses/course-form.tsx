@@ -197,4 +197,3 @@ export function CourseForm({ onFormSubmit, course }: CourseFormProps) {
     </Form>
   );
 }
-
