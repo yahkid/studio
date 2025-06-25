@@ -13,6 +13,8 @@
     <string name="description">Description</string>
     <string name="course_lessons_count">%d Lessons</string>
     <string name="lesson_number">Lesson %d</string>
+    <string name="event_date_time_format">%1$s at %2$s</string>
+    <string name="event_platform_format">Platform: %1$s</string>
 
     <!-- Partner Screen Strings -->
     <string name="partner_title">Kuwa Mshirika wa Maono</string>

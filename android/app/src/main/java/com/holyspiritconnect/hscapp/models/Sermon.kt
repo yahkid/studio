@@ -1,21 +1,27 @@
-
 package com.holyspiritconnect.hscapp.models
 
 import android.os.Parcelable
-import com.google.firebase.firestore.ServerTimestamp
+import com.google.firebase.Timestamp
 import kotlinx.parcelize.Parcelize
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Parcelize
 data class Sermon(
-    @get:JvmField var id: String = "",
-    var title: String = "",
-    var speaker: String = "",
-    var description: String = "",
-    @ServerTimestamp var sermon_date: Date? = null,
-    var youtube_video_id: String = "",
-    var audioDownloadUrl: String? = null,
-    var videoDownloadUrl: String? = null,
-    @get:JvmField var is_featured: Boolean = false,
-    var tags: List<String>? = null
-) : Parcelable
+    val id: String = "",
+    val title: String = "",
+    val speaker: String = "",
+    val description: String = "",
+    val youtube_video_id: String = "",
+    val sermon_date: Timestamp = Timestamp.now(),
+    val is_featured: Boolean = false
+) : Parcelable {
+    fun getFormattedDate(): String {
+        val sdf = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+        return sdf.format(sermon_date.toDate())
+    }
+
+    fun getThumbnailUrl(): String {
+        return "https://img.youtube.com/vi/$youtube_video_id/mqdefault.jpg"
+    }
+}

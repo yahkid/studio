@@ -2,77 +2,76 @@ package com.holyspiritconnect.hscapp.courses
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.holyspiritconnect.hscapp.R
+import com.holyspiritconnect.hscapp.databinding.ActivityCourseDetailBinding
+import com.holyspiritconnect.hscapp.databinding.ItemLessonBinding
 import com.holyspiritconnect.hscapp.models.Course
 import com.holyspiritconnect.hscapp.models.Lesson
 
 class CourseDetailActivity : AppCompatActivity() {
 
-    private lateinit var lessonsAdapter: LessonsAdapter
+    private lateinit var binding: ActivityCourseDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_course_detail)
-
+        binding = ActivityCourseDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val course = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(EXTRA_COURSE, Course::class.java)
+            intent.getParcelableExtra("course", Course::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableExtra(EXTRA_COURSE)
+            intent.getParcelableExtra("course")
         }
 
-        if (course != null) {
-            populateUI(course)
-        } else {
-            Toast.makeText(this, "Error: Course data not found.", Toast.LENGTH_LONG).show()
-            finish()
+        course?.let {
+            supportActionBar?.title = it.title
+            binding.courseDetailTitle.text = it.title
+            binding.courseDetailInstructor.text = it.instructor
+            binding.courseDetailDescription.text = it.description
+            Glide.with(this).load(it.image_url).into(binding.courseDetailImage)
+
+            binding.lessonsRecyclerView.apply {
+                layoutManager = LinearLayoutManager(this@CourseDetailActivity)
+                adapter = LessonsAdapter(it.lessons)
+            }
         }
     }
-
-    private fun populateUI(course: Course) {
-        val imageView: ImageView = findViewById(R.id.courseDetailImage)
-        val titleView: TextView = findViewById(R.id.courseDetailTitle)
-        val instructorView: TextView = findViewById(R.id.courseDetailInstructor)
-        val descriptionView: TextView = findViewById(R.id.courseDetailDescription)
-        val lessonsRecyclerView: RecyclerView = findViewById(R.id.lessonsRecyclerView)
-
-        titleView.text = course.title
-        instructorView.text = course.instructor
-        descriptionView.text = course.description
-
-        Glide.with(this)
-            .load(course.imageUrl)
-            .centerCrop()
-            .into(imageView)
-
-        lessonsAdapter = LessonsAdapter(course.lessons) { lesson ->
-            onLessonClicked(lesson)
-        }
-        lessonsRecyclerView.layoutManager = LinearLayoutManager(this)
-        lessonsRecyclerView.adapter = lessonsAdapter
-    }
-
-    private fun onLessonClicked(lesson: Lesson) {
-        // In a real app, you would open the video player here
-        Toast.makeText(this, "Playing: ${lesson.title}", Toast.LENGTH_SHORT).show()
-    }
-
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        finish()
         return true
     }
+}
 
-    companion object {
-        const val EXTRA_COURSE = "EXTRA_COURSE"
+class LessonsAdapter(private val lessons: List<Lesson>) :
+    RecyclerView.Adapter<LessonsAdapter.LessonViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonViewHolder {
+        val binding = ItemLessonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LessonViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
+        holder.bind(lessons[position], position + 1)
+    }
+
+    override fun getItemCount(): Int = lessons.size
+
+    class LessonViewHolder(private val binding: ItemLessonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(lesson: Lesson, lessonNumber: Int) {
+            binding.lessonNumber.text = itemView.context.getString(R.string.lesson_number, lessonNumber)
+            binding.lessonTitle.text = lesson.title
+            binding.lessonDuration.text = lesson.duration
+        }
     }
 }
