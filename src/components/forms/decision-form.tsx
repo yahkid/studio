@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn, Info, Sparkles, BookOpen, Users as UsersIcon } from 'lucide-react';
+import { User, Mail, MessageSquare, HeartHandshake, HelpCircle, Users2, CheckCircle, Loader2, LogIn, Info, Sparkles, BookOpen, Users as UsersIcon, MessagesSquare } from 'lucide-react';
 import { db } from '@/lib/firebaseClient'; 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; 
@@ -21,6 +21,7 @@ import { personalizeNextSteps, type PersonalizeNextStepsOutput } from '@/ai/flow
 const decisionOptions = [
     { id: "faith", label: "Nilifanya agano la kwanza na Kristo.", Icon: HeartHandshake },
     { id: "rededication", label: "Niliweka upya maisha yangu kwa Kristo.", Icon: CheckCircle },
+    { id: "prayer", label: "Nina ombi la maombi ningependa kushiriki.", Icon: MessagesSquare },
     { id: "baptism", label: "Nataka kujifunza zaidi kuhusu ubatizo.", Icon: HelpCircle },
     { id: "membership", label: "Ninapenda kuwa mwanachama wa kanisa.", Icon: Users2 },
     { id: "other", label: "Nyingine (tafadhali eleza kwenye maoni).", Icon: MessageSquare },

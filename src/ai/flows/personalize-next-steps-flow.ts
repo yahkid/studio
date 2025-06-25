@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to generate personalized next steps for a user based on their faith decision.
@@ -13,7 +14,7 @@ import { z } from 'zod';
 const PersonalizeNextStepsInputSchema = z.object({
   userName: z.string().describe('The name of the user who made the decision.'),
   decisionType: z
-    .enum(['faith', 'rededication', 'baptism', 'membership', 'other'])
+    .enum(['faith', 'rededication', 'baptism', 'membership', 'prayer', 'other'])
     .describe('The type of decision the user made.'),
 });
 export type PersonalizeNextStepsInput = z.infer<
@@ -80,6 +81,10 @@ Your tone should be celebratory, welcoming, and pastoral. Make them feel seen an
 *   **If 'decisionType' is 'membership':** Express excitement about them officially joining the family.
     1.  Suggest they learn more about the church's vision. Use the URL '/about'.
     2.  Mention that the team will reach out with details on the membership process.
+    
+*   **If 'decisionType' is 'prayer':** Be gentle and reassuring. Let them know their prayer is heard by God and the team.
+    1.  Acknowledge their courage in sharing. Assure them the pastoral team will be praying over their request. Use URL '/#'.
+    2.  Suggest the course on prayer for encouragement. Use URL '/kozi/maisha-ya-maombi'.
 
 *   **If 'decisionType' is 'other':** Acknowledge their response and let them know the pastoral team will review their comments and reach out personally. Provide a general encouragement link. Use the URL '/#tazama-na-ukue'.
 

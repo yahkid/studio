@@ -101,6 +101,11 @@ export default function PastoralCarePage() {
     }
   };
 
+  const nonPrayerDecisions = decisions.filter(d => d.decision_type !== 'prayer');
+  const newDecisions = nonPrayerDecisions.filter(d => d.status === 'new');
+  const prayerRequests = decisions.filter(d => d.decision_type === 'prayer');
+  const newPrayerRequestsCount = prayerRequests.filter(p => p.status === 'new').length;
+
 
   if (authLoading || isLoadingData) {
     return (
@@ -127,11 +132,11 @@ export default function PastoralCarePage() {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="decisions" className="font-body">
              <HandHeart className="mr-2 h-4 w-4" />
-             Maamuzi Mapya ({decisions.filter(d => d.status === 'new').length})
+             Maamuzi Mapya ({newDecisions.length})
           </TabsTrigger>
           <TabsTrigger value="prayer_requests" className="font-body">
             <MessagesSquare className="mr-2 h-4 w-4" />
-            Maombi ya Maombi
+            Maombi ya Maombi ({newPrayerRequestsCount > 0 ? `${newPrayerRequestsCount} Mpya` : prayerRequests.length})
           </TabsTrigger>
           <TabsTrigger value="all_contacts" className="font-body">
             <Users className="mr-2 h-4 w-4" />
@@ -140,7 +145,7 @@ export default function PastoralCarePage() {
         </TabsList>
 
         <TabsContent value="decisions" className="mt-6">
-          {decisions.filter(d => d.status === 'new').length === 0 ? (
+          {newDecisions.length === 0 ? (
             <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Zote ziko sawa!</AlertTitle>
@@ -150,7 +155,7 @@ export default function PastoralCarePage() {
             </Alert>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {decisions.filter(d => d.status === 'new').map((decision) => (
+              {newDecisions.map((decision) => (
                 <Card key={decision.id} className="flex flex-col cursor-pointer hover:border-primary transition-colors" onClick={() => handleCardClick(decision)}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -179,15 +184,42 @@ export default function PastoralCarePage() {
         </TabsContent>
 
         <TabsContent value="prayer_requests" className="mt-6">
-           <Card>
-            <CardHeader>
-              <CardTitle>Kituo cha Maombi</CardTitle>
-              <CardDescription>Kipengele hiki kinajengwa. Hivi karibuni, maombi ya maombi kutoka kwenye tovuti yataonekana hapa kwa wakati halisi kwa ajili ya ufuatiliaji.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Endelea kufuatilia kwa masasisho!</p>
-            </CardContent>
-          </Card>
+           {prayerRequests.length === 0 ? (
+            <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Hakuna Maombi ya Maombi</AlertTitle>
+                <AlertDescription>
+                    Wakati mtu anapowasilisha ombi la maombi, litaonekana hapa.
+                </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {prayerRequests.map((decision) => (
+                <Card key={decision.id} className="flex flex-col cursor-pointer hover:border-primary transition-colors" onClick={() => handleCardClick(decision)}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <CardTitle className="font-headline text-xl">{decision.name}</CardTitle>
+                            <CardDescription>{decision.email}</CardDescription>
+                        </div>
+                        <Badge variant={getStatusBadgeVariant(decision.status)} className="capitalize">{getStatusLabel(decision.status)}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-grow space-y-4">
+                     <div>
+                      <p className="text-sm font-semibold text-foreground mb-1">Ombi:</p>
+                      <p className="font-body text-muted-foreground line-clamp-3">{decision.comments || "Hakuna maelezo yaliyotolewa."}</p>
+                    </div>
+                  </CardContent>
+                   <CardFooter>
+                      <p className="text-xs text-muted-foreground">
+                        Imepokelewa {formatDistanceToNow(decision.created_at.toDate(), { addSuffix: true, locale: sw })}
+                      </p>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="all_contacts" className="mt-6">
@@ -205,8 +237,8 @@ export default function PastoralCarePage() {
                   </CardHeader>
                   <CardContent className="flex-grow space-y-4">
                      <div>
-                      <p className="text-sm font-semibold text-foreground mb-1">Uamuzi Uliofanywa:</p>
-                      <p className="font-body text-muted-foreground">{decision.decision_type}</p>
+                      <p className="text-sm font-semibold text-foreground mb-1">Aina:</p>
+                      <p className="font-body text-muted-foreground capitalize">{decision.decision_type}</p>
                     </div>
                   </CardContent>
                    <CardFooter>

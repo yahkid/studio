@@ -72,17 +72,19 @@ export function DecisionDetail({ decision }: { decision: EnrichedDecision }) {
         }
     };
 
+    const isPrayerRequest = decision.decision_type === 'prayer';
+
     return (
         <div className="h-full flex flex-col pt-4">
             <div className="px-4 space-y-4 mb-4">
                 <div>
-                    <h4 className="text-sm font-semibold text-muted-foreground">Uamuzi</h4>
-                    <p className="font-medium">{decision.decision_type}</p>
+                    <h4 className="text-sm font-semibold text-muted-foreground">{isPrayerRequest ? 'Aina ya Ombi' : 'Aina ya Uamuzi'}</h4>
+                    <p className="font-medium capitalize">{isPrayerRequest ? 'Ombi la Maombi' : decision.decision_type}</p>
                 </div>
-                 {decision.comments && (
+                 {(decision.comments || isPrayerRequest) && (
                     <div>
-                        <h4 className="text-sm font-semibold text-muted-foreground">Maoni ya Awali</h4>
-                        <blockquote className="mt-1 text-sm italic border-l-2 pl-3">"{decision.comments}"</blockquote>
+                        <h4 className="text-sm font-semibold text-muted-foreground">{isPrayerRequest ? 'Maelezo ya Ombi' : 'Maoni ya Awali'}</h4>
+                        <blockquote className="mt-1 text-sm italic border-l-2 pl-3">"{decision.comments || 'Hakuna maoni yaliyotolewa.'}"</blockquote>
                     </div>
                 )}
                  <div>
