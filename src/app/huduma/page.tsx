@@ -41,6 +41,12 @@ const departments: Department[] = [
     roles: ['Utawala wa Ofisi', 'Uingizaji Data', 'Uratibu wa Matukio', 'Mawasiliano'],
   },
   {
+    name: 'Rasilimali Watu (Human Resources)',
+    icon: Users,
+    description: 'Inasimamia ustawi wa wafanyakazi na wanaojitolea, ikiwa ni pamoja na kuajiri, mafunzo, na kukuza utamaduni mzuri wa huduma.',
+    roles: ['Uajiri wa Wanaojitolea', 'Mafunzo na Maendeleo', 'Mahusiano ya Wafanyakazi', 'Utunzaji wa Rekodi'],
+  },
+  {
     name: 'Uzalishaji (Production)',
     icon: Clapperboard,
     description: 'Timu ya ubunifu inayosimamia sauti, video, na picha ili kuhakikisha ujumbe wetu unafika kwa ubora wa hali ya juu.',
@@ -59,10 +65,10 @@ const departments: Department[] = [
     roles: ['Ufikiaji wa Jamii', 'Timu za Uinjilisti', 'Timu ya Ufuatiliaji', 'Upangaji wa Matukio ya Ufikiaji'],
   },
   {
-    name: 'Huduma za Kibinadamu',
+    name: 'Hospitality (Matendo ya Rehema)',
     icon: HeartHandshake,
-    description: 'Inaonyesha upendo wa Kristo kwa vitendo kwa kusaidia wenye mahitaji katika jamii yetu kupitia programu mbalimbali.',
-    roles: ['Benki ya Chakula', 'Ukusanyaji wa Nguo', 'Msaada kwa Jamii', 'Kutembelea Wagonjwa/Wafungwa'],
+    description: 'Inadhihirisha upendo wa Kristo kwa vitendo kwa kuwakaribisha wageni na kusaidia wenye mahitaji katika jamii yetu, na kuunda mazingira ya joto kwa wote.',
+    roles: ['Timu ya Ukaribishaji', 'Maandalizi ya Matukio', 'Msaada kwa Wageni Wapya', 'Huduma ya Vinywaji'],
   },
   {
     name: 'Mlima wa Maombi',

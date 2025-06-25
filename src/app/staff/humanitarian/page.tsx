@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Globe, Loader2, AlertCircle } from 'lucide-react';
+import { HeartHandshake, Loader2, AlertCircle } from 'lucide-react';
 import { db } from '@/lib/firebaseClient';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -19,7 +19,7 @@ interface EnrichedSignup extends VolunteerPartnerSignupDoc {
   id: string;
 }
 
-export default function HumanitarianPage() {
+export default function HospitalityPage() {
   const [volunteers, setVolunteers] = React.useState<EnrichedSignup[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const { toast } = useToast();
@@ -34,10 +34,14 @@ export default function HumanitarianPage() {
             id: doc.id,
             ...doc.data()
         })) as EnrichedSignup[];
-        setVolunteers(fetchedVolunteers);
+        setVolunteers(fetchedVolunteers.filter(v => 
+            v.department?.toLowerCase().includes("hospitality") || 
+            v.department?.toLowerCase().includes("ukarimu") ||
+            v.department?.toLowerCase().includes("matendo ya rehema")
+        ));
       } catch (error: any) {
         console.error("Kosa la kupata data ya wanaojitolea:", error);
-        toast({ title: "Kosa", description: "Imeshindwa kupata data ya wanaojitolea.", variant: "destructive" });
+        toast({ title: "Kosa", description: "Imeshindwa kupata data ya wanaojitolea kwa Ukarimu.", variant: "destructive" });
       } finally {
         setIsLoading(false);
       }
@@ -50,23 +54,23 @@ export default function HumanitarianPage() {
       <div className="mb-8">
         <Link href="/staff" className="text-sm text-primary hover:underline">&larr; Rudi kwenye Dashibodi ya Wafanyakazi</Link>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-3 mt-2">
-          <Globe className="h-8 w-8 text-primary" />
-          Huduma za Kijamii na Ufikiaji
+          <HeartHandshake className="h-8 w-8 text-primary" />
+          Ukarimu (Hospitality)
         </h1>
         <p className="text-muted-foreground font-body">
-          Simamia miradi ya kijamii na ratibu wanaojitolea.
+          Simamia wanaojitolea katika idara ya ukarimu.
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Waliojisajili Kujitolea</CardTitle>
-          <CardDescription>Hapa chini kuna orodha ya watu wote walioonyesha nia ya kujitolea.</CardDescription>
+          <CardTitle>Wanaojitolea wa Idara ya Ukarimu</CardTitle>
+          <CardDescription>Hapa chini ni orodha ya watu walioonyesha nia ya kutumika katika idara ya ukarimu.</CardDescription>
         </CardHeader>
         <CardContent>
            {isLoading ? (
                 <div className="flex justify-center items-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
             ) : volunteers.length === 0 ? (
-                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Wanaojitolea Bado</AlertTitle><AlertDescription>Hakuna aliyejisajili kujitolea bado.</AlertDescription></Alert>
+                <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Wanaojitolea Waliopatikana</AlertTitle><AlertDescription>Hakuna aliyejisajili mahususi kwa idara ya Ukarimu bado.</AlertDescription></Alert>
             ) : (
                 <div className="border rounded-md">
                     <Table>
@@ -75,7 +79,7 @@ export default function HumanitarianPage() {
                             <TableHead>Jina</TableHead>
                             <TableHead>Barua Pepe</TableHead>
                             <TableHead>Tarehe ya Kujisajili</TableHead>
-                            <TableHead>Idara/Vipaji</TableHead>
+                            <TableHead>Majukumu/Vipaji</TableHead>
                         </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -85,7 +89,6 @@ export default function HumanitarianPage() {
                                 <TableCell><a href={`mailto:${v.email}`} className="text-primary hover:underline">{v.email}</a></TableCell>
                                 <TableCell>{format(v.created_at.toDate(), 'PPP', { locale: sw })}</TableCell>
                                 <TableCell>
-                                    <p className="font-semibold">{v.department || 'Nia ya Jumla'}</p>
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {v.selected_roles?.map(role => <Badge key={role} variant="outline">{role}</Badge>)}
                                     </div>
