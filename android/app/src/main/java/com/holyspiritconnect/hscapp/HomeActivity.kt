@@ -1,4 +1,3 @@
-
 package com.holyspiritconnect.hscapp
 
 import android.os.Bundle
@@ -6,40 +5,57 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.holyspiritconnect.hscapp.courses.CoursesFragment
+import com.holyspiritconnect.hscapp.databinding.ActivityHomeBinding
 import com.holyspiritconnect.hscapp.events.EventsFragment
 import com.holyspiritconnect.hscapp.partner.PartnerFragment
 import com.holyspiritconnect.hscapp.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityHomeBinding
+
+    private val onNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    replaceFragment(HomeFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.nav_sermons -> {
+                    replaceFragment(SermonsFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.nav_courses -> {
+                    replaceFragment(CoursesFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.nav_events -> {
+                    replaceFragment(EventsFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.nav_partner -> {
+                    replaceFragment(PartnerFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        // Set the default fragment
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment())
-                .commit()
+            binding.bottomNavigation.selectedItemId = R.id.nav_home
         }
+    }
 
-        bottomNavigation.setOnItemSelectedListener { item ->
-            var selectedFragment: Fragment? = null
-            when (item.itemId) {
-                R.id.nav_home -> selectedFragment = HomeFragment()
-                R.id.nav_sermons -> selectedFragment = SermonsFragment()
-                R.id.nav_courses -> selectedFragment = CoursesFragment()
-                R.id.nav_events -> selectedFragment = EventsFragment()
-                R.id.nav_partner -> selectedFragment = PartnerFragment()
-            }
-            if (selectedFragment != null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment)
-                    .commit()
-            }
-            true
-        }
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }
