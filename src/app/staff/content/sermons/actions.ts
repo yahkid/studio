@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -26,7 +27,7 @@ export async function upsertSermon(formData: FormData) {
         speaker: formData.get('speaker'),
         youtube_video_id: formData.get('youtube_video_id'),
         sermon_date: formData.get('sermon_date'),
-        is_featured: formData.get('is_featured'),
+        is_featured: formData.get('is_featured') === 'true',
         tags: formData.get('tags'),
         audioDownloadUrl: formData.get('audioDownloadUrl'),
         videoDownloadUrl: formData.get('videoDownloadUrl'),
@@ -52,7 +53,8 @@ export async function upsertSermon(formData: FormData) {
         }
 
         revalidatePath('/'); // For watch and grow section
-        revalidatePath('/sermons'); // For future sermons page
+        revalidatePath('/sermons');
+        revalidatePath(`/sermons/${sermonId}`);
         revalidatePath('/staff/content/sermons');
         return { success: true };
 

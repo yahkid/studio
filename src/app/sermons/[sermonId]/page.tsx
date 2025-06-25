@@ -1,13 +1,15 @@
+
 import { db } from '@/lib/firebaseClient';
 import { doc, getDoc, type Timestamp } from 'firebase/firestore';
 import type { SermonDoc } from '@/types/firestore';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlayCircle, User, Calendar, Headphones, Tag } from 'lucide-react';
+import { PlayCircle, User, Calendar, Headphones, Tag, Play } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 type Props = {
   params: { sermonId: string };
@@ -121,7 +123,7 @@ export default async function SermonPage({ params }: Props) {
                   {sermon.videoDownloadUrl && (
                     <Button asChild variant="link" className="p-0 h-auto justify-start">
                       <a href={sermon.videoDownloadUrl} download className="flex items-center gap-2 text-primary hover:underline font-body">
-                        <PlayCircle />
+                        <Play />
                         <span>Pakua Video (MP4)</span>
                       </a>
                     </Button>
