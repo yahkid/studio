@@ -1,7 +1,5 @@
-
 package com.holyspiritconnect.hscapp.courses
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,41 +10,48 @@ import com.bumptech.glide.Glide
 import com.holyspiritconnect.hscapp.R
 import com.holyspiritconnect.hscapp.models.Course
 
-class CourseAdapter(private var courses: List<Course>) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
-
-    class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val thumbnail: ImageView = itemView.findViewById(R.id.courseThumbnail)
-        val title: TextView = itemView.findViewById(R.id.courseTitle)
-        val instructor: TextView = itemView.findViewById(R.id.courseInstructor)
-        val lessonCount: TextView = itemView.findViewById(R.id.courseLessonCount)
-    }
+class CourseAdapter(
+    private var courses: List<Course>,
+    private val onItemClick: (Course) -> Unit
+) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_course, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_course, parent, false)
         return CourseViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = courses[position]
-        holder.title.text = course.title
-        holder.instructor.text = course.instructor
-        holder.lessonCount.text = "${course.lessons.size} Lessons"
-        Glide.with(holder.itemView.context).load(course.image_url).into(holder.thumbnail)
-        
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, CourseDetailActivity::class.java).apply {
-                putExtra(CourseDetailActivity.EXTRA_COURSE, course)
-            }
-            context.startActivity(intent)
-        }
+        holder.bind(course)
     }
 
-    override fun getItemCount() = courses.size
+    override fun getItemCount(): Int = courses.size
 
     fun updateData(newCourses: List<Course>) {
         courses = newCourses
         notifyDataSetChanged()
+    }
+
+    inner class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val thumbnail: ImageView = itemView.findViewById(R.id.courseThumbnail)
+        private val title: TextView = itemView.findViewById(R.id.courseTitle)
+        private val instructor: TextView = itemView.findViewById(R.id.courseInstructor)
+        private val lessonCount: TextView = itemView.findViewById(R.id.courseLessonCount)
+
+        fun bind(course: Course) {
+            title.text = course.title
+            instructor.text = course.instructor
+            lessonCount.text = itemView.context.resources.getString(R.string.course_lessons_count, course.lessons.size)
+
+            Glide.with(itemView.context)
+                .load(course.imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.ic_courses_24)
+                .into(thumbnail)
+
+            itemView.setOnClickListener {
+                onItemClick(course)
+            }
+        }
     }
 }
