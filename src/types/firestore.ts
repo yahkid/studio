@@ -61,16 +61,6 @@ export interface WeeklyUpdateSignupDoc {
   source?: string; // e.g., 'watch_grow_section', 'matukio_page'
 }
 
-export interface FinancialPartnerSignupDoc {
-  id?: string;
-  created_at: Timestamp;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string | null;
-  country: string | null;
-}
-
 export interface PrayerPartnerSignupDoc {
   id?: string;
   created_at: Timestamp;
@@ -117,6 +107,16 @@ export interface UserCourseProgressDoc {
   completed_lessons: number[];
   last_accessed: Timestamp;
   progress_percentage: number;
+}
+
+export interface DonationDoc {
+    id?: string;
+    created_at: Timestamp;
+    amount: number;
+    method: 'mpesa' | 'card' | 'bank' | 'cash';
+    status: 'initiated' | 'completed' | 'failed';
+    userId?: string; // Firebase Auth user.uid
+    userName?: string;
 }
 
 
@@ -230,7 +230,7 @@ export interface FirestoreDocTypes {
   visit_requests: VisitRequestDoc;
   exit_intent_offers: ExitIntentOfferDoc;
   weekly_updates_signups: WeeklyUpdateSignupDoc;
-  financial_partner_signups: FinancialPartnerSignupDoc;
+  donations: DonationDoc;
   prayer_partner_signups: PrayerPartnerSignupDoc;
   volunteer_partner_signups: VolunteerPartnerSignupDoc;
   user_course_progress: UserCourseProgressDoc;

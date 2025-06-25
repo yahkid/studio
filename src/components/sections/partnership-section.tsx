@@ -4,18 +4,18 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { PaymentOptionsModal } from '@/components/modals/payment-options-modal';
 import { PrayerPartnerModal } from '@/components/modals/prayer-partner-modal';
 import { VolunteerPartnerModal } from '@/components/modals/volunteer-partner-modal';
 import { HandCoins, Sparkles, HandHeart, Users, TrendingUp, Heart, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface PartnershipOption {
   id: string;
   title: string;
   icon: React.ElementType;
   description: string;
-  action: () => void;
+  action: (() => void) | string; // Can be a function or a URL string
   buttonText: string;
   buttonVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
 }
@@ -28,7 +28,6 @@ interface ImpactStat {
 }
 
 export function PartnershipSectionSw() {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false);
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
 
@@ -38,7 +37,7 @@ export function PartnershipSectionSw() {
       title: 'Mshirika wa Kifedha', 
       icon: HandCoins, 
       description: 'Saidia dhamira yetu kwa mchango wako wa kifedha ili kupanua athari zetu.', 
-      action: () => setIsPaymentModalOpen(true), 
+      action: '/partner', 
       buttonText: 'Changia Sasa',
       buttonVariant: 'default',
     },
@@ -105,14 +104,20 @@ export function PartnershipSectionSw() {
                     <p className="font-body text-muted-foreground">{option.description}</p>
                   </CardContent>
                   <CardFooter className="justify-center">
-                    <Button
-                      onClick={option.action}
-                      variant={option.buttonVariant || 'default'}
-                      className="w-full sm:w-auto font-headline"
-                      suppressHydrationWarning={true}
-                    >
-                      {option.buttonText}
-                    </Button>
+                    {typeof option.action === 'string' ? (
+                       <Button asChild variant={option.buttonVariant || 'default'} className="w-full sm:w-auto font-headline">
+                         <Link href={option.action}>{option.buttonText}</Link>
+                       </Button>
+                    ) : (
+                       <Button
+                        onClick={option.action}
+                        variant={option.buttonVariant || 'default'}
+                        className="w-full sm:w-auto font-headline"
+                        suppressHydrationWarning={true}
+                      >
+                        {option.buttonText}
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               ))}
@@ -139,7 +144,6 @@ export function PartnershipSectionSw() {
           </div>
         </div>
       </motion.section>
-      <PaymentOptionsModal open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen} />
       <PrayerPartnerModal open={isPrayerModalOpen} onOpenChange={setIsPrayerModalOpen} />
       <VolunteerPartnerModal open={isVolunteerModalOpen} onOpenChange={setIsVolunteerModalOpen} />
     </>

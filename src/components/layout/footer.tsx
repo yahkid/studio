@@ -140,7 +140,7 @@ export function Footer() {
                 <li><Link href="/podcast" className="hover:text-white transition-colors flex items-center"><MicVocal className="mr-2 h-4 w-4 text-primary"/>Podikasti</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors flex items-center"><FileText className="mr-2 h-4 w-4 text-primary"/>Blog</Link></li>
                 <li><Link href="/matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
-                <li><Link href="/#ushirika" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
+                <li><Link href="/partner" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
                 <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>
               </ul>
             </div>

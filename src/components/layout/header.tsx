@@ -6,7 +6,7 @@ import Image from "next/image"; // Next.js Image for logo
 import { 
   LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MicVocal, ShieldCheck,
   LayoutDashboard, HandHeart, Newspaper, Globe, UsersRound, Baby, Shield, 
-  DollarSign, BarChart3, CalendarCheck 
+  DollarSign, BarChart3, CalendarCheck, Handshake
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
@@ -112,8 +112,8 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
-          <Button asChild variant="default" size="sm" className="font-body hidden sm:inline-flex" suppressHydrationWarning={true}>
-            <Link href="/new"><CalendarCheck className="mr-2 h-4 w-4" /> Panga Ujio</Link>
+          <Button asChild variant="outline" size="sm" className="font-body hidden sm:inline-flex" suppressHydrationWarning={true}>
+            <Link href="/partner"><Handshake className="mr-2 h-4 w-4" /> Partner With Us</Link>
           </Button>
           {isSigningOut || authLoading ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
