@@ -23,4 +23,12 @@
     <string name="other_ways_to_give">Njia Nyingine za Kutoa</string>
     <string name="other_ways_description">Unaweza pia kutoa kupitia M-Pesa, Tigo Pesa, au uhamisho wa benki. Tafadhali wasiliana na ofisi ya kanisa kwa maelezo zaidi.</string>
 
+    <!-- Sign Up Screen Strings -->
+    <string name="create_account">Create Account</string>
+    <string name="start_your_journey">Start your journey with us.</string>
+    <string name="full_name">Full Name</string>
+    <string name="already_have_account">"Already have an account? "</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+    <string name="logout">Logout</string>
+
 </resources>
