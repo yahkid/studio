@@ -6,62 +6,44 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.holyspiritconnect.hscapp.courses.CoursesFragment
+import com.holyspiritconnect.hscapp.databinding.ActivityHomeBinding
 import com.holyspiritconnect.hscapp.events.EventsFragment
+import com.holyspiritconnect.hscapp.leadership.LeadershipActivity
 import com.holyspiritconnect.hscapp.partner.PartnerFragment
 import com.holyspiritconnect.hscapp.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_home -> {
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                R.id.nav_sermons -> {
-                    replaceFragment(SermonsFragment())
-                    true
-                }
-                R.id.nav_courses -> {
-                    replaceFragment(CoursesFragment())
-                    true
-                }
-                R.id.nav_events -> {
-                    replaceFragment(EventsFragment())
-                    true
-                }
-                R.id.nav_partner -> {
-                    replaceFragment(PartnerFragment())
-                    true
-                }
-                else -> false
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            var selectedFragment: Fragment? = null
+            when (item.itemId) {
+                R.id.nav_home -> selectedFragment = HomeFragment()
+                R.id.nav_sermons -> selectedFragment = SermonsFragment()
+                R.id.nav_courses -> selectedFragment = CoursesFragment()
+                R.id.nav_events -> selectedFragment = EventsFragment()
+                R.id.nav_partner -> selectedFragment = PartnerFragment()
             }
+            if (selectedFragment != null) {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
+            }
+            true
         }
 
         // Set default fragment
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
-            bottomNavigationView.selectedItemId = R.id.nav_home
+            binding.bottomNavigation.selectedItemId = R.id.nav_home
         }
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -70,20 +52,20 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
             R.id.action_logout -> {
-                signOut()
-                true
+                auth.signOut()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                return true
             }
-            else -> super.onOptionsItemSelected(item)
+            R.id.action_leadership -> {
+                val intent = Intent(this, LeadershipActivity::class.java)
+                startActivity(intent)
+                return true
+            }
         }
-    }
-
-    private fun signOut() {
-        auth.signOut()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+        return super.onOptionsItemSelected(item)
     }
 }

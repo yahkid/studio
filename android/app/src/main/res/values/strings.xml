@@ -1,4 +1,3 @@
-
 <resources>
     <string name="app_name">HSCM Connect</string>
     <string name="welcome_back">Welcome Back!</string>
@@ -31,5 +30,6 @@
     <string name="already_have_account">"Already have an account? "</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="logout">Logout</string>
+    <string name="leadership">Leadership</string>
 
 </resources>
