@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -62,7 +63,7 @@ export function ThemeOfTheYearSection() {
       <div className="relative z-20 container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="font-headline text-5xl md:text-6xl font-bold uppercase tracking-wider mb-8">
-            2025 ni MWAKA WA <span className="text-secondary">KUMILIKI</span>
+            2025: MWAKA WAKO WA <span className="text-secondary">KUMILIKI</span>
           </h2>
           
           <div className="relative max-w-2xl mx-auto my-12">
@@ -74,7 +75,7 @@ export function ThemeOfTheYearSection() {
               </p>
             </blockquote>
             <cite className="block text-right not-italic mt-4 text-base text-slate-300 font-body">
-              Kumbukumbu la Torati 33:23
+              — Kumbukumbu la Torati 33:23
             </cite>
             {mounted && (
               <Button
@@ -91,28 +92,19 @@ export function ThemeOfTheYearSection() {
 
           <div className="font-body text-slate-200 space-y-6 max-w-3xl mx-auto text-lg leading-loose">
             <p>
-              Huu ni mstari ambao utatembea nao mwaka mzima ukikiri kumiliki katika kila eneo la maisha yako.
+              Hii sio kauli mbiu tu; hii ni <strong className="text-white">ahadi ya kinabii</strong> kwa ajili yako mwaka huu. Ni tamko kutoka mbinguni kwamba kila eneo la maisha yako limeandaliwa kwa ajili ya ushindi na upanuzi.
             </p>
+            
             <div className="bg-white/5 border border-white/10 rounded-lg p-6 my-8">
-              <p className="font-semibold text-white mb-2">Utakiri namna hii:</p>
-              <p className="italic">
-                "Ee Naftali (<span className="font-bold text-secondary">taja jina lako hapa</span>), uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini."
+              <p className="font-semibold text-white mb-2">Fanya Hili Neno Kuwa Lako:</p>
+              <p className="italic text-slate-200">
+                "Ee Naftali (<span className="font-bold text-secondary">taja jina lako</span>), niliyeshiba fadhili, niliyejawa na baraka za Bwana; Ninamiliki magharibi na kusini."
               </p>
             </div>
+            
+            <p className="font-semibold text-white">Tembea Katika Ahadi Hii:</p>
             <p>
-              Kiri mstari huu asubuhi, kiri mchana na usiku pia. Tembea na
-              mstari huu kwa imani, ukiri tena na tena. Na hakika utamiliki
-              magharibi na utamiliki na kusini pia. Huu ni mwaka wa kumiliki
-              kwako.
-            </p>
-            <div className="border-t border-white/10 pt-6">
-                <p className="font-semibold text-white mb-2">Wajibu wako mwaka huu ni:</p>
-                <p>
-                    Kukiri ahadi za Bwana alizokuahidi, kuziamini ahadi hizo, kutenda sawasawa na neno lake, kumruhusu Roho Mtakatifu atawale maisha yako na kuishi maisha ya <span className="font-bold text-secondary uppercase tracking-widest">MAOMBI</span>.
-                </p>
-            </div>
-            <p className="text-xl font-bold text-white mt-8">
-              Mpendwa, tembea katika neema ya kumiliki katika kila eneo la maisha yako katika jina la Yesu Kristo.
+              Fanya tamko hili liwe pumzi ya maombi yako. Anza na maliza siku yako nalo. Kiri kwa ujasiri, amini kwa undani, na tazama Mungu akifungua milango ambayo hakuna awezaye kuifunga. Huu si mwaka mwingine tu—<strong className="text-secondary">huu ni mwaka wako wa kumiliki</strong>. Katika Jina la Yesu!
             </p>
           </div>
         </div>
