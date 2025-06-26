@@ -1,4 +1,3 @@
-
 pluginManagement {
     repositories {
         google()
@@ -13,6 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
-rootProject.name = "HSCMConnect"
+rootProject.name = "HSCM-Connect"
 include(":app")

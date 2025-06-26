@@ -3,15 +3,15 @@
 #
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
+#
+# You can find general ProGuard rules for popular libraries at
+#   https://github.com/firebase/firebase-android-sdk/blob/master/firebase-app/proguard.txt
 
-# If you are using Google Play Services, you may need to add the following
-# lines to your ProGuard configuration file.
--keep class com.google.android.gms.common.api.internal.IStatusCallback { *; }
-
-# If you're using Glide, you may want to add the following to prevent issues with obfuscation:
--keep public class * implements com.bumptech.glide.module.GlideModule
+# Add any project specific keep rules here:
+#
+# If you use reflection to access classes in shrinking code, you have to
+# specify that code here.
+#-keep class com.google.vending.licensing.ILicensingService
+-keep class com.bumptech.glide.GeneratedAppGlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$ImageType {
-  **[] $VALUES;
-  public *;
-}
+-keep public class * extends com.bumptech.glide.module.LibraryGlideModule
