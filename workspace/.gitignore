@@ -1,0 +1,15 @@
+# Logs
+*.log
+firebase-debug.log
+firestore-debug.log
+
+# Environment variables
+.env*
+!.env.example
+
+# Build outputs
+.next/
+out/
+
+# Dependency directories
+node_modules/
