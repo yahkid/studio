@@ -1,3 +1,4 @@
+
 {
   "firestore": {
     "rules": "firestore.rules",
@@ -5,6 +6,12 @@
   },
   "functions": {
     "source": "functions"
+  },
+  "hosting": {
+    "source": ".",
+    "appHosting": {
+      "id": "hscm-connect-web"
+    }
   },
   "emulators": {
     "auth": {
