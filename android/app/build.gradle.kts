@@ -1,16 +1,16 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
-    id("kotlin-parcelize") // For @Parcelize annotation
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
+    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.hscmconnect.app"
+    namespace = "com.holyspiritconnect.hscapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.hscmconnect.app"
+        applicationId = "com.holyspiritconnect.hscapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -41,14 +41,10 @@ android {
 }
 
 dependencies {
-    // Standard Android libraries
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-    implementation(libs.fragment.ktx)
-    implementation(libs.recyclerview)
-    implementation(libs.lifecycle.viewmodel.ktx)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -56,8 +52,16 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
-    // Image Loading
+    // Navigation and Fragments
+    implementation(libs.fragment.ktx)
+
+    // UI
+    implementation(libs.recyclerview)
     implementation(libs.glide)
+
+    // ViewModel
+    implementation(libs.lifecycle.viewmodel.ktx)
+
 
     // Testing
     testImplementation(libs.junit)
