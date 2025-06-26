@@ -1,8 +1,5 @@
-
 package com.holyspiritconnect.hscapp.courses
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,15 +25,9 @@ class LessonAdapter(private val lessons: List<Lesson>) :
 
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         val lesson = lessons[position]
-        holder.lessonNumber.text = "Lesson ${position + 1}"
+        holder.lessonNumber.text = holder.itemView.context.getString(R.string.lesson_number, position + 1)
         holder.lessonTitle.text = lesson.title
         holder.lessonDuration.text = lesson.duration
-
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${lesson.videoId}"))
-            context.startActivity(intent)
-        }
     }
 
     override fun getItemCount() = lessons.size

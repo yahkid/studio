@@ -1,5 +1,6 @@
 package com.holyspiritconnect.hscapp.courses
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,41 +18,45 @@ class CoursesViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun fetchCourses() {
+    init {
+        fetchCourses()
+    }
+
+    private fun fetchCourses() {
         _isLoading.value = true
         db.collection("courses")
             .whereEqualTo("is_published", true)
             .orderBy("order", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener { documents ->
-                val coursesList = documents.map { document ->
-                    val lessonMaps = document.get("lessons") as? List<Map<String, Any>> ?: emptyList()
-                    val lessons = lessonMaps.map { map ->
+                val courseList = documents.map { document ->
+                    val lessonsList = (document.get("lessons") as? List<Map<String, Any>>)?.map { lessonMap ->
                         Lesson(
-                            id = map["id"] as? Long ?: 0,
-                            title = map["title"] as? String ?: "",
-                            duration = map["duration"] as? String ?: "",
-                            videoId = map["videoId"] as? String ?: "",
-                            description = map["description"] as? String,
-                            pdfDownloadUrl = map["pdfDownloadUrl"] as? String
+                            id = (lessonMap["id"] as? Long)?.toInt() ?: 0,
+                            title = lessonMap["title"] as? String ?: "",
+                            videoId = lessonMap["videoId"] as? String ?: "",
+                            duration = lessonMap["duration"] as? String ?: "",
+                            description = lessonMap["description"] as? String,
+                            pdfDownloadUrl = lessonMap["pdfDownloadUrl"] as? String
                         )
-                    }
+                    } ?: emptyList()
+
                     Course(
                         id = document.id,
                         title = document.getString("title") ?: "",
                         description = document.getString("description") ?: "",
                         instructor = document.getString("instructor") ?: "",
                         imageUrl = document.getString("image_url") ?: "",
-                        order = (document.getLong("order") ?: 0).toInt(),
-                        lessons = lessons
+                        lessons = lessonsList,
+                        order = (document.getLong("order")?.toInt() ?: 0)
                     )
                 }
-                _courses.value = coursesList
+                _courses.value = courseList
                 _isLoading.value = false
             }
             .addOnFailureListener { exception ->
+                Log.w("CoursesViewModel", "Error getting documents: ", exception)
                 _isLoading.value = false
-                // Handle the error, e.g., show a toast
             }
     }
 }
