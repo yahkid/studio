@@ -1,70 +1,112 @@
+
 "use client";
 
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BookMarked } from 'lucide-react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Copy, Check } from 'lucide-react';
+import { useState } from 'react';
 
 export function ThemeOfTheYearSection() {
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  const verseText = `"Ee Naftali, uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini." - Kumbukumbu la Torati 33:23`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(verseText).then(() => {
+      toast({
+        title: "Copied to Clipboard!",
+        description: "The theme verse has been copied.",
+      });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset icon after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+      toast({
+        title: "Copy Failed",
+        description: "Could not copy the verse. Please try again.",
+        variant: "destructive",
+      });
+    });
+  };
+
   return (
     <motion.section
       id="neno-la-mwaka"
-      className="w-full py-16 md:py-24"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className="relative w-full py-24 md:py-32 text-white overflow-hidden"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 1 }}
     >
-      <div className="container mx-auto px-4 max-w-4xl">
-        <Card className="bg-muted/30 dark:bg-muted/10 border-primary/20">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-                <BookMarked className="h-16 w-16 text-primary" />
-            </div>
-            <CardTitle className="font-headline text-4xl md:text-5xl text-foreground">
-              2025 ni MWAKA WA KUMILIKI
-            </CardTitle>
-            <CardDescription className="font-body text-lg md:text-xl text-muted-foreground pt-2">
-              Mstari wa Mwaka 2025
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="font-body text-muted-foreground space-y-6 text-center leading-relaxed">
-            <blockquote className="border-l-4 border-primary pl-6 py-2 text-left bg-background/50 my-6">
-              <p className="text-lg md:text-xl italic">
-                "Ee Naftali, uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini."
-              </p>
-              <cite className="block text-right not-italic mt-2 text-foreground font-semibold">
-                Kumbukumbu la Torati 33:23
-              </cite>
-            </blockquote>
+      {/* Background Image */}
+      <Image
+        src="https://placehold.co/1920x1080.png"
+        alt="Celestial background with golden sun rays"
+        fill
+        style={{ objectFit: 'cover' }}
+        quality={90}
+        className="z-0"
+        data-ai-hint="celestial light gold"
+      />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70 z-10" />
 
-            <div>
-              <p className="font-semibold text-foreground mb-2">
-                Huu ni mstari ambao utatembea nao mwaka mzima ukikiri kumiliki katika kila eneo la maisha yako.
-              </p>
+      {/* Content */}
+      <div className="relative z-20 container mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-headline text-5xl md:text-6xl font-bold uppercase tracking-wider mb-8">
+            2025 ni MWAKA WA <span className="text-secondary">KUMILIKI</span>
+          </h2>
+          
+          <div className="relative max-w-2xl mx-auto my-12">
+            <blockquote className="font-body text-2xl md:text-3xl italic leading-relaxed md:leading-relaxed">
               <p>
-                Utakiri namna hii: <br />
-                <span className="font-bold text-primary">"Ee Naftali (taja jina lako hapa), uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini."</span>
+                "Ee Naftali, uliyeshiba fadhili, Uliyejawa na baraka ya Bwana;
+                <br />
+                Umiliki magharibi na kusini."
+              </p>
+            </blockquote>
+            <cite className="block text-right not-italic mt-4 text-base text-slate-300 font-body">
+              Kumbukumbu la Torati 33:23
+            </cite>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopy}
+              className="absolute -top-4 -right-4 h-10 w-10 rounded-full text-slate-300 hover:text-white hover:bg-white/10"
+              aria-label="Copy verse"
+            >
+              {copied ? <Check className="h-5 w-5 text-green-400" /> : <Copy className="h-5 w-5" />}
+            </Button>
+          </div>
+
+          <div className="font-body text-slate-200 space-y-6 max-w-3xl mx-auto text-lg leading-loose">
+            <p>
+              Huu ni mstari ambao utatembea nao mwaka mzima ukikiri kumiliki katika kila eneo la maisha yako.
+            </p>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 my-8">
+              <p className="font-semibold text-white mb-2">Utakiri namna hii:</p>
+              <p className="italic">
+                "Ee Naftali (<span className="font-bold text-secondary">taja jina lako hapa</span>), uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini."
               </p>
             </div>
-
             <p>
               Kiri mstari huu asubuhi, kiri mchana na usiku pia. Tembea na mstari huu kwa imani, ukiri tena na tena. Na hakika utamiliki magharibi na utamiliki na kusini pia. Huu ni mwaka wa kumiliki kwako.
             </p>
-
-            <div>
-              <p className="font-semibold text-foreground">
-                Wajibu wako mwaka huu ni:
-              </p>
-              <p>
-                Kukiri ahadi za Bwana alizokuahidi, kuziamini ahadi hizo, kutenda sawasawa na neno lake, kumruhusu Roho Mtakatifu atawale maisha yako na kuishi maisha ya MAOMBI.
-              </p>
+            <div className="border-t border-white/10 pt-6">
+                <p className="font-semibold text-white mb-2">Wajibu wako mwaka huu ni:</p>
+                <p>
+                    Kukiri ahadi za Bwana alizokuahidi, kuziamini ahadi hizo, kutenda sawasawa na neno lake, kumruhusu Roho Mtakatifu atawale maisha yako na kuishi maisha ya <span className="font-bold text-secondary uppercase tracking-widest">MAOMBI</span>.
+                </p>
             </div>
-            
-            <p className="text-lg font-bold text-foreground mt-4">
+            <p className="text-xl font-bold text-white mt-8">
               Mpendwa, tembea katika neema ya kumiliki katika kila eneo la maisha yako katika jina la Yesu Kristo.
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </motion.section>
   );
