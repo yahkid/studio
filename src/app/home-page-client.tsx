@@ -8,6 +8,7 @@ import { MissionSectionSw } from "@/components/sections/mission-section-sw";
 import { DecisionPathwaySectionSw } from "@/components/sections/decision-pathway-section-sw";
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
+import { ThemeOfTheYearSection } from '@/components/sections/theme-of-the-year-section';
 
 const LeadMagnetModal = dynamic(() => import('@/components/modals/lead-magnet-modal').then(mod => mod.LeadMagnetModal), { ssr: false });
 const VisitPlannerModal = dynamic(() => import('@/components/modals/visit-planner-modal').then(mod => mod.VisitPlannerModal), { ssr: false });
@@ -24,9 +25,10 @@ export function HomePageClient({ children }: { children: React.ReactNode }) {
       <HeroSectionSw onOpenLeadMagnet={() => setIsLeadMagnetOpen(true)} />
 
       <div className="w-full space-y-12 md:space-y-16 lg:space-y-24">
+        <ThemeOfTheYearSection />
         <MissionSectionSw />
         
-        {/* The new "Stories & Media" section will be rendered here from page.tsx */}
+        {/* The "Stories & Media" section will be rendered here from page.tsx */}
         {children}
 
         <DecisionPathwaySectionSw onOpenDecisionModal={() => setIsDecisionModalOpen(true)} />
