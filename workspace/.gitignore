@@ -1,15 +1,23 @@
-# Logs
-*.log
+# Firebase
 firebase-debug.log
 firestore-debug.log
 
 # Environment variables
-.env*
-!.env.example
+.env
+.env.*
+!/.env.example
 
-# Build outputs
-.next/
-out/
+# Next.js
+.next
+out
 
-# Dependency directories
-node_modules/
+# Node
+node_modules
+
+# IDE
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
