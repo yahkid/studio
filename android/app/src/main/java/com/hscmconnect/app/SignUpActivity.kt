@@ -5,32 +5,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.hscmconnect.app.databinding.ActivityMainBinding
+import com.hscmconnect.app.databinding.ActivitySignUpBinding
 
-class MainActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivitySignUpBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-
-        binding.signUpLayout.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
-        }
         
-        binding.loginButton.setOnClickListener {
+        binding.loginLayout.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        binding.signUpButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
+            val name = binding.nameEditText.text.toString()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                    if(it.isSuccessful) {
-                        startActivity(Intent(this, HomeActivity::class.java))
+            if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -39,15 +41,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-     override fun onStart() {
-        super.onStart()
-        if(auth.currentUser != null){
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
         }
     }
 }

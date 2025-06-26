@@ -1,7 +1,7 @@
 package com.hscmconnect.app
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hscmconnect.app.courses.CoursesFragment
@@ -10,37 +10,34 @@ import com.hscmconnect.app.partner.PartnerFragment
 import com.hscmconnect.app.sermons.SermonsFragment
 
 class HomeActivity : AppCompatActivity() {
-
-    private lateinit var bottomNav: BottomNavigationView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        bottomNav = findViewById(R.id.bottom_navigation)
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigation.setOnNavigationItemSelectedListener(navListener)
 
-        // Set initial fragment
+        // Load the default fragment
         if (savedInstanceState == null) {
-            loadFragment(HomeFragment())
-        }
-
-        bottomNav.setOnItemSelectedListener { item ->
-            val fragment: Fragment = when (item.itemId) {
-                R.id.nav_home -> HomeFragment()
-                R.id.nav_sermons -> SermonsFragment()
-                R.id.nav_courses -> CoursesFragment()
-                R.id.nav_events -> EventsFragment()
-                R.id.nav_partner -> PartnerFragment()
-                else -> HomeFragment()
-            }
-            loadFragment(fragment)
-            true
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+            bottomNavigation.selectedItemId = R.id.nav_home
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+    private val navListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        var selectedFragment: Fragment? = null
+        when (item.itemId) {
+            R.id.nav_home -> selectedFragment = HomeFragment()
+            R.id.nav_sermons -> selectedFragment = SermonsFragment()
+            R.id.nav_courses -> selectedFragment = CoursesFragment()
+            R.id.nav_events -> selectedFragment = EventsFragment()
+            R.id.nav_partner -> selectedFragment = PartnerFragment()
+        }
+
+        if (selectedFragment != null) {
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
+            return@OnNavigationItemSelectedListener true
+        }
+        false
     }
 }

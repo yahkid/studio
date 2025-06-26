@@ -1,16 +1,16 @@
-
 package com.hscmconnect.app.courses
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Course(
-    var id: String = "",
+    val id: String = "",
     val title: String = "",
+    val description: String = "",
     val instructor: String = "",
     val image_url: String = "",
-    val lessons: List<Lesson> = emptyList()
-)
-
-data class Lesson(
-    val id: Long = 0,
-    val title: String = "",
-    val duration: String = ""
-)
+    val lessons: List<Lesson> = emptyList(),
+    val is_published: Boolean = false,
+    val order: Int = 0
+) : Parcelable

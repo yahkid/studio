@@ -1,70 +1,47 @@
 package com.hscmconnect.app.sermons
 
-import android.annotation.SuppressLint
-import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.Timestamp
 import com.hscmconnect.app.R
-import com.hscmconnect.app.model.Sermon
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SermonDetailActivity : AppCompatActivity() {
 
-    private lateinit var youtubeWebView: WebView
-    private lateinit var sermonDetailTitle: TextView
-    private lateinit var sermonDetailSpeaker: TextView
-    private lateinit var sermonDetailDate: TextView
-    private lateinit var sermonDetailDescription: TextView
+    companion object {
+        const val EXTRA_SERMON = "extra_sermon"
+    }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sermon_detail)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        youtubeWebView = findViewById(R.id.youtubeWebView)
-        sermonDetailTitle = findViewById(R.id.sermonDetailTitle)
-        sermonDetailSpeaker = findViewById(R.id.sermonDetailSpeaker)
-        sermonDetailDate = findViewById(R.id.sermonDetailDate)
-        sermonDetailDescription = findViewById(R.id.sermonDetailDescription)
-
-        // Retrieve the Sermon object
-        val sermon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("SERMON_EXTRA", Sermon::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra("SERMON_EXTRA")
-        }
-
+        val sermon = intent.getParcelableExtra<Sermon>(EXTRA_SERMON)
 
         if (sermon != null) {
-            title = sermon.title
-            sermonDetailTitle.text = sermon.title
-            sermonDetailSpeaker.text = sermon.speaker
-            sermonDetailDate.text = formatTimestamp(sermon.sermon_date)
-            sermonDetailDescription.text = sermon.description
+            val webView: WebView = findViewById(R.id.youtubeWebView)
+            val title: TextView = findViewById(R.id.sermonDetailTitle)
+            val speaker: TextView = findViewById(R.id.sermonDetailSpeaker)
+            val date: TextView = findViewById(R.id.sermonDetailDate)
+            val description: TextView = findViewById(R.id.sermonDetailDescription)
+            
+            title.text = sermon.title
+            speaker.text = sermon.speaker
+            val sdf = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+            date.text = sdf.format(sermon.sermon_date)
+            description.text = sermon.description
 
-            // Load YouTube video in WebView
-            val videoId = sermon.youtube_video_id
-            val webSettings = youtubeWebView.settings
-            webSettings.javaScriptEnabled = true
-            val frameVideo = "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/$videoId\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
-            youtubeWebView.loadData(frameVideo, "text/html", "utf-8")
+            webView.settings.javaScriptEnabled = true
+            val frameVideo = "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${sermon.youtube_video_id}\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+            webView.loadData(frameVideo, "text/html", "utf-8")
         }
     }
-
-    private fun formatTimestamp(timestamp: Timestamp): String {
-        val sdf = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-        return sdf.format(timestamp.toDate())
-    }
-
+    
     override fun onSupportNavigateUp(): Boolean {
-        finish()
+        onBackPressed()
         return true
     }
 }

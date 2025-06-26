@@ -1,14 +1,17 @@
-
 package com.hscmconnect.app.sermons
 
+import android.os.Parcelable
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.PropertyName
+import kotlinx.parcelize.Parcelize
+import java.util.Date
 
+@Parcelize
 data class Sermon(
     var id: String = "",
     val title: String = "",
+    val description: String = "",
     val speaker: String = "",
-    @get:PropertyName("youtube_video_id") @set:PropertyName("youtube_video_id") var youtubeVideoId: String = "",
-    @get:PropertyName("sermon_date") @set:PropertyName("sermon_date") var sermonDate: Timestamp? = null,
-    @get:PropertyName("is_featured") @set:PropertyName("is_featured") var isFeatured: Boolean = false
-)
+    val youtube_video_id: String = "",
+    val sermon_date: Date = Date(),
+    val is_featured: Boolean = false
+) : Parcelable

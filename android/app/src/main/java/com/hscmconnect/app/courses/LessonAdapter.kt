@@ -6,12 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hscmconnect.app.R
-import com.hscmconnect.app.model.Lesson
 
-class LessonAdapter(
-    private var lessons: List<Lesson>,
-    private val onLessonClickListener: (Lesson) -> Unit
-) : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
+class LessonAdapter(private val lessons: List<Lesson>) :
+    RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_lesson, parent, false)
@@ -21,25 +18,17 @@ class LessonAdapter(
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         val lesson = lessons[position]
         holder.bind(lesson, position + 1)
-        holder.itemView.setOnClickListener {
-            onLessonClickListener(lesson)
-        }
     }
 
-    override fun getItemCount(): Int = lessons.size
-
-    fun updateData(newLessons: List<Lesson>) {
-        lessons = newLessons
-        notifyDataSetChanged()
-    }
+    override fun getItemCount() = lessons.size
 
     class LessonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val lessonNumber: TextView = itemView.findViewById(R.id.lessonNumber)
         private val lessonTitle: TextView = itemView.findViewById(R.id.lessonTitle)
         private val lessonDuration: TextView = itemView.findViewById(R.id.lessonDuration)
 
-        fun bind(lesson: Lesson, position: Int) {
-            lessonNumber.text = "Lesson $position"
+        fun bind(lesson: Lesson, number: Int) {
+            lessonNumber.text = itemView.context.getString(R.string.lesson_number, number)
             lessonTitle.text = lesson.title
             lessonDuration.text = lesson.duration
         }
