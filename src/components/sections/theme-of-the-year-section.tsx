@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion } from 'framer-motion';
@@ -6,11 +5,16 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function ThemeOfTheYearSection() {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const verseText = `"Ee Naftali, uliyeshiba fadhili, Uliyejawa na baraka ya Bwana; Umiliki magharibi na kusini." - Kumbukumbu la Torati 33:23`;
 
@@ -72,15 +76,17 @@ export function ThemeOfTheYearSection() {
             <cite className="block text-right not-italic mt-4 text-base text-slate-300 font-body">
               Kumbukumbu la Torati 33:23
             </cite>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleCopy}
-              className="absolute -top-4 -right-4 h-10 w-10 rounded-full text-slate-300 hover:text-white hover:bg-white/10"
-              aria-label="Copy verse"
-            >
-              {copied ? <Check className="h-5 w-5 text-green-400" /> : <Copy className="h-5 w-5" />}
-            </Button>
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopy}
+                className="absolute -top-4 -right-4 h-10 w-10 rounded-full text-slate-300 hover:text-white hover:bg-white/10"
+                aria-label="Copy verse"
+              >
+                {copied ? <Check className="h-5 w-5 text-green-400" /> : <Copy className="h-5 w-5" />}
+              </Button>
+            )}
           </div>
 
           <div className="font-body text-slate-200 space-y-6 max-w-3xl mx-auto text-lg leading-loose">
@@ -94,7 +100,10 @@ export function ThemeOfTheYearSection() {
               </p>
             </div>
             <p>
-              Kiri mstari huu asubuhi, kiri mchana na usiku pia. Tembea na mstari huu kwa imani, ukiri tena na tena. Na hakika utamiliki magharibi na utamiliki na kusini pia. Huu ni mwaka wa kumiliki kwako.
+              Kiri mstari huu asubuhi, kiri mchana na usiku pia. Tembea na
+              mstari huu kwa imani, ukiri tena na tena. Na hakika utamiliki
+              magharibi na utamiliki na kusini pia. Huu ni mwaka wa kumiliki
+              kwako.
             </p>
             <div className="border-t border-white/10 pt-6">
                 <p className="font-semibold text-white mb-2">Wajibu wako mwaka huu ni:</p>
