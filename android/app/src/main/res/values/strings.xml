@@ -1,3 +1,4 @@
+
 <resources>
     <string name="app_name">HSCM Connect</string>
     <string name="welcome_back">Welcome Back!</string>
@@ -17,11 +18,11 @@
     <string name="event_platform_format">Platform: %1$s</string>
 
     <!-- Partner Screen Strings -->
-    <string name="partner_title">Kuwa Mshirika wa Maono</string>
-    <string name="partner_description">Utoaji wako unatuwezesha kueneza Injili, kuhudumia jamii, na kubadilisha maisha. Asante kwa kuwa sehemu ya kile Mungu anachofanya kupitia HSCM Connect.</string>
-    <string name="give_online_button_text">Toa Mchango Salama Mtandaoni</string>
-    <string name="other_ways_to_give">Njia Nyingine za Kutoa</string>
-    <string name="other_ways_description">Unaweza pia kutoa kupitia M-Pesa, Tigo Pesa, au uhamisho wa benki. Tafadhali wasiliana na ofisi ya kanisa kwa maelezo zaidi.</string>
+    <string name="partner_title">Become a Partner in the Vision</string>
+    <string name="partner_description">Your giving enables us to spread the Gospel, serve the community, and transform lives. Thank you for being part of what God is doing through HSCM Connect.</string>
+    <string name="give_online_button_text">Give Securely Online</string>
+    <string name="other_ways_to_give">Other Ways to Give</string>
+    <string name="other_ways_description">You can also give via M-Pesa, Tigo Pesa, or bank transfer. Please contact the church office for more details.</string>
 
     <!-- Sign Up Screen Strings -->
     <string name="create_account">Create Account</string>
