@@ -1,10 +1,15 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Allow public read on content collections, but only allow authenticated
-    // users (i.e., staff) to create, update, or delete content.
+    // Default to denying all reads and writes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- CONTENT COLLECTIONS ---
+    // Publicly readable, but only writable by authenticated staff/admins.
     match /sermons/{sermonId} {
       allow read: if true;
       allow write: if request.auth != null;
@@ -13,11 +18,19 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
-     match /leadership/{leaderId} {
+    match /leadership/{leaderId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
-     match /events/{eventId} {
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /published_testimonials/{testimonialId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
@@ -25,46 +38,43 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
-     match /blog_posts/{postId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-     match /published_testimonials/{testimonialId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
 
-    // Allow any user to submit forms (decisions, testimonies, etc.)
-    // but restrict read/update access.
-    match /decisions/{decisionId} {
-       allow create: if request.auth != null;
-       allow read, update: if request.auth != null; // Staff can read/update
-    }
+    // --- USER-SUBMITTED DATA ---
+    // Can be created by anyone, but only managed by staff.
     match /decisions/{decisionId}/{document=**} {
-       allow read, write: if request.auth != null; // Staff can manage logs
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
     }
-     match /user_testimonies/{testimonyId} {
-       allow create: if request.auth != null;
-       allow read: if request.auth != null; // Staff can read submissions
+    match /user_testimonies/{testimonyId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
     }
-     match /donations/{donationId} {
-        allow create: if true; // Allow creation from server-side action
-        allow update: if true; // Allow webhook to update
-        allow read: if request.auth != null; // Staff can read
-     }
+    match /donations/{docId} {
+      allow create: if true;
+      allow read: if request.auth != null;
+      // Allow webhooks to update status without authentication
+      allow update: if true;
+    }
 
-    // Allow users to read/write their own progress documents.
+    // --- USER-SPECIFIC DATA ---
+    // Users can only read and write their own progress.
     match /user_course_progress/{progressId} {
-       allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.user_id;
     }
 
-    // Allow writes to signup collections from anonymous/authed users
-     match /lead_magnet_signups/{docId} { allow create: if true; }
-     match /visit_requests/{docId} { allow create: if true; }
-     match /exit_intent_offers/{docId} { allow create: if true; }
-     match /weekly_updates_signups/{docId} { allow create: if true; }
-     match /prayer_partner_signups/{docId} { allow create: if true; }
-     match /volunteer_partner_signups/{docId} { allow create: if true; }
-     match /community_needs/{docId} { allow read, write: if request.auth != null; }
+    // --- PUBLIC SIGNUP FORMS ---
+    // Anyone can create a document in these collections.
+    match /lead_magnet_signups/{docId} { allow create: if true; }
+    match /visit_requests/{docId} { allow create: if true; }
+    match /exit_intent_offers/{docId} { allow create: if true; }
+    match /weekly_updates_signups/{docId} { allow create: if true; }
+    match /prayer_partner_signups/{docId} { allow create: if true; }
+    match /volunteer_partner_signups/{docId} { allow create: if true; }
+
+    // --- STAFF-ONLY COLLECTIONS ---
+    match /community_needs/{docId} {
+        allow create, read, update, delete: if request.auth != null;
+    }
   }
 }
