@@ -1,17 +1,17 @@
 # Add project specific ProGuard rules here.
-# By default, the flags in this file are applied to all build types.
+# By default, the flags in this file are applied to all build variants.
 #
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-#
-# You can find general ProGuard rules for popular libraries at
-#   https://github.com/firebase/firebase-android-sdk/blob/master/firebase-app/proguard.txt
+# You can find general ProGuard rules for popular libraries here:
+# https://github.com/square/proguard-rules/tree/master/general
 
-# Add any project specific keep rules here:
-#
-# If you use reflection to access classes in shrinking code, you have to
-# specify that code here.
-#-keep class com.google.vending.licensing.ILicensingService
--keep class com.bumptech.glide.GeneratedAppGlideModule
+# Keep the Crashlytics and Performance Monitoring classes.
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.perf.** { *; }
+
+# Add any other rules your app needs here. For example, for Glide:
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public class * extends com.bumptech.glide.module.LibraryGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$ImageType {
+  **[] $VALUES;
+  public *;
+}

@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-    id("kotlin-parcelize")
+    id("kotlin-parcelize") // For @Parcelize annotation
 }
 
 android {
@@ -41,18 +41,25 @@ android {
 }
 
 dependencies {
+    // Standard Android libraries
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+    implementation(libs.fragment.ktx)
+    implementation(libs.recyclerview)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-    implementation(libs.fragment.ktx)
-    implementation(libs.recyclerview)
+
+    // Image Loading
     implementation(libs.glide)
-    implementation(libs.lifecycle.viewmodel.ktx)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
