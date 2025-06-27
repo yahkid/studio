@@ -17,7 +17,7 @@
   <style name="Theme.HSCMConnect" parent="Base.Theme.HSCMConnect" />
 
   <!-- A simplified splash theme that will work without extra libraries -->
-  <style name="Theme.HSCMConnect.Splash" parent="Theme.HSCMConnect">
+  <style name="Theme.SplashScreen" parent="Theme.HSCMConnect">
         <item name="android:windowBackground">@color/hscm_green_dark</item>
   </style>
 </resources>
