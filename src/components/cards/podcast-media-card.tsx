@@ -40,8 +40,8 @@ export function PodcastMediaCard({ episode }: PodcastMediaCardProps) {
   return (
     <Card className="flex flex-col h-full overflow-hidden">
       <CardHeader>
-        <div className="relative aspect-video w-full overflow-hidden rounded-lg group">
-          <Link href={`/podcast/${episode.id}`}>
+        <Link href={`/podcast/${episode.id}`}>
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg group">
             <Image
               src={episode.artwork_url}
               alt={`Artwork for ${episode.title}`}
@@ -50,8 +50,8 @@ export function PodcastMediaCard({ episode }: PodcastMediaCardProps) {
               className="bg-muted group-hover:scale-105 transition-transform duration-300"
               data-ai-hint="podcast episode art"
             />
-          </Link>
-        </div>
+          </div>
+        </Link>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-sm font-semibold text-primary uppercase tracking-wider">Podikasti ya Hivi Punde</p>
