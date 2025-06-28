@@ -16,6 +16,7 @@ async function getFeaturedSermon() {
     const sermonsQuery = query(
       collection(db, "sermons"),
       where("is_featured", "==", true),
+      where("is_published", "==", true),
       orderBy("sermon_date", "desc"),
       limit(1)
     );

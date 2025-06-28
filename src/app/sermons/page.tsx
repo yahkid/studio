@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import { db } from '@/lib/firebaseClient';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import type { SermonDoc } from '@/types/firestore';
 import { SermonCard } from '@/components/cards/sermon-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -16,6 +16,7 @@ async function getSermons(): Promise<(SermonDoc & { id: string })[]> {
   try {
     const sermonsQuery = query(
       collection(db, "sermons"),
+      where("is_published", "==", true),
       orderBy("sermon_date", "desc")
     );
     const querySnapshot = await getDocs(sermonsQuery);

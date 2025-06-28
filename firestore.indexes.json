@@ -58,11 +58,21 @@
       ]
     },
     {
+      "collectionGroup": "donations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "created_at",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "sermons",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "is_featured",
+          "fieldPath": "is_published",
           "order": "ASCENDING"
         },
         {
@@ -72,11 +82,19 @@
       ]
     },
     {
-      "collectionGroup": "donations",
+      "collectionGroup": "sermons",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "created_at",
+          "fieldPath": "is_featured",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "is_published",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sermon_date",
           "order": "DESCENDING"
         }
       ]

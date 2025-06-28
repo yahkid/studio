@@ -125,6 +125,7 @@ export default function SermonManagerPage() {
                                     height={180} 
                                     className="aspect-video object-cover rounded-t-lg" 
                                 />
+                                <Badge variant={sermon.is_published ? "default" : "secondary"} className="absolute top-2 left-2">{sermon.is_published ? "Published" : "Draft"}</Badge>
                                 {sermon.is_featured && <Badge variant="default" className="absolute top-2 right-2"><BadgeCheck className="mr-1 h-3 w-3" /> Featured</Badge>}
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">

@@ -33,6 +33,7 @@ const sermonFormSchema = z.object({
   youtube_video_id: z.string().min(11, 'Must be a valid YouTube Video ID.'),
   sermon_date: z.date({ required_error: 'Sermon date is required.' }),
   is_featured: z.boolean().default(false),
+  is_published: z.boolean().default(false),
   tags: z.string().optional(),
   audioDownloadUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
   videoDownloadUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
@@ -54,6 +55,7 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
       youtube_video_id: sermon?.youtube_video_id || '',
       sermon_date: sermon?.sermon_date ? sermon.sermon_date.toDate() : new Date(),
       is_featured: sermon?.is_featured || false,
+      is_published: sermon?.is_published || false,
       tags: sermon?.tags?.join(', ') || '',
       audioDownloadUrl: sermon?.audioDownloadUrl || '',
       videoDownloadUrl: sermon?.videoDownloadUrl || '',
@@ -70,6 +72,7 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
         formData.append('youtube_video_id', data.youtube_video_id);
         formData.append('sermon_date', data.sermon_date.toISOString());
         formData.append('is_featured', String(data.is_featured));
+        formData.append('is_published', String(data.is_published));
         if (data.tags) formData.append('tags', data.tags);
         if (data.audioDownloadUrl) formData.append('audioDownloadUrl', data.audioDownloadUrl);
         if (data.videoDownloadUrl) formData.append('videoDownloadUrl', data.videoDownloadUrl);
@@ -133,12 +136,20 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
             <FormItem><FormLabel>Video Download URL (Optional)</FormLabel><FormControl><Input type="url" placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
         )} />
         
-        <FormField control={form.control} name="is_featured" render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
-            <FormLabel>Feature on Homepage</FormLabel><FormDescription>If checked, this sermon may appear on the homepage.</FormDescription></div>
-            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-            </FormItem>
-        )} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField control={form.control} name="is_published" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
+                <FormLabel>Published</FormLabel><FormDescription>Visible on public site.</FormDescription></div>
+                <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                </FormItem>
+            )} />
+            <FormField control={form.control} name="is_featured" render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
+                <FormLabel>Feature on Homepage</FormLabel><FormDescription>Show on the homepage.</FormDescription></div>
+                <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                </FormItem>
+            )} />
+        </div>
 
         <Button type="submit" disabled={isPending} className="w-full">
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

@@ -21,7 +21,7 @@ async function getSermonById(id: string): Promise<(SermonDoc & { id: string }) |
     const docRef = doc(db, 'sermons', id);
     const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
+    if (!docSnap.exists() || docSnap.data().is_published !== true) {
       return null;
     }
     return { id: docSnap.id, ...docSnap.data() } as (SermonDoc & { id: string });
