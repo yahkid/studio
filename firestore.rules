@@ -1,114 +1,88 @@
-
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- HELPER FUNCTIONS ---
-    function isSignedIn() {
+    // Helper function to check if a user is authenticated.
+    function isAuthenticated() {
       return request.auth != null;
     }
-    
-    // For this prototype, we consider any signed-in user an admin.
-    // In production, this would check for a custom claim or an 'admins' collection.
-    function isAdmin() {
-      return isSignedIn();
-    }
 
-    // --- PUBLIC-READ, ADMIN-WRITE COLLECTIONS ---
-    // Anyone can read these, but only admins can modify them from the dashboard.
-    match /sermons/{sermonId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /published_testimonials/{testimonialId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /courses/{courseId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /events/{eventId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /leadership/{leaderId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-     match /resources/{resourceId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /blog_posts/{postId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // --- USER-SUBMITTED DATA ---
-    // Users can create their own data, but only admins can read/manage the full list.
-    match /decisions/{decisionId} {
-      allow create: if isSignedIn();
-      allow read, update, delete: if isAdmin();
-
-      // Subcollection for pastor contact logs
-      match /contact_logs/{logId} {
-         allow read, create: if isAdmin();
-      }
+    // Default-deny all reads and writes unless specified otherwise.
+    match /{document=**} {
+      allow read, write: if false;
     }
     
-    match /user_testimonies/{testimonyId} {
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow read, update, delete: if isAdmin();
+    // PUBLIC READ-ONLY COLLECTIONS
+    // Anyone can read these collections. Only authenticated users (admins for now) can write.
+    match /courses/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /leadership/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /events/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /sermons/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /blog_posts/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /published_testimonials/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    match /resources/{doc=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // USER-SUBMITTED CONTENT
+    // Any authenticated user can create these documents.
+    // This allows logged-in users to submit forms.
+    match /decisions/{docId} {
+      allow create: if isAuthenticated();
+      allow read, update, delete: if isAuthenticated(); // Admins can manage
+    }
+    match /user_testimonies/{docId} {
+      allow create: if isAuthenticated();
+      allow read, update, delete: if isAuthenticated(); // Admins can manage
+    }
+    match /donations/{docId} {
+        allow create: if true; // Open for anyone to initiate
+        allow read, update: if isAuthenticated(); // Admins can manage
     }
     
-    // --- USER-SPECIFIC DATA ---
-    // Users can only access their own documents.
+    // OPEN COLLECTIONS (For anonymous submissions)
+     match /visit_requests/{docId} {
+      allow create: if true;
+    }
+     match /lead_magnet_signups/{docId} {
+      allow create: if true;
+    }
+     match /exit_intent_offers/{docId} {
+      allow create: if true;
+    }
+     match /weekly_updates_signups/{docId} {
+      allow create: if true;
+    }
+     match /prayer_partner_signups/{docId} {
+      allow create: if true;
+    }
+     match /volunteer_partner_signups/{docId} {
+      allow create: if true;
+    }
+    
+    // USER-SPECIFIC DATA
+    // Users can only manage their own progress records.
     match /user_course_progress/{progressId} {
-      allow read, write: if isSignedIn() && resource.data.user_id == request.auth.uid;
-    }
-    
-    match /donations/{donationId} {
-      // Authenticated users can create their own donation records.
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      // Admins can read all donations for financial dashboards.
-      allow read: if isAdmin();
-      // The webhook, acting with server credentials, can update status.
-      // For this prototype, we'll allow admin updates as well.
-      allow update: if isAdmin();
-    }
-
-    // --- OPEN-WRITE COLLECTIONS for FORMS ---
-    // Anyone can submit to these forms (e.g., from modals or footer).
-    match /visit_requests/{requestId} {
-      allow create: if true;
-      allow read, delete: if isAdmin();
-    }
-    match /volunteer_partner_signups/{signupId} {
-       allow create: if true;
-       allow read, delete: if isAdmin();
-    }
-    match /lead_magnet_signups/{signupId} {
-      allow create: if true;
-      allow read: if isAdmin();
-    }
-    match /weekly_updates_signups/{signupId} {
-       allow create: if true;
-       allow read: if isAdmin();
-    }
-     match /prayer_partner_signups/{signupId} {
-       allow create: if true;
-       allow read: if isAdmin();
-    }
-     match /exit_intent_offers/{offerId} {
-       allow create: if true;
-       allow read: if isAdmin();
-    }
-    
-    // --- ADMIN-ONLY COLLECTIONS ---
-    match /community_needs/{needId} {
-      allow read, create, update: if isAdmin();
+      allow read, create, update, delete: if isAuthenticated() && request.auth.uid == resource.data.user_id;
     }
   }
 }
