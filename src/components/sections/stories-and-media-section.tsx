@@ -1,73 +1,28 @@
-import { db } from '@/lib/firebaseClient';
-import { collection, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
+"use client";
+
 import type { SermonDoc, PublishedTestimonyDoc } from '@/types/firestore';
 import type { BuzzsproutEpisode } from '@/types/podcast';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { PlayCircle, MicVocal, MessageSquare, Quote } from 'lucide-react';
-import { format } from 'date-fns';
+import { PlayCircle, MicVocal, Quote, Share2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { PodcastMediaCard } from '../cards/podcast-media-card';
 
-async function getFeaturedSermon() {
-  try {
-    const sermonsQuery = query(
-      collection(db, "sermons"),
-      where("is_featured", "==", true),
-      where("is_published", "==", true),
-      orderBy("sermon_date", "desc"),
-      limit(1)
-    );
-    const querySnapshot = await getDocs(sermonsQuery);
-    if (querySnapshot.empty) return null;
-    return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() } as SermonDoc & { id: string };
-  } catch (error) {
-    console.error("Error fetching featured sermon for media section:", error);
-    return null;
-  }
+// New props interface
+interface StoriesAndMediaSectionProps {
+  sermon: (SermonDoc & { id: string }) | null;
+  podcast: BuzzsproutEpisode | null;
+  testimonial: PublishedTestimonyDoc | null;
+  onOpenTestimonyModal: () => void;
 }
 
-async function getLatestPodcast() {
-  try {
-    // We assume the API endpoint is running on the same host
-    // In a real production environment, use the full absolute URL
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:9002';
-    const response = await fetch(`${baseUrl}/api/podcast-episodes?limit=1`, { next: { revalidate: 3600 } });
-    if (!response.ok) return null;
-    const episodes: BuzzsproutEpisode[] = await response.json();
-    return episodes[0] || null;
-  } catch (error) {
-    console.error("Error fetching latest podcast for media section:", error);
-    return null;
-  }
-}
-
-async function getLatestTestimonials() {
-  try {
-    const testimonialsQuery = query(
-      collection(db, "published_testimonials"),
-      orderBy("published_at", "desc"),
-      limit(2)
-    );
-    const querySnapshot = await getDocs(testimonialsQuery);
-    return querySnapshot.docs.map(doc => doc.data() as PublishedTestimonyDoc);
-  } catch (error) {
-    console.error("Error fetching latest testimonials for media section:", error);
-    return [];
-  }
-}
-
-export async function StoriesAndMediaSection() {
-  const [sermon, podcast, testimonials] = await Promise.all([
-    getFeaturedSermon(),
-    getLatestPodcast(),
-    getLatestTestimonials(),
-  ]);
+// Component is no longer async
+export function StoriesAndMediaSection({ sermon, podcast, testimonial, onOpenTestimonyModal }: StoriesAndMediaSectionProps) {
 
   return (
-    <section id="stories-and-media" className="w-full py-16 md:py-24 bg-muted/30 dark:bg-muted/10">
+    <section id="tazama-na-ukue" className="w-full py-16 md:py-24 bg-muted/30 dark:bg-muted/10">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="font-headline text-4xl md:text-5xl text-foreground mb-4">
@@ -92,6 +47,7 @@ export async function StoriesAndMediaSection() {
                         fill
                         style={{ objectFit: 'cover' }}
                         className="bg-muted group-hover:scale-105 transition-transform duration-300"
+                        data-ai-hint="sermon thumbnail abstract"
                       />
                     </Link>
                   </div>
@@ -126,37 +82,37 @@ export async function StoriesAndMediaSection() {
           </div>
 
           {/* Column 3: Testimonials */}
-          <div className="space-y-6 md:col-span-2 lg:col-span-1">
-            {testimonials.length > 0 ? (
-              testimonials.map((testimony, index) => (
-                <Card key={index} className="bg-background/70">
-                    <CardContent className="p-6">
-                        <Quote className="h-5 w-5 text-primary mb-2" />
-                        <blockquote className="font-body italic text-muted-foreground">
-                        "{testimony.quote}"
-                        </blockquote>
-                        <cite className="font-headline not-italic text-sm text-foreground mt-4 block text-right">
-                        – {testimony.name}
-                        </cite>
-                    </CardContent>
-                </Card>
-              ))
-            ) : (
-                <Alert><MessageSquare className="h-4 w-4" /><AlertTitle>Hakuna Shuhuda</AlertTitle><AlertDescription>Hakuna shuhuda za umma zilizopatikana.</AlertDescription></Alert>
-            )}
-             {testimonials.length === 0 && (
-                <Card className="bg-background/70">
-                    <CardContent className="p-6">
-                        <Quote className="h-5 w-5 text-primary mb-2" />
-                        <blockquote className="font-body italic text-muted-foreground">
-                        "Nilikuwa nimekata tamaa, lakini HSCM ilinipa tumaini. Sasa nina furaha na nguvu mpya."
-                        </blockquote>
-                        <cite className="font-headline not-italic text-sm text-foreground mt-4 block text-right">
-                        – John Peter (Mfano)
-                        </cite>
-                    </CardContent>
-                </Card>
-            )}
+          <div className="md:col-span-2 lg:col-span-1">
+            <Card className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20">
+               <CardHeader className="items-center text-center">
+                 <div className="p-3 bg-card rounded-full mb-3">
+                    <Quote className="h-6 w-6 text-primary" />
+                 </div>
+                 <CardTitle className="font-headline text-xl">Hadithi za Mabadiliko</CardTitle>
+               </CardHeader>
+               <CardContent className="flex-grow text-center">
+                {testimonial ? (
+                   <>
+                    <blockquote className="font-body italic text-muted-foreground">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <cite className="font-headline not-italic text-sm text-foreground mt-4 block">
+                      – {testimonial.name}, {testimonial.location}
+                    </cite>
+                  </>
+                ) : (
+                  <p className="font-body text-muted-foreground">
+                    Mungu anafanya mambo makuu katika jamii yetu. Kuwa wa kwanza kushiriki hadithi yako ya jinsi alivyogusa maisha yako.
+                  </p>
+                )}
+               </CardContent>
+               <CardFooter>
+                <Button onClick={onOpenTestimonyModal} variant="outline" className="w-full font-headline bg-card/80 hover:bg-card" suppressHydrationWarning>
+                   <Share2 className="mr-2 h-4 w-4"/>
+                   Shiriki Hadithi Yako
+                 </Button>
+               </CardFooter>
+             </Card>
           </div>
 
         </div>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -15,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, UploadCloud, FileText, User, MailIcon as MailLucide, Send, Newspaper, MapPin } from 'lucide-react';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase';
 import { db, storage } from '@/lib/firebaseClient';
-import { collection, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { UserTestimonyDoc } from '@/types/firestore';
 import { WhatsAppIcon } from '../ui/whatsapp-icon';
@@ -27,10 +26,6 @@ const ACCEPTED_FILE_TYPES = [
   'image/jpeg',
   'image/png',
   'image/webp',
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain',
 ];
 
 const testimonyFormSchema = z.object({
@@ -77,7 +72,7 @@ export function TestimonyForm({ onFormSubmit }: TestimonyFormProps) {
         return;
       }
       if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
-        setFileError("Aina ya faili si sahihi. Inakubalika: JPG, PNG, WEBP, PDF, DOC, DOCX, TXT.");
+        setFileError("Aina ya faili si sahihi. Inakubalika: JPG, PNG, WEBP.");
         setSelectedFile(null);
         event.target.value = "";
         return;
@@ -133,23 +128,14 @@ ${story}
         return;
     }
 
-    if (values.consentToShare !== true) {
-      toast({
-        title: "Idhini Inahitajika",
-        description: "Lazima ukubali kushiriki ushuhuda wako ili kuwasilisha. Tafadhali tia alama kwenye kisanduku cha idhini.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSubmitting(true);
     let fileUrl: string | null = null;
     let originalFileName: string | null = null;
 
     try {
       if (selectedFile) {
-        const uniqueFileName = `${Date.now()}_${selectedFile.name}`;
-        const fileUploadRef = storageRef(storage, `user_testimonies_uploads/${user.uid}/${uniqueFileName}`);
+        const uniqueFileName = `${user.uid}-${Date.now()}_${selectedFile.name}`;
+        const fileUploadRef = storageRef(storage, `user_testimonies_uploads/${uniqueFileName}`);
         const uploadResult = await uploadBytes(fileUploadRef, selectedFile);
         fileUrl = await getDownloadURL(uploadResult.ref);
         originalFileName = selectedFile.name;
@@ -172,35 +158,20 @@ ${story}
 
       toast({
         title: "Ushuhuda Umewasilishwa!",
-        description: "Asante kwa kushiriki hadithi yako. Tunapitia na tunaweza kuwasiliana nawe.",
+        description: "Asante kwa kushiriki hadithi yako. Timu yetu itaipitia.",
       });
 
-      // Run AI summarization in the background. Don't block UI.
+      // Don't block UI on AI summarization
       summarizeTestimony({ story: values.story })
         .then(aiResult => {
-          updateDoc(docRef, {
+          updateDoc(doc(db, 'user_testimonies', docRef.id), {
             aiSuggestedQuote: aiResult.suggestedQuote,
             aiSummary: aiResult.summary,
           });
         })
         .catch(aiError => {
           console.error("AI Summarization Error:", aiError);
-          // Don't show an error toast to the user, as their main submission was successful.
-          // Just log it for the admin to see.
         });
-
-
-      if (values.newsletterOptIn && user.email) {
-        try {
-          await addDoc(collection(db, 'weekly_updates_signups'), {
-            email: user.email,
-            created_at: serverTimestamp(),
-            source: 'testimony_form_opt_in'
-          });
-        } catch (newsletterError: any) {
-          console.error("Error adding to newsletter from testimony form:", newsletterError);
-        }
-      }
 
       form.reset();
       setSelectedFile(null);
@@ -209,13 +180,9 @@ ${story}
       onFormSubmit?.();
     } catch (error: any) {
       console.error("Error submitting testimony:", error);
-      let description = error.message || "Imeshindwa kuwasilisha ushuhuda wako. Jaribu tena.";
-      if (error.code === 'permission-denied' || (error.message && error.message.toLowerCase().includes("permission"))) {
-        description = "Ruhusa haitoshi kuwasilisha ushuhuda. Tafadhali hakikisha umekubali kushiriki na umeingia. Ikiwa tatizo litaendelea, wasiliana na usaidizi.";
-      }
       toast({
         title: "Hitilafu ya Kuwasilisha",
-        description: description,
+        description: error.message || "Imeshindwa kuwasilisha ushuhuda wako. Jaribu tena.",
         variant: "destructive",
       });
     } finally {
@@ -301,7 +268,7 @@ ${story}
         />
 
         <FormItem>
-          <FormLabel htmlFor="testimony-file" className="font-body">Weka Picha au Hati (Hiari)</FormLabel>
+          <FormLabel htmlFor="testimony-file" className="font-body">Weka Picha (Hiari)</FormLabel>
           <div className="relative">
              <UploadCloud className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <FormControl>
@@ -322,7 +289,7 @@ ${story}
             </p>
           )}
           {fileError && <p className="mt-1 text-xs text-destructive">{fileError}</p>}
-          <p className="text-xs text-muted-foreground mt-1">Ukubwa wa juu: {MAX_FILE_SIZE_MB}MB. Aina zinazokubalika: JPG, PNG, PDF, DOC, TXT.</p>
+          <p className="text-xs text-muted-foreground mt-1">Ukubwa wa juu: {MAX_FILE_SIZE_MB}MB. Aina zinazokubalika: JPG, PNG, WEBP.</p>
         </FormItem>
 
         <FormField
@@ -347,30 +314,6 @@ ${story}
             </FormItem>
           )}
         />
-        
-        <FormField
-          control={form.control}
-          name="newsletterOptIn"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background dark:bg-muted/20">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={isSubmitting}
-                  id="newsletterOptIn"
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel htmlFor="newsletterOptIn" className="font-body text-sm text-muted-foreground cursor-pointer flex items-center">
-                  <Newspaper className="mr-2 h-4 w-4 text-primary/70" />
-                  Pia napenda kupokea taarifa na habari za kutia moyo kutoka HSCM Connect.
-                </FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-
 
         <div className="flex flex-col sm:flex-row gap-2">
             <Button type="submit" className="w-full font-headline" disabled={isSubmitting || !user || authLoading}>
