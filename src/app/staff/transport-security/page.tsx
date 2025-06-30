@@ -91,7 +91,7 @@ export default function TransportSecurityPage() {
                                 <TableCell>{format(event.event_date.toDate(), 'PPP', { locale: sw })} @ {event.start_time}</TableCell>
                                 <TableCell>{event.platform}</TableCell>
                                 <TableCell>{event.audience}</TableCell>
-                                <TableCell><Badge variant={event.is_active ? "default" : "outline"}>{event.is_active ? 'Inaendelea' : 'Imezimwa'}</Badge></TableCell>
+                                <TableCell><Badge variant={event.is_published ? "default" : "outline"}>{event.is_published ? 'Published' : 'Draft'}</Badge></TableCell>
                             </TableRow>
                         ))}
                         </TableBody>

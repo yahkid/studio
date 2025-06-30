@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { deleteSermon } from "./actions";
-import { Loader2, PlusCircle, Trash2, Edit, AlertCircle, Clapperboard, Youtube, BadgeCheck } from "lucide-react";
+import { Loader2, PlusCircle, Trash2, Edit, AlertCircle, Clapperboard, Youtube, BadgeCheck, CheckCircle, Circle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -125,8 +125,17 @@ export default function SermonManagerPage() {
                                     height={180} 
                                     className="aspect-video object-cover rounded-t-lg" 
                                 />
-                                <Badge variant={sermon.is_published ? "default" : "secondary"} className="absolute top-2 left-2">{sermon.is_published ? "Published" : "Draft"}</Badge>
-                                {sermon.is_featured && <Badge variant="default" className="absolute top-2 right-2"><BadgeCheck className="mr-1 h-3 w-3" /> Featured</Badge>}
+                                 <div className="absolute top-2 left-2 flex flex-col gap-1">
+                                    <Badge variant={sermon.is_published ? "default" : "secondary"} className="py-1">
+                                        {sermon.is_published ? <CheckCircle className="mr-1 h-3 w-3" /> : <Circle className="mr-1 h-3 w-3"/>}
+                                        {sermon.is_published ? "Published" : "Draft"}
+                                    </Badge>
+                                    {sermon.is_featured && (
+                                        <Badge variant="secondary" className="bg-hscm-gold text-dark-text hover:bg-hscm-gold/80 py-1">
+                                            <BadgeCheck className="mr-1 h-3 w-3" /> Featured
+                                        </Badge>
+                                    )}
+                                </div>
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
                                 <p className="text-xs text-muted-foreground">{sermon.sermon_date ? format(sermon.sermon_date.toDate(), 'PPP') : ''}</p>

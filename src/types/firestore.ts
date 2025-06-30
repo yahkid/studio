@@ -158,7 +158,7 @@ export interface EventDoc {
   platform: string; // e.g., "YouTube Live, Facebook"
   stream_url: string;
   audience: string; // e.g., "All", "Youth"
-  is_active: boolean; // To easily show/hide events
+  is_published: boolean; // Changed from is_active
 }
 
 export interface LessonDoc {

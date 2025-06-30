@@ -57,7 +57,7 @@ export default function MatukioPage() {
       try {
         const eventsQuery = query(
           collection(db, "events"),
-          where("is_active", "==", true),
+          where("is_published", "==", true),
           orderBy("event_date", "asc")
         );
         const querySnapshot = await getDocs(eventsQuery);

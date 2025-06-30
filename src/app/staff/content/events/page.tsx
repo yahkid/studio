@@ -53,7 +53,7 @@ const eventFormSchema = z.object({
   platform: z.string().min(1, { message: "Platform is required." }),
   stream_url: z.string().url({ message: "Please enter a valid URL."}).or(z.literal('#')),
   audience: z.string().min(1, { message: "Audience is required." }),
-  is_active: z.boolean().default(true),
+  is_published: z.boolean().default(false),
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
@@ -72,7 +72,7 @@ function AddEventForm({ onFormSubmit }: { onFormSubmit: () => void }) {
       platform: "YouTube Live",
       stream_url: "#",
       audience: "All",
-      is_active: true,
+      is_published: false,
     },
   });
 
@@ -154,10 +154,10 @@ function AddEventForm({ onFormSubmit }: { onFormSubmit: () => void }) {
             <FormItem><FormLabel>Stream URL</FormLabel><FormControl><Input placeholder="https://" {...field} /></FormControl><FormMessage /></FormItem>
         )} />
         
-        <FormField control={form.control} name="is_active" render={({ field }) => (
+        <FormField control={form.control} name="is_published" render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-0.5"><FormLabel>Activate Event</FormLabel>
-                <p className="text-xs text-muted-foreground">Inactive events will not appear on the public page.</p>
+                <div className="space-y-0.5"><FormLabel>Publish Event</FormLabel>
+                <p className="text-xs text-muted-foreground">Published events will appear on the public page.</p>
                 </div>
                 <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
             </FormItem>
@@ -262,7 +262,7 @@ export default function EventManagerPage() {
                             <CardHeader>
                                 <div className="flex justify-between items-start gap-2">
                                     <CardTitle className="font-headline text-lg">{event.title}</CardTitle>
-                                    <Badge variant={event.is_active ? "default" : "outline"}>{event.is_active ? "Active" : "Inactive"}</Badge>
+                                    <Badge variant={event.is_published ? "default" : "outline"}>{event.is_published ? "Published" : "Draft"}</Badge>
                                 </div>
                                 <CardDescription>
                                     {event.event_date instanceof Timestamp ? format(event.event_date.toDate(), 'PPP') : 'Invalid Date'} at {event.start_time}

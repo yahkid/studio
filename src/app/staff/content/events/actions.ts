@@ -16,7 +16,7 @@ const eventSchema = z.object({
   platform: z.string().min(1, 'Platform is required.'),
   stream_url: z.string().url('Please enter a valid URL.').or(z.literal('#')),
   audience: z.string().min(1, 'Audience is required.'),
-  is_active: z.boolean(),
+  is_published: z.boolean(),
 });
 
 export async function createEvent(formData: z.infer<typeof eventSchema>) {
