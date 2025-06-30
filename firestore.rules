@@ -1,88 +1,15 @@
+
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if a user is authenticated.
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-
-    // Default-deny all reads and writes unless specified otherwise.
+    
+    // WARNING: DEVELOPMENT ONLY
+    // These rules are highly permissive and allow anyone to read and write to your database.
+    // This is useful for initial development and debugging permission issues.
+    // Before deploying to production, you MUST implement secure rules.
     match /{document=**} {
-      allow read, write: if false;
-    }
-    
-    // PUBLIC READ-ONLY COLLECTIONS
-    // Anyone can read these collections. Only authenticated users (admins for now) can write.
-    match /courses/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /leadership/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /events/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /sermons/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /blog_posts/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /published_testimonials/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /resources/{doc=**} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-
-    // USER-SUBMITTED CONTENT
-    // Any authenticated user can create these documents.
-    // This allows logged-in users to submit forms.
-    match /decisions/{docId} {
-      allow create: if isAuthenticated();
-      allow read, update, delete: if isAuthenticated(); // Admins can manage
-    }
-    match /user_testimonies/{docId} {
-      allow create: if isAuthenticated();
-      allow read, update, delete: if isAuthenticated(); // Admins can manage
-    }
-    match /donations/{docId} {
-        allow create: if true; // Open for anyone to initiate
-        allow read, update: if isAuthenticated(); // Admins can manage
-    }
-    
-    // OPEN COLLECTIONS (For anonymous submissions)
-     match /visit_requests/{docId} {
-      allow create: if true;
-    }
-     match /lead_magnet_signups/{docId} {
-      allow create: if true;
-    }
-     match /exit_intent_offers/{docId} {
-      allow create: if true;
-    }
-     match /weekly_updates_signups/{docId} {
-      allow create: if true;
-    }
-     match /prayer_partner_signups/{docId} {
-      allow create: if true;
-    }
-     match /volunteer_partner_signups/{docId} {
-      allow create: if true;
-    }
-    
-    // USER-SPECIFIC DATA
-    // Users can only manage their own progress records.
-    match /user_course_progress/{progressId} {
-      allow read, create, update, delete: if isAuthenticated() && request.auth.uid == resource.data.user_id;
+      allow read, write: if true;
     }
   }
 }
