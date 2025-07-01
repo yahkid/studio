@@ -19,6 +19,7 @@ import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, where, Ti
 import type { EventDoc } from '@/types/firestore';
 import { motion } from "framer-motion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MatukioPage() {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
@@ -227,39 +228,49 @@ export default function MatukioPage() {
 
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 p-4 border rounded-lg bg-card">
         <div className="flex items-center gap-2">
-          <Button
-            variant={viewMode === 'list' ? 'default' : 'outline'}
-            onClick={() => setViewMode('list')}
-            className="font-body"
-            aria-pressed={viewMode === 'list'}
-            suppressHydrationWarning={true}
-          >
-            <List className="mr-2 h-4 w-4" /> Mipangilio
-          </Button>
-          <Button
-            variant={viewMode === 'month' ? 'default' : 'outline'}
-            onClick={() => setViewMode('month')}
-            className="font-body"
-            aria-pressed={viewMode === 'month'}
-            suppressHydrationWarning={true}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" /> Mwezi
-          </Button>
+            {!mounted ? (
+                <>
+                    <Skeleton className="h-10 w-28" />
+                    <Skeleton className="h-10 w-28" />
+                </>
+            ) : (
+                <>
+                    <Button
+                        variant={viewMode === 'list' ? 'default' : 'outline'}
+                        onClick={() => setViewMode('list')}
+                        className="font-body"
+                        aria-pressed={viewMode === 'list'}
+                    >
+                        <List className="mr-2 h-4 w-4" /> Mipangilio
+                    </Button>
+                    <Button
+                        variant={viewMode === 'month' ? 'default' : 'outline'}
+                        onClick={() => setViewMode('month')}
+                        className="font-body"
+                        aria-pressed={viewMode === 'month'}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" /> Mwezi
+                    </Button>
+                </>
+            )}
         </div>
+
 
         <div className="flex items-center gap-2">
           <Filter className="h-5 w-5 text-muted-foreground" />
-          <Select value={filterType} onValueChange={(value) => setFilterType(value as MinistryEvent['eventType'] | 'all')}>
-            <SelectTrigger className="w-full sm:w-[180px] font-body" suppressHydrationWarning={true}>
-              <SelectValue placeholder="Chuja kwa aina" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="font-body">Matukio Yote</SelectItem>
-              <SelectItem value="weekly" className="font-body">Ratiba ya Wiki</SelectItem>
-              <SelectItem value="monthly" className="font-body">Matukio ya Mwezi</SelectItem>
-              <SelectItem value="special" className="font-body">Matukio Maalum</SelectItem>
-            </SelectContent>
-          </Select>
+           {!mounted ? <Skeleton className="h-10 w-[180px]" /> : (
+            <Select value={filterType} onValueChange={(value) => setFilterType(value as MinistryEvent['eventType'] | 'all')}>
+                <SelectTrigger className="w-full sm:w-[180px] font-body">
+                <SelectValue placeholder="Chuja kwa aina" />
+                </SelectTrigger>
+                <SelectContent>
+                <SelectItem value="all" className="font-body">Matukio Yote</SelectItem>
+                <SelectItem value="weekly" className="font-body">Ratiba ya Wiki</SelectItem>
+                <SelectItem value="monthly" className="font-body">Matukio ya Mwezi</SelectItem>
+                <SelectItem value="special" className="font-body">Matukio Maalum</SelectItem>
+                </SelectContent>
+            </Select>
+           )}
         </div>
       </div>
       
@@ -348,7 +359,6 @@ export default function MatukioPage() {
                     required 
                     className="pl-10 font-body"
                     disabled={isEventSignupLoading}
-                    suppressHydrationWarning={true}
                     />
                 </div>
                 </div>
@@ -360,11 +370,10 @@ export default function MatukioPage() {
                     variant="ghost"
                     onClick={() => setEventSignupEmail('')}
                     disabled={isEventSignupLoading}
-                    suppressHydrationWarning={true}
                 >
                 Ghairi
                 </Button>
-                <Button type="submit" className="w-full sm:w-auto font-headline" disabled={isEventSignupLoading} suppressHydrationWarning={true}>
+                <Button type="submit" className="w-full sm:w-auto font-headline" disabled={isEventSignupLoading}>
                 {isEventSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isEventSignupLoading ? 'Inasajili...' : 'Nijulishe Kuhusu Matukio'}
                 </Button>

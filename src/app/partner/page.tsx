@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const TIGO_PESA_ICON = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,10 +65,10 @@ export default function PartnerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedDetails, setSubmittedDetails] = useState<DonationFormValues | null>(null);
-  const [isClient, setIsClient] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
   const form = useForm<DonationFormValues>({
@@ -142,7 +143,7 @@ export default function PartnerPage() {
              <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <CardTitle className="font-headline text-3xl">Asante, {submittedDetails.name.split(' ')[0]}!</CardTitle>
             <CardDescription>
-                Mchango wako wa <strong>TZS {isClient ? submittedDetails.amount.toLocaleString('en-US') : submittedDetails.amount}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
+                Mchango wako wa <strong>TZS {mounted ? submittedDetails.amount.toLocaleString('en-US') : submittedDetails.amount}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -218,7 +219,7 @@ export default function PartnerPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
                         {presetAmounts.map(preset => (
                             <Button key={preset} type="button" variant={form.watch('amount') === preset ? 'default' : 'outline'} onClick={() => form.setValue('amount', preset, { shouldValidate: true })}>
-                                {isClient ? preset.toLocaleString('en-US') : preset.toString()}
+                                {mounted ? preset.toLocaleString('en-US') : preset.toString()}
                             </Button>
                         ))}
                     </div>
@@ -265,37 +266,44 @@ export default function PartnerPage() {
                      <CardDescription>Baada ya kuchagua, fuata maelekezo ili kukamilisha mchango wako.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Tabs defaultValue="mpesa" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="mpesa"><Smartphone className="mr-2 h-4 w-4"/>M-Pesa</TabsTrigger>
-                            <TabsTrigger value="tigopesa"><TIGO_PESA_ICON /> Tigo Pesa</TabsTrigger>
-                            <TabsTrigger value="card"><CreditCard className="mr-2 h-4 w-4"/>Kadi</TabsTrigger>
-                        </TabsList>
-                        
-                        <TabsContent value="mpesa" className="mt-6 text-center space-y-4">
-                            <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia M-Pesa.</p>
-                            <Button onClick={() => handlePaymentInitiation('mpesa')} className="w-full h-12 text-lg" disabled={isLoading}>
-                                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Endelea na M-Pesa
-                            </Button>
-                        </TabsContent>
+                    {!mounted ? (
+                        <div className="space-y-4">
+                            <Skeleton className="h-10 w-full" />
+                            <Skeleton className="h-20 w-full" />
+                        </div>
+                    ) : (
+                        <Tabs defaultValue="mpesa" className="w-full">
+                            <TabsList className="grid w-full grid-cols-3">
+                                <TabsTrigger value="mpesa"><Smartphone className="mr-2 h-4 w-4"/>M-Pesa</TabsTrigger>
+                                <TabsTrigger value="tigopesa"><TIGO_PESA_ICON /> Tigo Pesa</TabsTrigger>
+                                <TabsTrigger value="card"><CreditCard className="mr-2 h-4 w-4"/>Kadi</TabsTrigger>
+                            </TabsList>
+                            
+                            <TabsContent value="mpesa" className="mt-6 text-center space-y-4">
+                                <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia M-Pesa.</p>
+                                <Button onClick={() => handlePaymentInitiation('mpesa')} className="w-full h-12 text-lg" disabled={isLoading}>
+                                    {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                                    Endelea na M-Pesa
+                                </Button>
+                            </TabsContent>
 
-                         <TabsContent value="tigopesa" className="mt-6 text-center space-y-4">
-                             <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Tigo Pesa.</p>
-                            <Button onClick={() => handlePaymentInitiation('tigopesa')} className="w-full h-12 text-lg" disabled={isLoading}>
-                                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Endelea na Tigo Pesa
-                            </Button>
-                        </TabsContent>
+                            <TabsContent value="tigopesa" className="mt-6 text-center space-y-4">
+                                <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Tigo Pesa.</p>
+                                <Button onClick={() => handlePaymentInitiation('tigopesa')} className="w-full h-12 text-lg" disabled={isLoading}>
+                                    {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                                    Endelea na Tigo Pesa
+                                </Button>
+                            </TabsContent>
 
-                        <TabsContent value="card" className="mt-6 text-center space-y-4">
-                            <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Kadi (Visa/Mastercard).</p>
-                             <Button onClick={() => handlePaymentInitiation('card')} className="w-full h-12 text-lg" disabled={isLoading}>
-                                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                Endelea na Kadi
-                            </Button>
-                        </TabsContent>
-                    </Tabs>
+                            <TabsContent value="card" className="mt-6 text-center space-y-4">
+                                <p className="text-muted-foreground">Thibitisha maelezo yako na uendelee na malipo salama kupitia Kadi (Visa/Mastercard).</p>
+                                <Button onClick={() => handlePaymentInitiation('card')} className="w-full h-12 text-lg" disabled={isLoading}>
+                                    {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                                    Endelea na Kadi
+                                </Button>
+                            </TabsContent>
+                        </Tabs>
+                    )}
                 </CardContent>
             </Card>
         </form>

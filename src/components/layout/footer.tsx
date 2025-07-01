@@ -2,7 +2,11 @@
 "use client"; 
 
 import Link from "next/link";
-import { MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, Users, HandHeart, Film, Handshake, MicVocal, Mail, Loader2, Shield, Heart, BookOpen, Download, FileText } from 'lucide-react';
+import { 
+  MapPin, Phone, Mail as MailIconLucide, Facebook, Instagram, Youtube, Command, 
+  Users, HandHeart, Film, Handshake, MicVocal, Mail, Loader2, Shield, Heart, 
+  BookOpen, Download, FileText 
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +14,21 @@ import { useState } from "react";
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebaseClient';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+const quickLinks = [
+    { href: "/beliefs", label: "Imani Yetu", icon: HandHeart },
+    { href: "/uongozi", label: "Uongozi Wetu", icon: Shield },
+    { href: "/new", label: "Mimi Mgeni", icon: Users },
+    { href: "/kozi", label: "Kozi za Kujifunza", icon: BookOpen },
+    { href: "/huduma", label: "Kutumika", icon: Heart },
+    { href: "/resources", label: "Rasilimali", icon: Download },
+    { href: "/sermons", label: "Mahubiri", icon: Film },
+    { href: "/podcast", label: "Podikasti", icon: MicVocal },
+    { href: "/blog", label: "Blog", icon: FileText },
+    { href: "/matukio", label: "Matukio", icon: Users },
+    { href: "/partner", label: "Ushirika", icon: Handshake },
+    { href: "/decision", label: "Nimeamua Leo", icon: HandHeart },
+];
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -130,18 +149,14 @@ export function Footer() {
                 Viungo vya Haraka
               </h3>
               <ul className="space-y-2 font-body text-sm">
-                <li><Link href="/beliefs" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Imani Yetu</Link></li>
-                <li><Link href="/uongozi" className="hover:text-white transition-colors flex items-center"><Shield className="mr-2 h-4 w-4 text-primary"/>Uongozi Wetu</Link></li>
-                <li><Link href="/new" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Mimi Mgeni</Link></li>
-                <li><Link href="/kozi" className="hover:text-white transition-colors flex items-center"><BookOpen className="mr-2 h-4 w-4 text-primary"/>Kozi za Kujifunza</Link></li>
-                <li><Link href="/huduma" className="hover:text-white transition-colors flex items-center"><Heart className="mr-2 h-4 w-4 text-primary"/>Kutumika</Link></li>
-                <li><Link href="/resources" className="hover:text-white transition-colors flex items-center"><Download className="mr-2 h-4 w-4 text-primary"/>Rasilimali</Link></li>
-                <li><Link href="/sermons" className="hover:text-white transition-colors flex items-center"><Film className="mr-2 h-4 w-4 text-primary"/>Mahubiri</Link></li>
-                <li><Link href="/podcast" className="hover:text-white transition-colors flex items-center"><MicVocal className="mr-2 h-4 w-4 text-primary"/>Podikasti</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors flex items-center"><FileText className="mr-2 h-4 w-4 text-primary"/>Blog</Link></li>
-                <li><Link href="/matukio" className="hover:text-white transition-colors flex items-center"><Users className="mr-2 h-4 w-4 text-primary"/>Matukio</Link></li>
-                <li><Link href="/partner" className="hover:text-white transition-colors flex items-center"><Handshake className="mr-2 h-4 w-4 text-primary"/>Ushirika</Link></li>
-                <li><Link href="/decision" className="hover:text-white transition-colors flex items-center"><HandHeart className="mr-2 h-4 w-4 text-primary"/>Nimeamua Leo</Link></li>
+                {quickLinks.map(({ href, label, icon: Icon }) => (
+                  <li key={href}>
+                    <Link href={href} className="hover:text-white transition-colors flex items-center">
+                      <Icon className="mr-2 h-4 w-4 text-primary" />
+                      {label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -167,14 +182,12 @@ export function Footer() {
                   className="pl-10 pr-3 py-2.5 w-full font-body text-sm bg-zinc-800 border-zinc-700 text-white placeholder-zinc-500 focus:ring-primary focus:border-primary"
                   required
                   disabled={isFooterSignupLoading}
-                  suppressHydrationWarning={true}
                 />
               </div>
               <Button 
                 type="submit" 
                 className="font-headline text-sm bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto shrink-0" 
                 disabled={isFooterSignupLoading}
-                suppressHydrationWarning={true}
               >
                 {isFooterSignupLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isFooterSignupLoading ? 'Inatuma...' : 'Jisajili'}
