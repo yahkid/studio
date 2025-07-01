@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups', // Reverted to allow auth popups to work correctly
+            value: 'same-origin', // Use 'same-origin' for compatibility with Firebase Auth popups
           },
         ],
       },

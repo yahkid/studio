@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 
 // Import types for props
@@ -13,7 +13,7 @@ import { DecisionPathwaySectionSw } from "@/components/sections/decision-pathway
 import { EventsSectionSw } from "@/components/sections/events-section";
 import { PartnershipSectionSw } from "@/components/sections/partnership-section";
 import { ThemeOfTheYearSection } from '@/components/sections/theme-of-the-year-section';
-import { StoriesAndMediaSection } from '@/components/sections/stories-and-media-section'; // Import directly
+import { StoriesAndMediaSection } from '@/components/sections/stories-and-media-section';
 
 const LeadMagnetModal = dynamic(() => import('@/components/modals/lead-magnet-modal').then(mod => mod.LeadMagnetModal), { ssr: false });
 const VisitPlannerModal = dynamic(() => import('@/components/modals/visit-planner-modal').then(mod => mod.VisitPlannerModal), { ssr: false });
@@ -29,10 +29,10 @@ interface HomePageClientProps {
 }
 
 export function HomePageClient({ sermon, podcast, testimonial }: HomePageClientProps) {
-  const [isLeadMagnetOpen, setIsLeadMagnetOpen] = useState(false);
-  const [isVisitPlannerOpen, setIsVisitPlannerOpen] = useState(false);
-  const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false);
-  const [isTestimonyModalOpen, setIsTestimonyModalOpen] = useState(false);
+  const [isLeadMagnetOpen, setIsLeadMagnetOpen] = React.useState(false);
+  const [isVisitPlannerOpen, setIsVisitPlannerOpen] = React.useState(false);
+  const [isDecisionModalOpen, setIsDecisionModalOpen] = React.useState(false);
+  const [isTestimonyModalOpen, setIsTestimonyModalOpen] = React.useState(false);
 
   return (
     <>
