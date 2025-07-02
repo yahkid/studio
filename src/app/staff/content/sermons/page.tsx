@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { deleteSermon } from "./actions";
-import { Loader2, PlusCircle, Trash2, Edit, AlertCircle, Clapperboard, Youtube, BadgeCheck, CheckCircle, Circle } from "lucide-react";
+import { deleteSermon, setSermonPublishedStatus } from "./actions"; // Import new action
+import { Loader2, PlusCircle, Trash2, Edit, AlertCircle, Clapperboard, Youtube, CheckCircle, Circle, Eye, EyeOff } from "lucide-react"; // Import new icons
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,43 @@ import { format } from "date-fns";
 
 interface EnrichedSermon extends SermonDoc {
     id: string;
+}
+
+// Publish/Unpublish button component to handle state
+function PublishSermonButton({ sermon }: { sermon: EnrichedSermon }) {
+    const { toast } = useToast();
+    const [isPublishing, startPublishTransition] = useTransition();
+
+    const handlePublishToggle = () => {
+        startPublishTransition(async () => {
+            const newStatus = !sermon.is_published;
+            const result = await setSermonPublishedStatus(sermon.id, newStatus);
+            if (result.success) {
+                toast({ title: newStatus ? "Sermon Published" : "Sermon Unpublished", description: "The sermon status has been updated." });
+            } else {
+                toast({ title: "Error", description: result.error, variant: "destructive" });
+            }
+        });
+    }
+
+    return (
+        <Button 
+            onClick={handlePublishToggle}
+            variant={sermon.is_published ? "secondary" : "default"} 
+            size="sm" 
+            className="w-full sm:w-auto"
+            disabled={isPublishing}
+        >
+            {isPublishing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : sermon.is_published ? (
+                <EyeOff className="mr-2 h-4 w-4" />
+            ) : (
+                <Eye className="mr-2 h-4 w-4" />
+            )}
+            {isPublishing ? "Updating..." : sermon.is_published ? "Unpublish" : "Publish"}
+        </Button>
+    )
 }
 
 export default function SermonManagerPage() {
@@ -53,6 +90,12 @@ export default function SermonManagerPage() {
     useEffect(() => {
         fetchSermons();
     }, [fetchSermons]);
+    
+    useEffect(() => {
+        if (!isSheetOpen) {
+            fetchSermons();
+        }
+    }, [isSheetOpen, fetchSermons]);
 
     const handleEdit = (sermon: EnrichedSermon) => {
         setEditingSermon(sermon);
@@ -69,7 +112,7 @@ export default function SermonManagerPage() {
             const result = await deleteSermon(sermonId);
             if (result.success) {
                 toast({ title: "Sermon Deleted" });
-                fetchSermons();
+                // No need to call fetchSermons() here, revalidatePath handles it.
             } else {
                 toast({ title: "Error", description: result.error, variant: "destructive" });
             }
@@ -78,7 +121,6 @@ export default function SermonManagerPage() {
 
     const handleFormSubmit = () => {
       setIsSheetOpen(false);
-      fetchSermons();
     }
 
     return (
@@ -125,17 +167,11 @@ export default function SermonManagerPage() {
                                     height={180} 
                                     className="aspect-video object-cover rounded-t-lg" 
                                 />
-                                 <div className="absolute top-2 left-2 flex flex-col gap-1">
-                                    <Badge variant={sermon.is_published ? "default" : "secondary"} className="py-1">
-                                        {sermon.is_published ? <CheckCircle className="mr-1 h-3 w-3" /> : <Circle className="mr-1 h-3 w-3"/>}
-                                        {sermon.is_published ? "Published" : "Draft"}
-                                    </Badge>
-                                    {sermon.is_featured && (
-                                        <Badge variant="secondary" className="bg-hscm-gold text-dark-text hover:bg-hscm-gold/80 py-1">
-                                            <BadgeCheck className="mr-1 h-3 w-3" /> Featured
-                                        </Badge>
-                                    )}
-                                </div>
+                                 <Badge variant={sermon.is_published ? "default" : "secondary"} className="absolute top-2 right-2 flex items-center">
+                                    {sermon.is_published ? <CheckCircle className="mr-1 h-3 w-3" /> : <Circle className="mr-1 h-3 w-3"/>}
+                                    {sermon.is_published ? "Published" : "Draft"}
+                                </Badge>
+                                {sermon.is_featured && <Badge variant="secondary" className="absolute top-2 left-2 bg-hscm-gold text-dark-text hover:bg-hscm-gold/80">Featured</Badge>}
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
                                 <p className="text-xs text-muted-foreground">{sermon.sermon_date ? format(sermon.sermon_date.toDate(), 'PPP') : ''}</p>
@@ -145,23 +181,26 @@ export default function SermonManagerPage() {
                                   <Youtube className="h-3 w-3" /> Watch on YouTube
                                 </a>
                             </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => handleEdit(sermon)}><Edit className="h-4 w-4" /></Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="destructive" size="icon" disabled={isDeleting}><Trash2 className="h-4 w-4"/></Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(sermon.id)} disabled={isDeleting}>
-                                                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                                Yes, delete
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                            <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch gap-2">
+                                <PublishSermonButton sermon={sermon} />
+                                <div className="flex gap-2">
+                                    <Button variant="outline" size="icon" onClick={() => handleEdit(sermon)} className="flex-1 sm:flex-auto"><Edit className="h-4 w-4" /></Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="icon" disabled={isDeleting} className="flex-1 sm:flex-auto"><Trash2 className="h-4 w-4"/></Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(sermon.id)} disabled={isDeleting}>
+                                                    {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                    Yes, delete
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
                             </CardFooter>
                         </Card>
                     ))}

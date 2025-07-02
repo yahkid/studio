@@ -31,9 +31,8 @@ const sermonFormSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   speaker: z.string().min(2, 'Speaker name is required.'),
   youtube_video_id: z.string().min(11, 'Must be a valid YouTube Video ID.'),
-  sermon_date: z.date({ required_error: 'Sermon date is required.' }),
+  sermon_date: z.coerce.date({ required_error: 'Sermon date is required.' }),
   is_featured: z.boolean().default(false),
-  is_published: z.boolean().default(false),
   tags: z.string().optional(),
   audioDownloadUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
   videoDownloadUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
@@ -55,7 +54,6 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
       youtube_video_id: sermon?.youtube_video_id || '',
       sermon_date: sermon?.sermon_date ? sermon.sermon_date.toDate() : new Date(),
       is_featured: sermon?.is_featured || false,
-      is_published: sermon?.is_published || false,
       tags: sermon?.tags?.join(', ') || '',
       audioDownloadUrl: sermon?.audioDownloadUrl || '',
       videoDownloadUrl: sermon?.videoDownloadUrl || '',
@@ -72,14 +70,17 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
         formData.append('youtube_video_id', data.youtube_video_id);
         formData.append('sermon_date', data.sermon_date.toISOString());
         formData.append('is_featured', String(data.is_featured));
-        formData.append('is_published', String(data.is_published));
+        // When creating a new sermon, it's always a draft.
+        // When updating, we don't change the published status here, preserving its existing value.
+        formData.append('is_published', String(sermon?.is_published || false));
+
         if (data.tags) formData.append('tags', data.tags);
         if (data.audioDownloadUrl) formData.append('audioDownloadUrl', data.audioDownloadUrl);
         if (data.videoDownloadUrl) formData.append('videoDownloadUrl', data.videoDownloadUrl);
 
         const result = await upsertSermon(formData);
         if (result.success) {
-            toast({ title: sermon ? "Sermon Updated" : "Sermon Created", description: "The sermon has been saved." });
+            toast({ title: sermon ? "Sermon Updated" : "Sermon Draft Created", description: "The sermon content has been saved." });
             onFormSubmit();
         } else {
             toast({ title: "Error", description: result.error || "Failed to save sermon.", variant: "destructive" });
@@ -136,24 +137,16 @@ export function SermonForm({ onFormSubmit, sermon }: SermonFormProps) {
             <FormItem><FormLabel>Video Download URL (Optional)</FormLabel><FormControl><Input type="url" placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
         )} />
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField control={form.control} name="is_published" render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
-                <FormLabel>Published</FormLabel><FormDescription>Visible on public site.</FormDescription></div>
-                <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                </FormItem>
-            )} />
-            <FormField control={form.control} name="is_featured" render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
-                <FormLabel>Feature on Homepage</FormLabel><FormDescription>Show on the homepage.</FormDescription></div>
-                <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                </FormItem>
-            )} />
-        </div>
-
+        <FormField control={form.control} name="is_featured" render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5">
+            <FormLabel>Feature on Homepage</FormLabel><FormDescription>Show on the homepage.</FormDescription></div>
+            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+            </FormItem>
+        )} />
+        
         <Button type="submit" disabled={isPending} className="w-full">
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isPending ? "Saving..." : sermon ? "Save Changes" : "Create Sermon"}
+            {isPending ? "Saving..." : sermon ? "Save Changes" : "Create Sermon Draft"}
         </Button>
       </form>
     </Form>

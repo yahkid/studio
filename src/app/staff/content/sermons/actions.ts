@@ -84,3 +84,25 @@ export async function deleteSermon(sermonId: string) {
         return { success: false, error: error.message || "An unknown error occurred." };
     }
 }
+
+
+// New action for toggling publish status
+export async function setSermonPublishedStatus(sermonId: string, is_published: boolean) {
+  if (!sermonId) {
+    return { success: false, error: "Sermon ID is required." };
+  }
+
+  try {
+    const docRef = doc(db, 'sermons', sermonId);
+    await updateDoc(docRef, { is_published });
+
+    revalidatePath('/');
+    revalidatePath('/sermons');
+    revalidatePath('/staff/content/sermons');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error updating sermon status:", error);
+    return { success: false, error: error.message || "An unknown error occurred." };
+  }
+}
+

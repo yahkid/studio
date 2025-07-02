@@ -2,88 +2,11 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if a user is authenticated
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-    
-    // --------------------------------------------------
-    //  Public Content Collections
-    //  - Anyone can read.
-    //  - Only authenticated users (admins) can write/delete.
-    // --------------------------------------------------
-    match /courses/{courseId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-
-    match /events/{eventId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    
-    match /leadership/{leaderId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    
-    match /sermons/{sermonId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-
-    match /blog_posts/{postId} {
-      // Public can only read published posts
-      allow read: if resource.data.is_published == true;
-      allow write: if isAuthenticated();
-    }
-    
-    match /published_testimonials/{testimonialId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-
-    match /resources/{resourceId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-
-    // --------------------------------------------------
-    //  User Submission & Lead-Gen Collections
-    //  - Anyone can create (to reduce friction for new leads).
-    //  - Only admins can read/manage them.
-    // --------------------------------------------------
-    match /decisions/{decisionId} {
-      allow create: if isAuthenticated(); // User must be logged in to make a decision
-      allow read, update, delete: if isAuthenticated();
-    }
-
-    match /user_testimonies/{testimonyId} {
-      allow create: if isAuthenticated(); // User must be logged in to submit a testimony
-      allow read, update: if isAuthenticated(); // Admin review
-      allow delete: if isAuthenticated();
-    }
-
-    // Lead-gen forms allow anyone to create
-    match /lead_magnet_signups/{signupId}   { allow create: if true; allow read, write: if isAuthenticated(); }
-    match /exit_intent_offers/{offerId}     { allow create: if true; allow read, write: if isAuthenticated(); }
-    match /visit_requests/{requestId}       { allow create: if true; allow read, write: if isAuthenticated(); }
-    match /weekly_updates_signups/{signupId}{ allow create: if true; allow read, write: if isAuthenticated(); }
-    match /financial_partner_signups/{signupId}{ allow create: if true; allow read, write: if isAuthenticated(); }
-    match /prayer_partner_signups/{signupId}  { allow create: if true; allow read, write: if isAuthenticated(); }
-    match /volunteer_partner_signups/{signupId}{ allow create: if true; allow read, write: if isAuthenticated(); }
-    
-    // --------------------------------------------------
-    //  User-Specific Data
-    //  - Users can only read/write their own documents.
-    // --------------------------------------------------
-    match /user_course_progress/{progressId} {
-      // Allow user to create and update their own progress record
-      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.user_id;
-      allow read, update: if isAuthenticated() && request.auth.uid == resource.data.user_id;
-      // No delete access from client
-      allow delete: if false;
+    // Allow read and write access to all documents
+    // for developers during the prototyping phase.
+    // THIS IS NOT A SECURE RULE FOR PRODUCTION.
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
