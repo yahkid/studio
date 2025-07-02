@@ -42,6 +42,13 @@
         { "fieldPath": "event_date", "order": "ASCENDING" }
       ]
     },
+     {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "event_date", "order": "ASCENDING" }
+      ]
+    },
     {
       "collectionGroup": "published_testimonials",
       "queryScope": "COLLECTION",
@@ -75,8 +82,7 @@
       "collectionGroup": "user_course_progress",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "user_id", "order": "ASCENDING" },
-        { "fieldPath": "course_id", "order": "ASCENDING" }
+        { "fieldPath": "user_id", "order": "ASCENDING" }
       ]
     },
     {
@@ -85,7 +91,37 @@
       "fields": [
         { "fieldPath": "created_at", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "decisions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "community_needs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+     {
+      "collectionGroup": "volunteer_partner_signups",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "visit_requests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
 }
+
+    
