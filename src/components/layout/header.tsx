@@ -28,8 +28,6 @@ import { signOut } from 'firebase/auth';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
 import { Skeleton } from "../ui/skeleton";
 
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
-
 export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
   const router = useRouter();
@@ -68,7 +66,9 @@ export function Header() {
   
   const userDisplayName = user?.displayName || user?.email;
   const userPhotoURL = user?.photoURL;
-  const isAdmin = user?.uid === ADMIN_UID;
+  
+  // For the prototype, any authenticated user is considered an admin.
+  const isAdmin = !!user;
 
 
   const renderAuthSection = () => {

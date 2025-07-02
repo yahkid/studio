@@ -13,8 +13,6 @@ import {
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
-
 export default function StaffLayout({
   children,
 }: {
@@ -27,10 +25,11 @@ export default function StaffLayout({
 
   React.useEffect(() => {
     if (initialLoadingComplete) {
-      if (!user || user.uid !== ADMIN_UID) {
+      // Any authenticated user is considered an admin for this prototype.
+      if (!user) {
         toast({
           title: "Access Denied",
-          description: "You do not have permission to view this page.",
+          description: "You must be logged in to view this page.",
           variant: "destructive",
         });
         router.replace("/"); // Use replace to prevent going back to the protected page
