@@ -1,9 +1,10 @@
+
 'use server';
 
 import { db } from '@/lib/firebaseClient';
 import { collection, getDocs, getCountFromServer } from 'firebase/firestore';
 import { format, startOfMonth } from 'date-fns';
-import type { DecisionDoc, DonationDoc } from '@/types/firestore';
+import type { DecisionDoc, DonationDoc, UserCourseProgressDoc } from '@/types/firestore';
 
 export async function getAnalyticsData() {
   try {
@@ -17,18 +18,21 @@ export async function getAnalyticsData() {
       getDocs(collection(db, 'decisions')),
       getDocs(collection(db, 'donations')),
       getCountFromServer(collection(db, 'user_testimonies')),
-      getCountFromServer(collection(db, 'user_course_progress')),
+      getDocs(collection(db, 'user_course_progress')), // Fetch full docs now
     ]);
 
     const decisions = decisionsSnap.docs.map(doc => doc.data() as DecisionDoc);
     const donations = donationsSnap.docs.map(doc => doc.data() as DonationDoc);
+    const courseProgresses = coursesProgressSnap.docs.map(doc => doc.data() as UserCourseProgressDoc);
 
     // 2. Process data for metric cards
     const totalDecisions = decisions.length;
     const totalTestimonies = testimoniesSnap.data().count;
-    const totalCourses = coursesProgressSnap.data().count;
+    const totalCoursesStarted = courseProgresses.length;
+    const totalLessonsCompleted = courseProgresses.reduce((sum, progress) => sum + (progress.completed_lessons?.length || 0), 0);
     const successfulDonations = donations.filter(d => d.status === 'succeeded');
     const totalDonationAmount = successfulDonations.reduce((sum, d) => sum + d.amount, 0);
+    const totalSuccessfulDonations = successfulDonations.length;
 
     // 3. Process data for charts
     // Decisions over time (by month)
@@ -56,18 +60,35 @@ export async function getAnalyticsData() {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
+    // Donations over time (by month)
+    const donationsByMonth = successfulDonations.reduce((acc, donation) => {
+      const month = format(startOfMonth(donation.created_at.toDate()), 'yyyy-MM');
+      acc[month] = (acc[month] || 0) + donation.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const donationsTimeSeries = Object.entries(donationsByMonth)
+      .map(([date, amount]) => ({
+        date,
+        Amount: amount,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
     return {
       success: true,
       stats: {
         totalDecisions,
         totalTestimonies,
-        totalCourses,
+        totalCoursesStarted,
+        totalLessonsCompleted,
         totalDonationAmount,
-        totalUsers: 150, // Placeholder, as getting auth users server-side is complex
+        totalSuccessfulDonations,
+        totalUsers: 150, // Placeholder
       },
       chartData: {
         decisionsTimeSeries,
         decisionTypeData,
+        donationsTimeSeries,
       },
     };
   } catch (error: any) {

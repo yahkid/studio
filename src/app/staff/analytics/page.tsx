@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from 'react';
@@ -78,11 +79,12 @@ export default function AnalyticsPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           <MetricCard title="Total Users" value={stats.totalUsers?.toLocaleString() || '...'} icon={Users} description="Placeholder value" isLoading={isLoading} />
           <MetricCard title="Faith Decisions" value={stats.totalDecisions?.toLocaleString() || '...'} icon={HandHeart} description="Total decisions submitted" isLoading={isLoading} />
           <MetricCard title="Testimonies" value={stats.totalTestimonies?.toLocaleString() || '...'} icon={MessageSquareText} description="Total stories shared" isLoading={isLoading} />
-          <MetricCard title="Donation Amount" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('en-US') || '...'}` : 'Loading...'} icon={DollarSign} description="Total successful donations" isLoading={isLoading} />
+          <MetricCard title="Total Donations (TZS)" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('en-US') || '...'}` : 'Loading...'} icon={DollarSign} description={`${stats.totalSuccessfulDonations || 0} successful donations`} isLoading={isLoading} />
+          <MetricCard title="Lessons Completed" value={stats.totalLessonsCompleted?.toLocaleString() || '...'} icon={BookOpen} description={`Across ${stats.totalCoursesStarted || 0} started courses`} isLoading={isLoading} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -132,6 +134,32 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <div className="grid gap-6 lg:grid-cols-1">
+        <Card>
+            <CardHeader>
+                <CardTitle>Donation Amount Over Time</CardTitle>
+                <CardDescription>Monthly sum of successful donations.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                    {isLoading || !chartData.donationsTimeSeries ? (
+                        <div className="flex h-full w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary"/></div>
+                    ) : (
+                        <BarChart data={chartData.donationsTimeSeries}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" tickFormatter={(val) => new Date(val + '-02').toLocaleDateString('en-US', { month: 'short' })} />
+                            <YAxis width={80} tickFormatter={(value) => `TZS ${Number(value) / 1000}k`} />
+                            <Tooltip formatter={(value) => `TZS ${Number(value).toLocaleString()}`} />
+                            <Legend />
+                            <Bar dataKey="Amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                    )}
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
+      </div>
+
     </div>
   )
 }
