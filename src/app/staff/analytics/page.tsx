@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
           <MetricCard title="Total Users" value={stats.totalUsers?.toLocaleString() || '...'} icon={Users} description="Placeholder value" isLoading={isLoading} />
           <MetricCard title="Faith Decisions" value={stats.totalDecisions?.toLocaleString() || '...'} icon={HandHeart} description="Total decisions submitted" isLoading={isLoading} />
           <MetricCard title="Testimonies" value={stats.totalTestimonies?.toLocaleString() || '...'} icon={MessageSquareText} description="Total stories shared" isLoading={isLoading} />
-          <MetricCard title="Total Donations (TZS)" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('en-US') || '...'}` : 'Loading...'} icon={DollarSign} description={`${stats.totalSuccessfulDonations || 0} successful donations`} isLoading={isLoading} />
+          <MetricCard title="Total Donations (TZS)" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('sw-TZ') || '...'}` : 'Loading...'} icon={DollarSign} description={`${stats.totalSuccessfulDonations || 0} successful donations`} isLoading={isLoading} />
           <MetricCard title="Lessons Completed" value={stats.totalLessonsCompleted?.toLocaleString() || '...'} icon={BookOpen} description={`Across ${stats.totalCoursesStarted || 0} started courses`} isLoading={isLoading} />
       </div>
 
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" tickFormatter={(val) => new Date(val + '-02').toLocaleDateString('en-US', { month: 'short' })} />
                             <YAxis width={80} tickFormatter={(value) => `TZS ${Number(value) / 1000}k`} />
-                            <Tooltip formatter={(value) => `TZS ${Number(value).toLocaleString()}`} />
+                            <Tooltip formatter={(value) => `TZS ${Number(value).toLocaleString('sw-TZ')}`} />
                             <Legend />
                             <Bar dataKey="Amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                         </BarChart>

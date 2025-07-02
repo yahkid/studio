@@ -143,7 +143,7 @@ export default function PartnerPage() {
              <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <CardTitle className="font-headline text-3xl">Asante, {submittedDetails.name.split(' ')[0]}!</CardTitle>
             <CardDescription>
-                Mchango wako wa <strong>TZS {mounted ? submittedDetails.amount.toLocaleString('en-US') : submittedDetails.amount}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
+                Mchango wako wa <strong>TZS {mounted ? submittedDetails.amount.toLocaleString('sw-TZ') : submittedDetails.amount}</strong> ({submittedDetails.frequency === 'monthly' ? 'kila mwezi' : 'mara moja'}) umepokelewa.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -219,7 +219,7 @@ export default function PartnerPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
                         {presetAmounts.map(preset => (
                             <Button key={preset} type="button" variant={form.watch('amount') === preset ? 'default' : 'outline'} onClick={() => form.setValue('amount', preset, { shouldValidate: true })}>
-                                {mounted ? preset.toLocaleString('en-US') : preset.toString()}
+                                {mounted ? preset.toLocaleString('sw-TZ') : preset.toString()}
                             </Button>
                         ))}
                     </div>
