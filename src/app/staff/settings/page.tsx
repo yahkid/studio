@@ -31,7 +31,7 @@ export default function SettingsPage() {
       if (result.success) {
         toast({
           title: "Database Imejazwa kwa Mafanikio",
-          description: "Data ya mfano kwa kozi na uongozi imeongezwa.",
+          description: "Data ya mfano kwa maudhui yote imeongezwa.",
         });
       } else {
         toast({
@@ -68,9 +68,9 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent>
           <p className="font-body text-sm text-muted-foreground mb-4">
-            Zana hii itajaza makusanyo yako ya `courses` na `leadership` na data ya mfano yenye ubora. Ni muhimu kwa ajili ya majaribio au kuanzisha tovuti kwa mara ya kwanza.
+            Zana hii itajaza makusanyo yote makuu ya maudhui (`sermons`, `courses`, `leadership`, `events`, `blog_posts`, `resources`) na data ya mfano yenye ubora.
             <br />
-            <strong className="text-destructive">Onyo:</strong> Kufanya hivi kutafuta hati zozote zilizopo zenye ID sawa.
+            <strong className="text-destructive">Onyo:</strong> Kufanya hivi kutaunda hati mpya. Hakutafuta data iliyopo isipokuwa hati za `courses` na `leadership` zenye ID maalum.
           </p>
         </CardContent>
         <CardFooter>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Una uhakika kabisa?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Kitendo hiki hakiwezi kutenduliwa. Hii itafuta na kuandika upya hati katika makusanyo ya `courses` na `leadership` na data ya mfano.
+                  Kitendo hiki kitaongeza data ya mfano kwenye database yako. Hati zilizopo za kozi na uongozi zenye ID maalum zinaweza kuandikwa upya.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

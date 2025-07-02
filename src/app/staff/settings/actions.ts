@@ -52,6 +52,7 @@ const sampleSermons = [
         sermon_date: Timestamp.fromDate(new Date("2024-07-21")),
         tags: ["transformation", "mindset", "faith"],
         is_featured: true,
+        is_published: true,
         audioDownloadUrl: "#",
         videoDownloadUrl: "#",
     },
@@ -63,10 +64,89 @@ const sampleSermons = [
         sermon_date: Timestamp.fromDate(new Date("2024-07-14")),
         tags: ["joy", "spiritual growth", "hope"],
         is_featured: false,
+        is_published: true,
         audioDownloadUrl: "#",
         videoDownloadUrl: "#",
     }
 ];
+
+const sampleEvents = [
+    {
+        title: "Youth Conference 2025",
+        description: "A special conference for all the youth to connect, learn, and grow in faith.",
+        event_date: Timestamp.fromDate(new Date("2025-06-30")),
+        start_time: "18:00",
+        end_time: "20:30",
+        event_type: 'special' as const,
+        platform: "Main Church Hall",
+        stream_url: "#",
+        audience: "Youth",
+        is_published: true,
+    },
+    {
+        title: "Sunday Service",
+        description: "Join us for our weekly worship and word service.",
+        event_date: Timestamp.fromDate(new Date("2024-07-28")), // A date in the past to show it works
+        start_time: "09:00",
+        end_time: "11:00",
+        event_type: 'weekly' as const,
+        platform: "YouTube Live",
+        stream_url: "https://youtube.com/hscmconnect",
+        audience: "All",
+        is_published: true,
+    }
+];
+
+const sampleBlogPosts = [
+    {
+        title: "Finding Peace in a Chaotic World",
+        slug: "finding-peace-in-a-chaotic-world",
+        author: "Rev. Innocent Morris",
+        content: "In a world filled with noise and distraction, finding true peace can seem impossible. But the Bible tells us that the peace of God, which transcends all understanding, is available to us through Christ Jesus. This article explores practical steps to anchor your heart in God's peace, no matter the storms you face.",
+        image_url: 'https://placehold.co/600x400.png',
+        ai_hint: 'serene landscape sunset',
+        tags: ["peace", "faith", "hope"],
+        is_published: true,
+        published_at: Timestamp.fromDate(new Date("2024-07-15")),
+    },
+    {
+        title: "The Purpose of Community in Faith",
+        slug: "purpose-of-community-in-faith",
+        author: "Pastor Jane Mdoe",
+        content: "We were not created to walk our faith journey alone. Christian community is God's design for our growth, encouragement, and accountability. Discover why gathering together is more than just a Sunday tradition—it's a vital part of a thriving spiritual life.",
+        image_url: 'https://placehold.co/600x400.png',
+        ai_hint: 'diverse people smiling',
+        tags: ["community", "church", "fellowship"],
+        is_published: true,
+        published_at: Timestamp.fromDate(new Date("2024-07-10")),
+    }
+];
+
+const sampleResources = [
+    {
+        title: "Mwongozo wa Misingi ya Imani",
+        description: "Mwongozo wa PDF unaoelezea imani za msingi za Ukristo na kanisa letu. Nzuri kwa waumini wapya.",
+        category: "E-Books",
+        fileUrl: "#",
+        fileType: 'PDF' as const,
+        thumbnailUrl: "https://placehold.co/600x400.png",
+        aiHint: "open book light",
+        order: 1,
+        uploadedAt: serverTimestamp(),
+    },
+    {
+        title: "Sermon Series Art",
+        description: "High-resolution graphic for the 'Power of a Renewed Mind' sermon series.",
+        category: "Graphics",
+        fileUrl: "#",
+        fileType: 'JPG' as const,
+        thumbnailUrl: "https://placehold.co/600x400.png",
+        aiHint: "abstract design brain",
+        order: 2,
+        uploadedAt: serverTimestamp(),
+    }
+];
+
 
 export async function seedDatabase() {
   try {
@@ -89,16 +169,43 @@ export async function seedDatabase() {
         const sermonRef = doc(collection(db, 'sermons'));
         batch.set(sermonRef, sermon);
     });
+    
+    // Seed Events
+    sampleEvents.forEach(event => {
+        const eventRef = doc(collection(db, 'events'));
+        batch.set(eventRef, event);
+    });
+    
+    // Seed Blog Posts
+    sampleBlogPosts.forEach(post => {
+        const postRef = doc(collection(db, 'blog_posts'));
+        batch.set(postRef, post);
+    });
+    
+    // Seed Resources
+    sampleResources.forEach(resource => {
+        const resourceRef = doc(collection(db, 'resources'));
+        batch.set(resourceRef, resource);
+    });
 
     await batch.commit();
     
-    // Revalidate paths to show new data
+    // Revalidate all relevant paths
+    revalidatePath('/');
     revalidatePath('/kozi');
     revalidatePath('/uongozi');
-    revalidatePath('/'); // For sermons on homepage
+    revalidatePath('/sermons');
+    revalidatePath('/matukio');
+    revalidatePath('/blog');
+    revalidatePath('/resources');
+    
+    // Revalidate staff pages
     revalidatePath('/staff/content/sermons');
     revalidatePath('/staff/content/courses');
     revalidatePath('/staff/content/leadership');
+    revalidatePath('/staff/content/events');
+    revalidatePath('/staff/content/blog');
+    revalidatePath('/staff/content/resources');
 
 
     return { success: true };
