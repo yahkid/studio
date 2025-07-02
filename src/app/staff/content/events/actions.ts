@@ -3,10 +3,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/firebaseClient';
-import { collection, addDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { z } from 'zod';
 
 const eventSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(3, 'Title must be at least 3 characters.'),
   description: z.string().optional(),
   event_date: z.date({ required_error: 'Event date is required.' }),
@@ -16,41 +17,43 @@ const eventSchema = z.object({
   platform: z.string().min(1, 'Platform is required.'),
   stream_url: z.string().url('Please enter a valid URL.').or(z.literal('#')),
   audience: z.string().min(1, 'Audience is required.'),
-  is_published: z.boolean(),
 });
 
-export async function createEvent(formData: z.infer<typeof eventSchema>) {
-  // A server-side check for admin role would be ideal here in a real app
-  // const isAdmin = await checkAdmin(); if (!isAdmin) return ...
-  
+export async function upsertEvent(formData: z.infer<typeof eventSchema> & { is_published?: boolean }) {
   const parsed = eventSchema.safeParse(formData);
   if (!parsed.success) {
-    // Flatten the error messages for easier display on the client
     const errorMessages = parsed.error.flatten().fieldErrors;
     return { success: false, error: JSON.stringify(errorMessages) };
   }
 
   try {
+    const { id, ...data } = parsed.data;
     const eventData = {
-      ...parsed.data,
-      event_date: Timestamp.fromDate(parsed.data.event_date),
+      ...data,
+      event_date: Timestamp.fromDate(data.event_date),
     };
-    await addDoc(collection(db, 'events'), eventData);
     
-    // Revalidate paths to reflect the changes on public and admin pages
+    if (id) {
+        const docRef = doc(db, 'events', id);
+        await updateDoc(docRef, eventData);
+    } else {
+        await addDoc(collection(db, 'events'), {
+            ...eventData,
+            is_published: formData.is_published || false,
+        });
+    }
+    
     revalidatePath('/matukio');
     revalidatePath('/staff/content/events');
 
     return { success: true };
   } catch (error: any) {
-    console.error("Error creating event:", error);
+    console.error("Error upserting event:", error);
     return { success: false, error: error.message || 'An unknown error occurred.' };
   }
 }
 
 export async function deleteEvent(eventId: string) {
-  // A server-side check for admin role would be ideal here
-  
   if (!eventId) {
     return { success: false, error: 'Event ID is required.' };
   }
@@ -58,7 +61,6 @@ export async function deleteEvent(eventId: string) {
   try {
     await deleteDoc(doc(db, 'events', eventId));
     
-    // Revalidate paths to reflect the changes
     revalidatePath('/matukio');
     revalidatePath('/staff/content/events');
 
@@ -66,5 +68,23 @@ export async function deleteEvent(eventId: string) {
   } catch (error: any) {
     console.error("Error deleting event:", error);
     return { success: false, error: error.message || 'An unknown error occurred.' };
+  }
+}
+
+export async function setEventPublishedStatus(eventId: string, is_published: boolean) {
+  if (!eventId) {
+    return { success: false, error: "Event ID is required." };
+  }
+
+  try {
+    const docRef = doc(db, 'events', eventId);
+    await updateDoc(docRef, { is_published });
+
+    revalidatePath('/matukio');
+    revalidatePath('/staff/content/events');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error updating event status:", error);
+    return { success: false, error: error.message || "An unknown error occurred." };
   }
 }

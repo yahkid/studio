@@ -8,179 +8,67 @@ import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firesto
 import type { EventDoc } from '@/types/firestore';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { createEvent, deleteEvent } from "./actions";
-import { cn } from "@/lib/utils";
+import { deleteEvent, setEventPublishedStatus } from "./actions";
 import { format } from "date-fns";
 import Link from "next/link";
-import { Loader2, PlusCircle, Calendar as CalendarIcon, Trash2, AlertCircle, CalendarClock } from "lucide-react";
+import { Loader2, PlusCircle, Trash2, AlertCircle, CalendarClock, Edit, Eye, EyeOff, CheckCircle, Circle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { EventForm } from "./event-form";
 
 interface EnrichedEvent extends EventDoc {
     id: string;
 }
 
-const eventFormSchema = z.object({
-  title: z.string().min(3, { message: "Title must be at least 3 characters." }),
-  description: z.string().optional(),
-  event_date: z.date({ required_error: "Event date is required." }),
-  start_time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "Use HH:MM format." }),
-  end_time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "Use HH:MM format." }),
-  event_type: z.enum(['weekly', 'monthly', 'special'], { required_error: "Event type is required."}),
-  platform: z.string().min(1, { message: "Platform is required." }),
-  stream_url: z.string().url({ message: "Please enter a valid URL."}).or(z.literal('#')),
-  audience: z.string().min(1, { message: "Audience is required." }),
-  is_published: z.boolean().default(false),
-});
+function PublishEventButton({ event, onStatusChange }: { event: EnrichedEvent; onStatusChange: () => void }) {
+    const { toast } = useToast();
+    const [isPublishing, startPublishTransition] = useTransition();
 
-type EventFormValues = z.infer<typeof eventFormSchema>;
+    const handlePublishToggle = () => {
+        startPublishTransition(async () => {
+            const newStatus = !event.is_published;
+            const result = await setEventPublishedStatus(event.id, newStatus);
+            if (result.success) {
+                toast({ title: newStatus ? "Event Published" : "Event Unpublished", description: "The event status has been updated." });
+                onStatusChange();
+            } else {
+                toast({ title: "Error", description: result.error, variant: "destructive" });
+            }
+        });
+    }
 
-function AddEventForm({ onFormSubmit }: { onFormSubmit: () => void }) {
-  const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
-  
-  const form = useForm<EventFormValues>({
-    resolver: zodResolver(eventFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      start_time: "20:00",
-      end_time: "21:30",
-      platform: "YouTube Live",
-      stream_url: "#",
-      audience: "All",
-      is_published: false,
-    },
-  });
-
-  const onSubmit = (data: EventFormValues) => {
-    startTransition(async () => {
-      const result = await createEvent(data);
-      if (result.success) {
-        toast({ title: "Event Created", description: "The new event has been added successfully." });
-        onFormSubmit(); // Close sheet and refresh list
-        form.reset();
-      } else {
-        toast({ title: "Error", description: "Failed to create event. Please check the form.", variant: "destructive" });
-        console.error("Form submission error:", result.error);
-      }
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField control={form.control} name="title" render={({ field }) => (
-          <FormItem><FormLabel>Title</FormLabel><FormControl><Input placeholder="Event Title" {...field} /></FormControl><FormMessage /></FormItem>
-        )} />
-        
-        <FormField control={form.control} name="description" render={({ field }) => (
-          <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea placeholder="Describe the event..." {...field} /></FormControl><FormMessage /></FormItem>
-        )} />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField control={form.control} name="event_date" render={({ field }) => (
-            <FormItem className="flex flex-col"><FormLabel>Event Date</FormLabel>
-                <Popover><PopoverTrigger asChild>
-                    <FormControl>
-                    <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                    </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                </PopoverContent>
-                </Popover><FormMessage />
-            </FormItem>
-            )} />
-             <FormField control={form.control} name="event_type" render={({ field }) => (
-                <FormItem><FormLabel>Event Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl><SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger></FormControl>
-                        <SelectContent>
-                            <SelectItem value="weekly">Weekly</SelectItem>
-                            <SelectItem value="monthly">Monthly</SelectItem>
-                            <SelectItem value="special">Special</SelectItem>
-                        </SelectContent>
-                    </Select><FormMessage />
-                </FormItem>
-            )} />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField control={form.control} name="start_time" render={({ field }) => (
-            <FormItem><FormLabel>Start Time (EAT)</FormLabel><FormControl><Input placeholder="HH:MM" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="end_time" render={({ field }) => (
-            <FormItem><FormLabel>End Time (EAT)</FormLabel><FormControl><Input placeholder="HH:MM" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField control={form.control} name="platform" render={({ field }) => (
-                <FormItem><FormLabel>Platform</FormLabel><FormControl><Input placeholder="e.g., YouTube, Zoom" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="audience" render={({ field }) => (
-                <FormItem><FormLabel>Audience</FormLabel><FormControl><Input placeholder="e.g., All, Youth" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-        </div>
-
-        <FormField control={form.control} name="stream_url" render={({ field }) => (
-            <FormItem><FormLabel>Stream URL</FormLabel><FormControl><Input placeholder="https://" {...field} /></FormControl><FormMessage /></FormItem>
-        )} />
-        
-        <FormField control={form.control} name="is_published" render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-0.5"><FormLabel>Publish Event</FormLabel>
-                <p className="text-xs text-muted-foreground">Published events will appear on the public page.</p>
-                </div>
-                <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-            </FormItem>
-        )} />
-
-        <Button type="submit" disabled={isPending} className="w-full">
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isPending ? "Creating Event..." : "Create Event"}
+    return (
+        <Button 
+            onClick={handlePublishToggle}
+            variant={event.is_published ? "secondary" : "default"} 
+            size="sm" 
+            className="w-full sm:w-auto"
+            disabled={isPublishing}
+        >
+            {isPublishing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : event.is_published ? (
+                <EyeOff className="mr-2 h-4 w-4" />
+            ) : (
+                <Eye className="mr-2 h-4 w-4" />
+            )}
+            {isPublishing ? "Updating..." : event.is_published ? "Unpublish" : "Publish"}
         </Button>
-      </form>
-    </Form>
-  );
+    )
 }
-
 
 export default function EventManagerPage() {
     const [events, setEvents] = useState<EnrichedEvent[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [editingEvent, setEditingEvent] = useState<EnrichedEvent | null>(null);
     const [isDeleting, startDeleteTransition] = useTransition();
     const { toast } = useToast();
 
-    const fetchEvents = async () => {
+    const fetchEvents = React.useCallback(async () => {
         setIsLoading(true);
         try {
             const eventsQuery = query(collection(db, "events"), orderBy("event_date", "desc"));
@@ -196,22 +84,37 @@ export default function EventManagerPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [toast]);
 
     useEffect(() => {
         fetchEvents();
-    }, []);
+    }, [fetchEvents]);
+
+    const handleEdit = (event: EnrichedEvent) => {
+        setEditingEvent(event);
+        setIsSheetOpen(true);
+    };
+
+    const handleAdd = () => {
+        setEditingEvent(null);
+        setIsSheetOpen(true);
+    };
 
     const handleDelete = (eventId: string) => {
         startDeleteTransition(async () => {
             const result = await deleteEvent(eventId);
             if (result.success) {
                 toast({ title: "Event Deleted", description: "The event has been successfully removed." });
-                setEvents(prev => prev.filter(e => e.id !== eventId));
+                fetchEvents();
             } else {
                 toast({ title: "Error", description: result.error, variant: "destructive" });
             }
         });
+    };
+
+    const handleFormSubmit = () => {
+      setIsSheetOpen(false);
+      fetchEvents();
     };
 
     return (
@@ -227,21 +130,20 @@ export default function EventManagerPage() {
                         Create, view, and manage all ministry events.
                     </p>
                 </div>
-                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                    <SheetTrigger asChild>
-                        <Button suppressHydrationWarning={true}><PlusCircle className="mr-2 h-4 w-4" /> Add New Event</Button>
-                    </SheetTrigger>
-                    <SheetContent className="w-full sm:max-w-lg">
-                        <SheetHeader>
-                            <SheetTitle>Create New Event</SheetTitle>
-                            <SheetDescription>Fill out the details for the new event. Click create when you're done.</SheetDescription>
-                        </SheetHeader>
-                        <div className="mt-4 pr-4 h-[calc(100vh-8rem)] overflow-y-auto">
-                           <AddEventForm onFormSubmit={() => { setIsSheetOpen(false); fetchEvents(); }} />
-                        </div>
-                    </SheetContent>
-                </Sheet>
+                <Button onClick={handleAdd} suppressHydrationWarning={true}><PlusCircle className="mr-2 h-4 w-4" /> Add New Event</Button>
             </div>
+
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetContent className="w-full sm:max-w-lg">
+                    <SheetHeader>
+                        <SheetTitle>{editingEvent ? "Edit Event" : "Create New Event"}</SheetTitle>
+                        <SheetDescription>Fill out the details for the event. Click save when you're done.</SheetDescription>
+                    </SheetHeader>
+                    <div className="mt-4 pr-4 h-[calc(100vh-8rem)] overflow-y-auto">
+                       <EventForm onFormSubmit={handleFormSubmit} event={editingEvent} />
+                    </div>
+                </SheetContent>
+            </Sheet>
 
             {isLoading ? (
                  <div className="flex justify-center items-center py-20">
@@ -262,7 +164,10 @@ export default function EventManagerPage() {
                             <CardHeader>
                                 <div className="flex justify-between items-start gap-2">
                                     <CardTitle className="font-headline text-lg">{event.title}</CardTitle>
-                                    <Badge variant={event.is_published ? "default" : "outline"}>{event.is_published ? "Published" : "Draft"}</Badge>
+                                    <Badge variant={event.is_published ? "default" : "secondary"} className="flex items-center">
+                                      {event.is_published ? <CheckCircle className="mr-1 h-3 w-3" /> : <Circle className="mr-1 h-3 w-3"/>}
+                                      {event.is_published ? "Published" : "Draft"}
+                                    </Badge>
                                 </div>
                                 <CardDescription>
                                     {event.event_date instanceof Timestamp ? format(event.event_date.toDate(), 'PPP') : 'Invalid Date'} at {event.start_time}
@@ -271,30 +176,29 @@ export default function EventManagerPage() {
                              <CardContent className="flex-grow">
                                 <p className="text-sm text-muted-foreground line-clamp-3">{event.description}</p>
                             </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="destructive" size="sm" disabled={isDeleting} suppressHydrationWarning={true}>
-                                            <Trash2 className="mr-2 h-4 w-4"/> Delete
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. This will permanently delete the event.
-                                        </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => handleDelete(event.id)} disabled={isDeleting}>
-                                            {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                            Yes, delete
-                                        </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                                {/* Edit button can be added here later */}
+                            <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch gap-2">
+                                <PublishEventButton event={event} onStatusChange={fetchEvents} />
+                                <div className="flex gap-2">
+                                    <Button variant="outline" size="icon" onClick={() => handleEdit(event)} className="flex-1 sm:flex-auto"><Edit className="h-4 w-4" /></Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="icon" disabled={isDeleting} className="flex-1 sm:flex-auto"><Trash2 className="h-4 w-4"/></Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(event.id)} disabled={isDeleting}>
+                                                    {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                    Yes, delete
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
                             </CardFooter>
                         </Card>
                     ))}
