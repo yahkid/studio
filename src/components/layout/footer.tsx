@@ -135,7 +135,10 @@ export function Footer() {
                   <Instagram className="h-8 w-8" />
                 </a>
                 <a href="https://tiktok.com/@hscworship" target="_blank" rel="noopener noreferrer" aria-label="HSCM TikTok" className="text-[#D3D3D3] hover:text-white transition-colors">
-                  <Command className="h-8 w-8" /> {/* Placeholder for TikTok */}
+                   <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor">
+                    <title>TikTok</title>
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.85-.38-6.95-1.48-2.05-1.08-3.5-2.95-4.17-5.12-.52-1.68-.56-3.43-.44-5.16.24-3.34 1.91-6.42 4.84-8.18 2.12-1.26 4.6-1.66 6.92-1.15.02 1.52.01 3.04.01 4.57-.93-.13-1.86-.21-2.79-.21-1.95 0-3.59.85-4.43 2.59-.49 1.06-.52 2.34-.04 3.48.49 1.14 1.36 2.02 2.58 2.45 1.18.42 2.5.34 3.59-.11.18-.08.34-.17.51-.27v-4.67c.01-1.19-.43-2.33-1.25-3.16C9.92 6.13 8.7 5.56 7.4 5.56c-.02 0-.03 0-.05 0v-4.2c.98.05 1.96.12 2.94.12 1.17 0 2.34-.05 3.51-.08z" />
+                  </svg>
                 </a>
                 <a href="#" aria-label="HSCM YouTube" className="text-[#D3D3D3] hover:text-white transition-colors">
                   <Youtube className="h-8 w-8" />
