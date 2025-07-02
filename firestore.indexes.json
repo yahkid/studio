@@ -1,3 +1,4 @@
+
 {
   "indexes": [
     {
@@ -33,7 +34,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "is_active",
+          "fieldPath": "is_published",
           "order": "ASCENDING"
         },
         {

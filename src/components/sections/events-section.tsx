@@ -35,7 +35,7 @@ export function EventsSectionSw({ onOpenVisitPlanner }: EventsSectionSwProps) {
 
         const eventsQuery = query(
           collection(db, "events"),
-          where("is_active", "==", true),
+          where("is_published", "==", true),
           where("event_date", ">=", Timestamp.fromDate(today)),
           orderBy("event_date", "asc"),
           limit(3)
