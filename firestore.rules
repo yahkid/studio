@@ -1,12 +1,75 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read and write access to all documents
-    // for developers during the prototyping phase.
-    // THIS IS NOT A SECURE RULE FOR PRODUCTION.
-    match /{document=**} {
-      allow read, write: if true;
+
+    // Helper function to identify the admin user by their UID.
+    // For a production app, use custom claims for role-based access control.
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == 'iuFnP6LS5uUZYhH3NXAM4u8SKSK2';
     }
+
+    // Helper function to check if the requesting user is the owner of a document.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- CONTENT COLLECTIONS: Publicly readable, admin write access ---
+    match /sermons/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /courses/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /events/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /leadership/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /blog_posts/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /resources/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /published_testimonials/{docId} { allow read: if true; allow write: if isAdmin(); }
+
+    // --- USER-SPECIFIC DATA: Only the owner can read/write ---
+    match /user_course_progress/{progressId} {
+      allow read, write: if isOwner(resource.data.user_id);
+    }
+    
+    // --- AUTHENTICATED SUBMISSIONS: Logged-in users can create, admins manage ---
+    match /decisions/{decisionId} {
+      allow create: if isOwner(request.resource.data.user_id);
+      allow read, update, delete: if isAdmin();
+
+      // Subcollection for contact logs, only accessible by admins
+      match /contact_logs/{logId} {
+        allow read, create, update, delete: if isAdmin();
+      }
+    }
+    match /user_testimonies/{testimonyId} {
+      // Users must own the testimony they are creating.
+      allow create: if isOwner(request.resource.data.userId);
+      // Admins can manage all testimonies.
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // --- ANONYMOUS & AUTHENTICATED SUBMISSIONS: Anyone can create, admins manage ---
+    match /donations/{donationId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    match /visit_requests/{requestId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+    }
+    match /volunteer_partner_signups/{signupId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+    }
+
+    // --- OTHER SIGNUP COLLECTIONS: Anyone can create, admins manage ---
+    match /exit_intent_offers/{offerId} { allow create: if true; allow read, delete: if isAdmin(); }
+    match /lead_magnet_signups/{signupId} { allow create: if true; allow read, delete: if isAdmin(); }
+    match /weekly_updates_signups/{signupId} { allow create: if true; allow read, delete: if isAdmin(); }
+    match /prayer_partner_signups/{signupId} { allow create: if true; allow read, delete: if isAdmin(); }
+
+    // --- STAFF-ONLY COLLECTIONS ---
+    match /community_needs/{needId} {
+      allow read, write: if isAdmin();
+    }
+
   }
 }
