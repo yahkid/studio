@@ -18,23 +18,10 @@ import {
   SidebarGroupLabel
 } from "@/components/ui/sidebar";
 import {
-  Shield,
-  ShieldCheck,
-  Newspaper,
-  DollarSign,
-  HandHeart,
-  BarChart3,
-  Settings,
-  LayoutDashboard,
-  LogOut,
   Home,
-  User,
-  HeartHandshake,
-  UsersRound,
-  Baby,
-  Users,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { staffNavItems } from '@/lib/staff-nav'; // Import the new config
 
 export function StaffSidebar() {
   const pathname = usePathname();
@@ -47,20 +34,6 @@ export function StaffSidebar() {
     if (nameParts.length === 1) return nameParts[0].substring(0, 2).toUpperCase();
     return nameParts.map((part) => part[0]).join('').toUpperCase().substring(0, 2);
   };
-  
-  const menuItems = [
-    { href: '/staff', label: 'Dashibodi', icon: LayoutDashboard },
-    { href: '/admin/review-testimonies', label: 'Pitia Shuhuda', icon: ShieldCheck },
-    { href: '/staff/pastoral', label: 'Huduma za Kichungaji', icon: HandHeart },
-    { href: '/staff/content', label: 'Maudhui', icon: Newspaper },
-    { href: '/staff/humanitarian', label: 'Ukarimu', icon: HeartHandshake },
-    { href: '/staff/human-resource', label: 'Rasilimali Watu', icon: Users },
-    { href: '/staff/youth', label: 'Huduma ya Vijana', icon: UsersRound },
-    { href: '/staff/children', label: "Huduma ya Watoto", icon: Baby },
-    { href: '/staff/transport-security', label: 'Uchukuzi na Usalama', icon: Shield },
-    { href: '/staff/finance', label: 'Fedha', icon: DollarSign },
-    { href: '/staff/analytics', label: 'Takwimu', icon: BarChart3 },
-  ];
   
   return (
     <>
@@ -81,15 +54,15 @@ export function StaffSidebar() {
 
       <SidebarContent>
         <SidebarMenu>
-          {menuItems.map((item) => (
+          {staffNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href}>
                 <SidebarMenuButton
                   isActive={pathname.startsWith(item.href) && (item.href !== '/staff' || pathname === '/staff')}
-                  tooltip={item.label}
+                  tooltip={item.labelSw}
                 >
                   <item.icon />
-                  <span>{item.label}</span>
+                  <span>{item.labelSw}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
@@ -101,14 +74,6 @@ export function StaffSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Akaunti</SidebarGroupLabel>
           <SidebarMenu>
-             <SidebarMenuItem>
-              <Link href="/staff/settings">
-                <SidebarMenuButton tooltip="Mipangilio" isActive={pathname === '/staff/settings'}>
-                  <Settings/>
-                  <span>Mipangilio</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
              <SidebarMenuItem>
               <Link href="/">
                 <SidebarMenuButton tooltip="Rudi Kwenye Tovuti">

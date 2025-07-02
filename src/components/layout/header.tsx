@@ -5,8 +5,7 @@ import Link from "next/link";
 import Image from "next/image"; // Next.js Image for logo
 import { 
   LogIn, LogOut, Loader2, User, Settings as SettingsIcon, MicVocal, ShieldCheck,
-  LayoutDashboard, HandHeart, Newspaper, Globe, UsersRound, Baby, Shield, 
-  DollarSign, BarChart3, CalendarCheck, Handshake
+  Handshake
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
@@ -27,6 +26,7 @@ import { auth } from '@/lib/firebaseClient';
 import { signOut } from 'firebase/auth';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
 import { Skeleton } from "../ui/skeleton";
+import { staffNavItems } from "@/lib/staff-nav";
 
 export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -98,17 +98,17 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-64">
                 <DropdownMenuLabel>Staff Tools</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link href="/staff"><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/admin/review-testimonies"><ShieldCheck className="mr-2 h-4 w-4" />Review Testimonies</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/pastoral"><HandHeart className="mr-2 h-4 w-4" />Pastoral Care</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/content"><Newspaper className="mr-2 h-4 w-4" />Content</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/humanitarian"><Globe className="mr-2 h-4 w-4" />Humanitarian</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/youth"><UsersRound className="mr-2 h-4 w-4" />Youth Ministry</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/children"><Baby className="mr-2 h-4 w-4" />Children's Ministry</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/transport-security"><Shield className="mr-2 h-4 w-4" />Transport & Security</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/finance"><DollarSign className="mr-2 h-4 w-4" />Finance</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/analytics"><BarChart3 className="mr-2 h-4 w-4" />Analytics</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/staff/settings"><SettingsIcon className="mr-2 h-4 w-4" />System Settings</Link></DropdownMenuItem>
+                {staffNavItems.map(item => {
+                  const Icon = item.icon;
+                  return (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link href={item.href}>
+                        <Icon className="mr-2 h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  )
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           )}

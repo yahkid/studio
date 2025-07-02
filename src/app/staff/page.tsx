@@ -1,8 +1,7 @@
-
 import type { Metadata } from 'next';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Baby, Shield, ShieldCheck, Newspaper, DollarSign, HandHeart, BarChart3, Settings, HeartHandshake, UsersRound, Users } from 'lucide-react';
 import Link from 'next/link';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { staffNavItems } from '@/lib/staff-nav'; // Import the new config
 
 export const metadata: Metadata = {
   title: 'Dashibodi ya Wafanyakazi | HSCM Connect',
@@ -45,72 +44,17 @@ export default function StaffDashboardPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <DashboardCard
-          title="Pitia Shuhuda"
-          description="Idhinisha na chapisha hadithi za watumiaji kwenye ukurasa wa nyumbani."
-          icon={ShieldCheck}
-          href="/admin/review-testimonies"
-        />
-        <DashboardCard
-          title="Huduma za Kichungaji"
-          description="Fuatilia maamuzi, maombi ya maombi, na mipango ya kutembelewa."
-          icon={HandHeart}
-          href="/staff/pastoral"
-        />
-        <DashboardCard
-          title="Usimamizi wa Maudhui"
-          description="Unda na hariri makala za blogu, mahubiri, na maelezo ya matukio."
-          icon={Newspaper}
-          href="/staff/content"
-        />
-        <DashboardCard
-          title="Ukarimu"
-          description="Simamia timu ya ukarimu na huduma kwa wageni."
-          icon={HeartHandshake}
-          href="/staff/humanitarian"
-        />
-        <DashboardCard
-          title="Rasilimali Watu (HR)"
-          description="Simamia maombi ya wanaojitolea na orodha ya wafanyakazi."
-          icon={Users}
-          href="/staff/human-resource"
-        />
-        <DashboardCard
-          title="Huduma ya Vijana"
-          description="Simamia matukio ya vijana na mawasiliano na wazazi."
-          icon={UsersRound}
-          href="/staff/youth"
-        />
-        <DashboardCard
-          title="Huduma ya Watoto"
-          description="Simamia uandikishaji, mtaala, na taarifa za wazazi."
-          icon={Baby}
-          href="/staff/children"
-        />
-        <DashboardCard
-          title="Uchukuzi na Usalama"
-          description="Tazama ratiba za matukio na ratibu wanaojitolea wa vifaa."
-          icon={Shield}
-          href="/staff/transport-security"
-        />
-        <DashboardCard
-          title="Utoaji na Fedha"
-          description="Tazama ripoti za utoaji na simamia data ya washirika wa kifedha."
-          icon={DollarSign}
-          href="/staff/finance"
-        />
-        <DashboardCard
-          title="Takwimu"
-          description="Pitia takwimu za trafiki ya tovuti na ushiriki."
-          icon={BarChart3}
-          href="/staff/analytics"
-        />
-        <DashboardCard
-          title="Mipangilio ya Mfumo"
-          description="Simamia mipangilio ya tovuti na majukumu ya watumiaji."
-          icon={Settings}
-          href="/staff/settings"
-        />
+        {staffNavItems
+          .filter(item => item.href !== '/staff') // Exclude the dashboard link from the cards
+          .map(item => (
+            <DashboardCard
+              key={item.href}
+              title={item.labelSw}
+              description={item.description}
+              icon={item.icon}
+              href={item.href}
+            />
+        ))}
       </div>
     </div>
   );
