@@ -2,101 +2,88 @@
 {
   "indexes": [
     {
-      "collectionGroup": "courses",
+      "collectionGroup": "sermons",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "is_published",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "order",
-          "order": "ASCENDING"
-        }
+        { "fieldPath": "is_featured", "order": "ASCENDING" },
+        { "fieldPath": "is_published", "order": "ASCENDING" },
+        { "fieldPath": "sermon_date", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sermons",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "is_published", "order": "ASCENDING" },
+        { "fieldPath": "sermon_date", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "courses",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "course_slug",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "is_published",
-          "order": "ASCENDING"
-        }
+        { "fieldPath": "is_published", "order": "ASCENDING" },
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "courses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "course_slug", "order": "ASCENDING" },
+        { "fieldPath": "is_published", "order": "ASCENDING" }
       ]
     },
     {
       "collectionGroup": "events",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "is_published",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "event_date",
-          "order": "ASCENDING"
-        }
+        { "fieldPath": "is_published", "order": "ASCENDING" },
+        { "fieldPath": "event_date", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "published_testimonials",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "published_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "blog_posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "is_published", "order": "ASCENDING" },
+        { "fieldPath": "published_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "leadership",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "resources",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "order", "order": "ASCENDING" }
       ]
     },
     {
       "collectionGroup": "user_course_progress",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "user_id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "course_id",
-          "order": "ASCENDING"
-        }
+        { "fieldPath": "user_id", "order": "ASCENDING" },
+        { "fieldPath": "course_id", "order": "ASCENDING" }
       ]
     },
     {
       "collectionGroup": "donations",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "created_at",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "sermons",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "is_published",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "sermon_date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "sermons",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "is_featured",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "is_published",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "sermon_date",
-          "order": "DESCENDING"
-        }
+        { "fieldPath": "created_at", "order": "DESCENDING" }
       ]
     }
   ],
