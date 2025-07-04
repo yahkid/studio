@@ -23,7 +23,7 @@ export const staffNavItems = [
     icon: LayoutDashboard,
   },
   {
-    href: '/admin/review-testimonies',
+    href: '/staff/review-testimonies',
     label: 'Review Testimonies',
     labelSw: 'Pitia Shuhuda',
     description: 'Approve and publish user-submitted stories.',
