@@ -21,7 +21,9 @@
     <string name="partner_description">Your giving enables us to spread the Gospel, serve the community, and transform lives. Thank you for being part of what God is doing through HSCM Connect.</string>
     <string name="give_online_button_text">Give Securely Online</string>
     <string name="other_ways_to_give">Other Ways to Give</string>
-    <string name="other_ways_description">You can also give via M-Pesa, Tigo Pesa, or bank transfer. Please contact the church office for more details.</string>
+    <string name="mpesa_instructions">1. Piga *150*00#\n2. Chagua 4: Lipa kwa M-PESA\n3. Chagua 4: Weka Namba ya Kampuni\n4. Weka Namba ya Kampuni: <b>123456</b>\n5. Weka Namba ya Kumbukumbu: <b>SADAKA</b>\n6. Weka Kiasi\n7. Weka Namba ya Siri\n8. Bonyeza 1 kuthibitisha</string>
+    <string name="tigopesa_instructions">1. Piga *150*01#\n2. Chagua 4: Lipa Bili\n3. Chagua 3: Ingiza Namba ya Kampuni\n4. Weka Namba ya Kampuni: <b>654321</b>\n5. Weka Namba ya Kumbukumbu: <b>SADAKA</b>\n6. Weka Kiasi\n7. Weka Namba ya Siri kuthibitisha</string>
+
 
     <!-- Sign Up Screen Strings -->
     <string name="create_account">Create Account</string>
