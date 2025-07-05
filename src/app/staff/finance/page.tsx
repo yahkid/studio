@@ -25,9 +25,10 @@ interface MetricCardProps {
   value: string | number;
   icon: React.ElementType;
   description: string;
+  isLoading: boolean;
 }
 
-function MetricCard({ title, value, icon: Icon, description }: MetricCardProps) {
+function MetricCard({ title, value, icon: Icon, description, isLoading }: MetricCardProps) {
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -35,8 +36,12 @@ function MetricCard({ title, value, icon: Icon, description }: MetricCardProps) 
                 <Icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="text-xs text-muted-foreground">{description}</p>
+                {isLoading ? (
+                  <Skeleton className="h-8 w-3/4" />
+                ) : (
+                  <div className="text-2xl font-bold">{value}</div>
+                )}
+                {description && <p className="text-xs text-muted-foreground">{description}</p>}
             </CardContent>
         </Card>
     )
@@ -127,21 +132,36 @@ export default function FinancePage() {
         </p>
       </div>
 
-      {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader><CardContent><Skeleton className="h-10 w-full rounded-md" /></CardContent></Card>
-              <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader><CardContent><Skeleton className="h-10 w-full rounded-md" /></CardContent></Card>
-              <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader><CardContent><Skeleton className="h-10 w-full rounded-md" /></CardContent></Card>
-              <Card><CardHeader><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardHeader><CardContent><Skeleton className="h-10 w-full rounded-md" /></CardContent></Card>
-          </div>
-      ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <MetricCard title="Jumla ya Michango (Imefanikiwa)" value={isClient ? `TZS ${stats.totalAmount.toLocaleString('en-US')}` : `TZS ${stats.totalAmount}`} icon={TrendingUp} description={`Kutoka kwa michango ${stats.totalDonations}`} />
-              <MetricCard title="Michango ya Mara Moja" value={stats.oneTimeCount} icon={Repeat} description="Jumla ya michango ya mara moja" />
-              <MetricCard title="Washirika wa Kila Mwezi" value={stats.monthlyCount} icon={CalendarCheck} description="Jumla ya michango ya kila mwezi" />
-              <MetricCard title="Jumla ya Miamala" value={donations.length} icon={DollarSign} description="Ikiwemo inayosubiri na iliyoshindwa" />
-          </div>
-      )}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard 
+            title="Jumla ya Michango (Imefanikiwa)" 
+            value={isClient ? `TZS ${stats.totalAmount.toLocaleString('en-US')}` : `TZS ${stats.totalAmount}`} 
+            icon={TrendingUp} 
+            description={`Kutoka kwa michango ${stats.totalDonations}`} 
+            isLoading={isLoading}
+          />
+          <MetricCard 
+            title="Michango ya Mara Moja" 
+            value={stats.oneTimeCount} 
+            icon={Repeat} 
+            description="Jumla ya michango ya mara moja" 
+            isLoading={isLoading}
+          />
+          <MetricCard 
+            title="Washirika wa Kila Mwezi" 
+            value={stats.monthlyCount} 
+            icon={CalendarCheck} 
+            description="Jumla ya michango ya kila mwezi" 
+            isLoading={isLoading}
+          />
+          <MetricCard 
+            title="Jumla ya Miamala" 
+            value={donations.length} 
+            icon={DollarSign} 
+            description="Ikiwemo inayosubiri na iliyoshindwa" 
+            isLoading={isLoading}
+          />
+      </div>
 
 
       <Card className="mt-8">
