@@ -63,6 +63,30 @@ function PublishSermonButton({ sermon, onStatusChange }: { sermon: EnrichedSermo
     )
 }
 
+const safeFormatDate = (date: any): string => {
+    if (!date) return 'Tarehe Batili';
+    try {
+        // Handle Firestore Timestamp
+        if (typeof date.toDate === 'function') {
+            return format(date.toDate(), 'PPP', { locale: sw });
+        }
+        // Handle JS Date object
+        if (date instanceof Date) {
+            return format(date, 'PPP', { locale: sw });
+        }
+        // Handle ISO string or other string representations
+        const parsed = new Date(date);
+        if (!isNaN(parsed.getTime())) {
+            return format(parsed, 'PPP', { locale: sw });
+        }
+    } catch (e) {
+        console.error("Date formatting failed:", e);
+        return 'Tarehe Batili';
+    }
+    return 'Tarehe Batili';
+};
+
+
 export default function SermonManagerPage() {
     const [sermons, setSermons] = useState<EnrichedSermon[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -174,9 +198,7 @@ export default function SermonManagerPage() {
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
                                 <p className="text-xs text-muted-foreground">
-                                    {sermon.sermon_date && typeof sermon.sermon_date.toDate === 'function' 
-                                        ? format(sermon.sermon_date.toDate(), 'PPP', { locale: sw }) 
-                                        : 'Tarehe Batili'}
+                                    {safeFormatDate(sermon.sermon_date)}
                                 </p>
                                 <CardTitle className="font-headline text-lg mt-1">{sermon.title}</CardTitle>
                                 <CardDescription className="text-xs mt-1">Speaker: {sermon.speaker}</CardDescription>
