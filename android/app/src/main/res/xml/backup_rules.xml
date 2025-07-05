@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
     <!--
-    This is a default backup configuration.
-    To learn more about Android Backup, see:
-    https://developer.android.com/guide/topics/data/autobackup
+    This backup configuration is for Android 11 and lower.
+    For modern Android versions (12+), see data_extraction_rules.xml.
+    This file mirrors the modern configuration for consistency.
+    It's critical to back up SharedPreferences for user settings.
     -->
+    <include domain="sharedpref" />
+    <exclude domain="database" />
+    <exclude domain="file" />
+    <exclude domain="root" />
 </full-backup-content>
