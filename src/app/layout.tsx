@@ -56,7 +56,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <Header />
-              <main className="flex-grow container py-8 pb-28">{children}</main>
+              <main className="flex-grow">{children}</main>
               <Footer />
               <Toaster />
             </ThemeProvider>
