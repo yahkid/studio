@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { db } from '@/lib/firebaseClient';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import type { FirestoreDocTypes } from '@/types/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type EnrichedProgress = FirestoreDocTypes['user_course_progress'] & {
   courseDetails?: Course;
@@ -35,6 +36,81 @@ const getInitials = (name?: string | null) => {
     .toUpperCase()
     .substring(0, 2);
 };
+
+function ProfilePageSkeleton() {
+  return (
+    <div className="container mx-auto py-12 px-4">
+      <Card className="mb-10 w-full overflow-hidden">
+        <CardHeader className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:items-center sm:p-8 sm:text-left sm:gap-6 bg-muted/30 dark:bg-muted/10">
+          <Skeleton className="h-24 w-24 rounded-full sm:h-32 sm:w-32" />
+          <div className="flex-1 space-y-3">
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-5 w-1/2" />
+          </div>
+        </CardHeader>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="md:col-span-1">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-3/4" />
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-5 w-3/4" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-5 w-1/2" />
+              </div>
+              <div className="space-y-2 pt-2">
+                 <Skeleton className="h-8 w-full" />
+                 <Skeleton className="h-8 w-full" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="md:col-span-2 space-y-8">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-1/2" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex items-center p-4 bg-muted/50 rounded-lg space-x-4">
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-6 w-1/4" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+                <div className="flex items-center p-4 bg-muted/50 rounded-lg space-x-4">
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-6 w-1/4" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="space-y-6">
+            <Skeleton className="h-8 w-1/3" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card><CardContent className="p-2 space-y-2"><Skeleton className="aspect-video w-full" /><Skeleton className="h-5 w-3/4" /><Skeleton className="h-10 w-full" /></CardContent></Card>
+              <Card><CardContent className="p-2 space-y-2"><Skeleton className="aspect-video w-full" /><Skeleton className="h-5 w-3/4" /><Skeleton className="h-10 w-full" /></CardContent></Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 export default function ProfilePage() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -100,13 +176,8 @@ export default function ProfilePage() {
   const totalCoursesStarted = userProgress.length;
   const totalLessonsCompleted = userProgress.reduce((sum, p) => sum + (p.completed_lessons?.length || 0), 0);
 
-  if (!mounted || (!initialLoadingComplete && authLoading)) {
-    return (
-      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="ml-4 font-body text-lg">Loading profile...</p>
-      </div>
-    );
+  if (!mounted || !initialLoadingComplete || authLoading) {
+    return <ProfilePageSkeleton />;
   }
 
   return (
