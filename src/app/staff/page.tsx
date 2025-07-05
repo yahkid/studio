@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { staffNavItems } from '@/lib/staff-nav'; // Import the new config
+import { staffNavGroups } from '@/lib/staff-nav'; // Import the new config
 
 export const metadata: Metadata = {
   title: 'Dashibodi ya Wafanyakazi | HSCM Connect',
@@ -32,6 +32,9 @@ function DashboardCard({ title, description, icon: Icon, href }: DashboardCardPr
 }
 
 export default function StaffDashboardPage() {
+  // Flatten the groups into a single array of nav items
+  const allNavItems = staffNavGroups.flatMap(group => group.items);
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="space-y-2">
@@ -44,7 +47,7 @@ export default function StaffDashboardPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {staffNavItems
+        {allNavItems
           .filter(item => item.href !== '/staff') // Exclude the dashboard link from the cards
           .map(item => (
             <DashboardCard

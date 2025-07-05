@@ -17,6 +17,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup, // Import Group
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
@@ -26,7 +27,7 @@ import { auth } from '@/lib/firebaseClient';
 import { signOut } from 'firebase/auth';
 import { useAuthFirebase } from '@/contexts/AuthContextFirebase'; // Firebase Auth Hook
 import { Skeleton } from "../ui/skeleton";
-import { staffNavItems } from "@/lib/staff-nav";
+import { staffNavGroups } from "@/lib/staff-nav"; // Import grouped nav items
 
 export function Header() {
   const { user, loading: authLoading, initialLoadingComplete } = useAuthFirebase();
@@ -96,19 +97,23 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuLabel>Staff Tools</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {staffNavItems.map(item => {
-                  const Icon = item.icon;
-                  return (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link href={item.href}>
-                        <Icon className="mr-2 h-4 w-4" />
-                        {item.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  )
-                })}
+                {staffNavGroups.map((group, index) => (
+                  <DropdownMenuGroup key={group.label}>
+                    {index > 0 && <DropdownMenuSeparator />}
+                    <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                    {group.items.map(item => {
+                        const Icon = item.icon;
+                        return (
+                          <DropdownMenuItem key={item.href} asChild>
+                            <Link href={item.href}>
+                              <Icon className="mr-2 h-4 w-4" />
+                              {item.label}
+                            </Link>
+                          </DropdownMenuItem>
+                        )
+                    })}
+                  </DropdownMenuGroup>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           )}

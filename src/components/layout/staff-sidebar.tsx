@@ -21,7 +21,7 @@ import {
   Home,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { staffNavItems } from '@/lib/staff-nav'; // Import the new config
+import { staffNavGroups } from '@/lib/staff-nav'; // Import the new config
 
 export function StaffSidebar() {
   const pathname = usePathname();
@@ -53,21 +53,26 @@ export function StaffSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarMenu>
-          {staffNavItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <Link href={item.href}>
-                <SidebarMenuButton
-                  isActive={pathname.startsWith(item.href) && (item.href !== '/staff' || pathname === '/staff')}
-                  tooltip={item.labelSw}
-                >
-                  <item.icon />
-                  <span>{item.labelSw}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        {staffNavGroups.map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarMenu>
+              {group.items.map((item) => (
+                 <SidebarMenuItem key={item.href}>
+                    <Link href={item.href}>
+                      <SidebarMenuButton
+                        isActive={pathname.startsWith(item.href) && (item.href !== '/staff' || pathname === '/staff')}
+                        tooltip={item.labelSw}
+                      >
+                        <item.icon />
+                        <span>{item.labelSw}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter>
