@@ -173,4 +173,3 @@ export default function HospitalityPage() {
     </div>
   )
 }
-
