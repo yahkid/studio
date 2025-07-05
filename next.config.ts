@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/__/auth/:path*',
+        destination: 'https://hsc-website-d7569.firebaseapp.com/__/auth/:path*',
+      },
+    ]
+  },
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
