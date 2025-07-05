@@ -1,4 +1,3 @@
-
 "use client";
 
 import './globals.css';
@@ -39,9 +38,7 @@ export default function RootLayout({
   return (
     // Apply font variables to the html tag for global access
     <html lang="sw" suppressHydrationWarning className={cn(lato.variable, montserrat.variable)}>
-      <head>
-        {/* Direct font links are no longer needed */}
-      </head>
+      <head />
       {/* Apply base font via Tailwind utility class */}
       <body className="antialiased min-h-screen flex flex-col bg-background text-foreground font-body">
         <Suspense>
