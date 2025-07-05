@@ -1,136 +1,107 @@
-
 rules_version = '2';
 
+// By default, deny all reads and writes
+// This is a secure-by-default approach.
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // --- Helper Functions ---
-    // In a real app, use custom claims instead of hardcoding a UID.
-    // function isAdmin() {
-    //   return request.auth.token.admin == true;
-    // }
+    // Helper function to check if a user is an admin
+    // REPLACE 'YOUR_ADMIN_UID_HERE' with your actual Firebase Auth User ID
     function isAdmin() {
-      // Replace this placeholder UID with your actual admin user's UID from Firebase Auth
-      return request.auth.uid == '2121212121212121212121212121';
-    }
-
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
+      return request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID';
     }
     
-    function isAuthenticated() {
-      return request.auth != null;
+    // Helper function to check if the user is the owner of the document
+    function isOwner(resource) {
+      return request.auth.uid == resource.data.userId;
     }
 
-    // --- Default Deny All ---
-    // Secure by default. No document is accessible unless a specific rule allows it.
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // --- Publicly Readable Content Collections ---
-    // These collections are readable by anyone, but only writable by admins.
-    // This is for content like sermons, courses, events, etc.
+    // Public content (Sermons, Courses, Events, Leadership, etc.) is readable by anyone
     match /sermons/{sermonId} {
-      allow read: if resource.data.is_published == true;
-      allow list: if true; // Allow listing for queries, reads are filtered by rule above
+      allow read: if true;
       allow write: if isAdmin();
     }
-    
     match /courses/{courseId} {
-      allow read: if resource.data.is_published == true;
-      allow list: if true;
+      allow read: if true;
       allow write: if isAdmin();
     }
-
     match /events/{eventId} {
-      allow read: if resource.data.is_published == true;
-      allow list: if true;
+      allow read: if true;
       allow write: if isAdmin();
     }
-
     match /leadership/{leaderId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-
-    match /blog_posts/{postId} {
-      allow read: if resource.data.is_published == true;
-      allow list: if true;
-      allow write: if isAdmin();
-    }
-
-    match /published_testimonials/{testimonyId} {
+     match /blog_posts/{postId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
-    match /resources/{resourceId} {
+    match /published_testimonials/{testimonyId} {
         allow read: if true;
         allow write: if isAdmin();
     }
-    
-    // --- User-Specific Data Collections ---
-    // Users can only read and write their own documents.
+     match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User-specific data (progress, etc.) can only be read/written by the owner
     match /user_course_progress/{progressId} {
-      allow read, update, delete: if isOwner(resource.data.user_id);
-      allow create: if isOwner(request.resource.data.user_id);
+      allow read, write: if isOwner(resource);
+    }
+
+    // User submissions can be created by any authenticated user
+    // but can only be read/updated/deleted by an admin
+    match /decisions/{decisionId} {
+        allow create: if request.auth.uid != null;
+        allow read, update, delete: if isAdmin();
     }
     
-    // --- Submission Collections ---
-    // Any authenticated user can create (submit) a document.
-    // Only admins can read, update, or delete submissions.
-    match /decisions/{decisionId} {
-      allow create: if isAuthenticated() && isOwner(request.resource.data.user_id);
-      allow read, update, delete: if isAdmin();
-
-      // Subcollection for pastoral follow-up notes
-      match /contact_logs/{logId} {
+    match /decisions/{decisionId}/contact_logs/{logId} {
         allow read, write: if isAdmin();
-      }
     }
 
     match /user_testimonies/{testimonyId} {
-      allow create: if isAuthenticated() && isOwner(request.resource.data.userId);
-      allow read, update, delete: if isAdmin();
+        allow create: if request.auth.uid != null;
+        allow read, update, delete: if isAdmin();
     }
 
-    match /donations/{donationId} {
-      allow create: if isAuthenticated();
-      // Webhooks handle status updates, admins can read/manage.
-      allow read, update: if isAdmin(); 
-    }
-    
-    match /visit_requests/{requestId} {
-      allow create: if isAuthenticated();
-      allow read, update, delete: if isAdmin();
-    }
-
-    match /volunteer_partner_signups/{signupId} {
-      allow create: if true; // Open to all, even unauthenticated users
-      allow read, update, delete: if isAdmin();
-    }
-    
-    // Simple email signups, no auth needed to write.
+    // Public creation for lead magnets and signups (no auth required)
     match /lead_magnet_signups/{signupId} {
-      allow create: if true;
-      allow read, delete: if isAdmin();
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
     }
-    match /weekly_updates_signups/{signupId} {
-      allow create: if true;
-      allow read, delete: if isAdmin();
+    match /visit_requests/{requestId} {
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
     }
     match /exit_intent_offers/{offerId} {
-      allow create: if true;
-      allow read, delete: if isAdmin();
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
+    }
+    match /weekly_updates_signups/{signupId} {
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
     }
      match /prayer_partner_signups/{signupId} {
-      allow create: if true;
-      allow read, delete: if isAdmin();
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
     }
+    match /volunteer_partner_signups/{signupId} {
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
+    }
+    
      match /community_needs/{needId} {
-      allow create: if isAuthenticated(); // Must be logged-in staff
-      allow read, update, delete: if isAdmin();
+        allow create: if request.auth.uid != null; // Must be authenticated (staff)
+        allow read, update, delete: if isAdmin();
+    }
+    
+    // Donations can be created by anyone, but only managed by admins.
+    match /donations/{donationId} {
+        allow create: if true;
+        allow read, update, delete: if isAdmin();
     }
   }
 }
