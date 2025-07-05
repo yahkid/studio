@@ -19,6 +19,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Badge } from "@/components/ui/badge";
 import { SermonForm } from "./sermon-form";
 import { format } from "date-fns";
+import { sw } from 'date-fns/locale';
 
 interface EnrichedSermon extends SermonDoc {
     id: string;
@@ -87,12 +88,9 @@ export default function SermonManagerPage() {
             setIsLoading(false);
         }
     }, [toast]);
-
-    useEffect(() => {
-        fetchSermons();
-    }, [fetchSermons]);
     
     useEffect(() => {
+        // Fetch data when the component mounts, or when the sheet is closed.
         if (!isSheetOpen) {
             fetchSermons();
         }
@@ -175,7 +173,11 @@ export default function SermonManagerPage() {
                                 {sermon.is_featured && <Badge variant="secondary" className="absolute top-2 left-2 bg-hscm-gold text-dark-text hover:bg-hscm-gold/80">Featured</Badge>}
                             </CardHeader>
                              <CardContent className="pt-4 flex-grow">
-                                <p className="text-xs text-muted-foreground">{sermon.sermon_date ? format(sermon.sermon_date.toDate(), 'PPP') : ''}</p>
+                                <p className="text-xs text-muted-foreground">
+                                    {sermon.sermon_date && typeof sermon.sermon_date.toDate === 'function' 
+                                        ? format(sermon.sermon_date.toDate(), 'PPP', { locale: sw }) 
+                                        : 'Tarehe Batili'}
+                                </p>
                                 <CardTitle className="font-headline text-lg mt-1">{sermon.title}</CardTitle>
                                 <CardDescription className="text-xs mt-1">Speaker: {sermon.speaker}</CardDescription>
                                 <a href={`https://youtu.be/${sermon.youtube_video_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary mt-2">
