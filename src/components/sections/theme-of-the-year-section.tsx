@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion } from 'framer-motion';
@@ -48,7 +47,7 @@ export function ThemeOfTheYearSection() {
     >
       {/* Background Image */}
       <Image
-        src="https://placehold.co/1920x1080.png"
+        src="https://images.unsplash.com/photo-1627855621532-588145a55427?q=80&w=2070&auto=format&fit=crop"
         alt="Celestial background with golden sun rays"
         fill
         style={{ objectFit: 'cover' }}
