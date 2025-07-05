@@ -16,26 +16,15 @@ export default {
         headline: ['var(--font-montserrat)', 'sans-serif'],
       },
       colors: {
-        // HSCM Brand Colors from PRD
-        'hscm-green': '#166534', // primary
-        'hscm-red': '#B91C1C',   // accent (maps to destructive)
-        'hscm-gold': '#FBBF24',  // highlight (maps to secondary/accent)
+        // Direct brand color utilities for specific one-off uses
+        'hscm-green': '#166534',
+        'hscm-red': '#B91C1C',
+        'hscm-gold': '#FBBF24',
         'dark-text': '#1C1917',
         'body-text': '#333333',
-        'background-light': '#FFFFFF',
-        'background-dark': '#1a1a1a', // for footer
+        'background-dark': '#1a1a1a',
 
-        // HSCM Brand Colors (available as Tailwind utilities e.g., bg-hscm-green)
-        // These were existing, some might be redundant now or map to the above
-        // 'hscm-red': 'var(--hscm-red)', // #D90429 - This was an older red, PRD specifies #B91C1C
-        // 'hscm-gold': 'var(--hscm-gold)', // #FFD700 - PRD specifices #FBBF24
-        // 'hscm-green': 'var(--hscm-green)', // #00A86B - PRD specifices #166534
-        'hscm-green-dark-theme': 'var(--hscm-green-dark-theme)', // #00B37F
-        'hscm-gold-dark-theme': 'var(--hscm-gold-dark-theme)', // #FFDE33
-        'body-text-light': 'var(--body-text-light)',
-        'body-text-dark': 'var(--body-text-dark)',
-
-        // ShadCN theme variables (for consistency with existing components & theme structure)
+        // ShadCN theme variables (driven by globals.css)
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
