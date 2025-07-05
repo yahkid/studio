@@ -37,7 +37,8 @@ export default function PastoralCarePage() {
 
   useEffect(() => {
     if (initialLoadingComplete && !authLoading) {
-      if (!user || user.uid !== ADMIN_UID) {
+      // For the prototype, any authenticated user is considered an admin/pastor.
+      if (!user) {
         toast({
           title: "Ufikiaji Umezuiwa",
           description: "Huna ruhusa ya kuona ukurasa huu.",
@@ -253,8 +254,8 @@ export default function PastoralCarePage() {
       </Tabs>
       
       <Sheet open={isSheetOpen} onOpenChange={handleSheetClose}>
-        <SheetContent className="w-full sm:max-w-lg">
-          <SheetHeader className="pr-10">
+        <SheetContent className="w-full sm:max-w-lg p-0">
+          <SheetHeader className="p-4 border-b">
             <SheetTitle className="font-headline text-2xl">{selectedDecision?.name}</SheetTitle>
             <p className="text-sm text-muted-foreground">{selectedDecision?.email}</p>
           </SheetHeader>

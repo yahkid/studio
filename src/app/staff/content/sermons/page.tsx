@@ -25,7 +25,7 @@ interface EnrichedSermon extends SermonDoc {
 }
 
 // Publish/Unpublish button component to handle state
-function PublishSermonButton({ sermon }: { sermon: EnrichedSermon }) {
+function PublishSermonButton({ sermon, onStatusChange }: { sermon: EnrichedSermon, onStatusChange: () => void }) {
     const { toast } = useToast();
     const [isPublishing, startPublishTransition] = useTransition();
 
@@ -35,6 +35,7 @@ function PublishSermonButton({ sermon }: { sermon: EnrichedSermon }) {
             const result = await setSermonPublishedStatus(sermon.id, newStatus);
             if (result.success) {
                 toast({ title: newStatus ? "Sermon Published" : "Sermon Unpublished", description: "The sermon status has been updated." });
+                onStatusChange();
             } else {
                 toast({ title: "Error", description: result.error, variant: "destructive" });
             }
@@ -112,7 +113,7 @@ export default function SermonManagerPage() {
             const result = await deleteSermon(sermonId);
             if (result.success) {
                 toast({ title: "Sermon Deleted" });
-                // No need to call fetchSermons() here, revalidatePath handles it.
+                fetchSermons();
             } else {
                 toast({ title: "Error", description: result.error, variant: "destructive" });
             }
@@ -182,7 +183,7 @@ export default function SermonManagerPage() {
                                 </a>
                             </CardContent>
                             <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch gap-2">
-                                <PublishSermonButton sermon={sermon} />
+                                <PublishSermonButton sermon={sermon} onStatusChange={fetchSermons} />
                                 <div className="flex gap-2">
                                     <Button variant="outline" size="icon" onClick={() => handleEdit(sermon)} className="flex-1 sm:flex-auto"><Edit className="h-4 w-4" /></Button>
                                     <AlertDialog>
