@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   This is a default data extraction configuration.
-   To learn more about data extraction rules, see:
+   This configuration file specifies which app data is included in Google's
+   backup and restore services. For more details, see:
    https://developer.android.com/guide/topics/data/autobackup#Rules
 -->
 <data-extraction-rules>
+    <!--
+      Configuration for cloud-based backups to the user's Google Drive.
+      This is used when a user sets up a new device.
+    -->
     <cloud-backup>
         <!--
-        To disable cloud backup, change the value of this tag to "none"
-        To enable cloud backup, change the value of this tag to "full"
+          ALWAYS include SharedPreferences. This is where user-specific settings
+          like theme preference (light/dark), notification settings, or whether
+          they've completed an onboarding flow are stored. This is critical for
+          a good user experience on a new device.
         -->
         <include domain="sharedpref" />
+
+        <!--
+          EXCLUDE local databases. This app uses Firestore, which is a cloud database.
+          There is no local database that needs to be backed up. Excluding this prevents
+          potential issues if a temporary database is ever created.
+        -->
         <exclude domain="database" />
+
+        <!--
+          EXCLUDE local files. App files are typically image caches (from Glide/Picasso)
+          or other temporary data that should be re-downloaded, not restored from a backup.
+          This makes the backup smaller and faster.
+        -->
         <exclude domain="file" />
+
+        <!--
+          EXCLUDE the root directory. It's generally best practice to be specific
+          about what you include, and the root directory can contain sensitive or
+          unnecessary files.
+        -->
         <exclude domain="root" />
     </cloud-backup>
+
+    <!--
+      Configuration for device-to-device transfers. For this app's architecture,
+      the cloud backup rules are sufficient for both scenarios. There are no large,
+      non-cloud files that would require a different strategy for direct transfers.
+      Therefore, this section can be left commented out.
+    -->
     <!--
     <device-transfer>
         <include .../>
