@@ -16,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { ResourceForm } from "./resource-form";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EnrichedResource extends ResourceDoc {
     id: string;
@@ -35,6 +36,29 @@ const getIconForFileType = (fileType: ResourceDoc['fileType']) => {
   }
 };
 
+function ResourceCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="flex-row items-start gap-4 space-y-0">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-1.5 flex-1">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-1/4" />
+                </div>
+            </CardHeader>
+            <CardContent className="flex-grow">
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </div>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <Skeleton className="h-9 w-9" />
+                <Skeleton className="h-9 w-9" />
+            </CardFooter>
+        </Card>
+    );
+}
 
 export default function ResourceManagerPage() {
     const [resources, setResources] = useState<EnrichedResource[]>([]);
@@ -122,7 +146,9 @@ export default function ResourceManagerPage() {
             </Sheet>
 
             {isLoading ? (
-                 <div className="flex justify-center items-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {Array.from({ length: 4 }).map((_, i) => <ResourceCardSkeleton key={i} />)}
+                </div>
             ) : resources.length === 0 ? (
                 <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>No Resources Found</AlertTitle><AlertDescription>Click "Add New Resource" to get started.</AlertDescription></Alert>
             ) : (

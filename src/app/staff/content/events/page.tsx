@@ -18,6 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { EventForm } from "./event-form";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EnrichedEvent extends EventDoc {
     id: string;
@@ -58,6 +59,27 @@ function PublishEventButton({ event, onStatusChange }: { event: EnrichedEvent; o
             {isPublishing ? "Updating..." : event.is_published ? "Unpublish" : "Publish"}
         </Button>
     )
+}
+
+function EventCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader>
+                <Skeleton className="h-6 w-3/4 mb-1" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent className="flex-grow">
+                <Skeleton className="h-10 w-full" />
+            </CardContent>
+            <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch gap-2">
+                <Skeleton className="h-9 w-full sm:w-[120px]" />
+                <div className="flex gap-2 w-full sm:w-auto">
+                    <Skeleton className="h-9 w-9 flex-1 sm:flex-auto" />
+                    <Skeleton className="h-9 w-9 flex-1 sm:flex-auto" />
+                </div>
+            </CardFooter>
+        </Card>
+    );
 }
 
 export default function EventManagerPage() {
@@ -146,9 +168,9 @@ export default function EventManagerPage() {
             </Sheet>
 
             {isLoading ? (
-                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.from({ length: 6 }).map((_, i) => <EventCardSkeleton key={i} />)}
+                </div>
             ) : events.length === 0 ? (
                 <Alert>
                     <AlertCircle className="h-4 w-4" />

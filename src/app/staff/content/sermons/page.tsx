@@ -20,12 +20,12 @@ import { Badge } from "@/components/ui/badge";
 import { SermonForm } from "./sermon-form";
 import { format } from "date-fns";
 import { sw } from 'date-fns/locale';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EnrichedSermon extends SermonDoc {
     id: string;
 }
 
-// Publish/Unpublish button component to handle state
 function PublishSermonButton({ sermon, onStatusChange }: { sermon: EnrichedSermon, onStatusChange: () => void }) {
     const { toast } = useToast();
     const [isPublishing, startPublishTransition] = useTransition();
@@ -66,15 +66,12 @@ function PublishSermonButton({ sermon, onStatusChange }: { sermon: EnrichedSermo
 const safeFormatDate = (date: any): string => {
     if (!date) return 'Tarehe Batili';
     try {
-        // Handle Firestore Timestamp
         if (typeof date.toDate === 'function') {
             return format(date.toDate(), 'PPP', { locale: sw });
         }
-        // Handle JS Date object
         if (date instanceof Date) {
             return format(date, 'PPP', { locale: sw });
         }
-        // Handle ISO string or other string representations
         const parsed = new Date(date);
         if (!isNaN(parsed.getTime())) {
             return format(parsed, 'PPP', { locale: sw });
@@ -86,6 +83,27 @@ const safeFormatDate = (date: any): string => {
     return 'Tarehe Batili';
 };
 
+function SermonCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="p-0 relative">
+                <Skeleton className="aspect-video w-full" />
+            </CardHeader>
+            <CardContent className="pt-4 flex-grow space-y-2">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-5 w-4/5" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+            <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch gap-2">
+                <Skeleton className="h-9 w-full sm:w-auto sm:flex-1" />
+                <div className="flex gap-2">
+                    <Skeleton className="h-9 w-9" />
+                    <Skeleton className="h-9 w-9" />
+                </div>
+            </CardFooter>
+        </Card>
+    )
+}
 
 export default function SermonManagerPage() {
     const [sermons, setSermons] = useState<EnrichedSermon[]>([]);
@@ -114,7 +132,6 @@ export default function SermonManagerPage() {
     }, [toast]);
     
     useEffect(() => {
-        // Fetch data when the component mounts, or when the sheet is closed.
         if (!isSheetOpen) {
             fetchSermons();
         }
@@ -175,7 +192,9 @@ export default function SermonManagerPage() {
             </Sheet>
 
             {isLoading ? (
-                 <div className="flex justify-center items-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.from({ length: 6 }).map((_, i) => <SermonCardSkeleton key={i} />)}
+                </div>
             ) : sermons.length === 0 ? (
                 <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>No Sermons Found</AlertTitle><AlertDescription>Click "Add New Sermon" to get started.</AlertDescription></Alert>
             ) : (

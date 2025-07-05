@@ -20,10 +20,31 @@ import { Badge } from "@/components/ui/badge";
 import { BlogForm } from "./blog-form";
 import { format } from "date-fns";
 import { sw } from 'date-fns/locale';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EnrichedPost extends BlogPostDoc {
     id: string;
 }
+
+function BlogCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="p-0 relative">
+                <Skeleton className="aspect-video w-full" />
+            </CardHeader>
+            <CardContent className="pt-4 flex-grow space-y-2">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-5 w-4/5" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <Skeleton className="h-9 w-9" />
+                <Skeleton className="h-9 w-9" />
+            </CardFooter>
+        </Card>
+    )
+}
+
 
 export default function BlogManagerPage() {
     const [posts, setPosts] = useState<EnrichedPost[]>([]);
@@ -111,7 +132,9 @@ export default function BlogManagerPage() {
             </Sheet>
 
             {isLoading ? (
-                 <div className="flex justify-center items-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.from({ length: 6 }).map((_, i) => <BlogCardSkeleton key={i} />)}
+                </div>
             ) : posts.length === 0 ? (
                 <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>Hakuna Makala Zilizopatikana</AlertTitle><AlertDescription>Bofya "Ongeza Makala Mpya" ili kuanza.</AlertDescription></Alert>
             ) : (

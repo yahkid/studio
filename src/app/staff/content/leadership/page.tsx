@@ -27,9 +27,28 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LeaderForm } from './leader-form';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EnrichedLeader extends LeadershipDoc {
     id: string;
+}
+
+function LeaderCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="p-0">
+                <Skeleton className="aspect-square w-full" />
+            </CardHeader>
+            <CardContent className="pt-4 flex-grow space-y-2">
+                <Skeleton className="h-5 w-4/5" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <Skeleton className="h-9 w-9" />
+                <Skeleton className="h-9 w-9" />
+            </CardFooter>
+        </Card>
+    );
 }
 
 export default function LeadershipManagerPage() {
@@ -118,7 +137,9 @@ export default function LeadershipManagerPage() {
             </Sheet>
 
             {isLoading ? (
-                 <div className="flex justify-center items-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {Array.from({ length: 4 }).map((_, i) => <LeaderCardSkeleton key={i} />)}
+                </div>
             ) : leaders.length === 0 ? (
                 <Alert><AlertCircle className="h-4 w-4" /><AlertTitle>No Leaders Found</AlertTitle><AlertDescription>Click "Add New Leader" to get started.</AlertDescription></Alert>
             ) : (
