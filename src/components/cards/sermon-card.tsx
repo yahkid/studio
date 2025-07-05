@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import type { SermonDoc } from '@/types/firestore';
@@ -13,7 +14,7 @@ interface SermonCardProps {
 
 export function SermonCard({ sermon }: SermonCardProps) {
   return (
-    <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg transition-shadow duration-300">
+    <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       <CardHeader className="p-0 relative group">
         <Link href={`/sermons/${sermon.id}`} aria-label={`Tazama hubiri: ${sermon.title}`}>
           <div className="aspect-[16/9] w-full overflow-hidden">

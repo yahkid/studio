@@ -25,13 +25,12 @@ export function HeroSectionSw({ onOpenLeadMagnet }: HeroSectionSwProps) {
           fill
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           quality={85}
-          className="opacity-10 dark:opacity-20"
           priority
           suppressHydrationWarning={true}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 z-10"></div>
+        {/* Simplified Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-black/60 to-black/80 z-10"></div>
       </motion.div>
-      <div className="absolute inset-0 bg-black/60 z-10"></div> {/* Overlay */}
 
       <div className="relative z-20 container mx-auto px-6 py-8 text-white">
         <div className="max-w-3xl mx-auto text-center">

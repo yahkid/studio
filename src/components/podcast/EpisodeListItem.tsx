@@ -36,7 +36,7 @@ export function EpisodeListItem({ episode }: EpisodeListItemProps) {
       className="block group rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       aria-label={`View details for episode: ${episode.title}`}
     >
-      <Card className="flex flex-col h-full overflow-hidden group-hover:shadow-xl transition-shadow duration-300 ease-in-out">
+      <Card className="flex flex-col h-full overflow-hidden group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300 ease-in-out">
         {episode.artwork_url && (
           <div className="aspect-video relative overflow-hidden">
               <Image

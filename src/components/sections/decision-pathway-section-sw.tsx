@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { HandHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 interface DecisionPathwaySectionSwProps {
   onOpenDecisionModal: () => void;
@@ -12,7 +13,14 @@ interface DecisionPathwaySectionSwProps {
 
 export function DecisionPathwaySectionSw({ onOpenDecisionModal }: DecisionPathwaySectionSwProps) {
   return (
-    <section id="njia-ya-uamuzi" className="w-full max-w-5xl mx-auto text-center py-16 md:py-24 space-y-6 px-4">
+    <motion.section 
+      id="njia-ya-uamuzi" 
+      className="w-full max-w-5xl mx-auto text-center py-16 md:py-24 space-y-6 px-4"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="aspect-video w-full rounded-lg border overflow-hidden relative">
         <Image
           src="/Gemini_Generated_Image_asrt4uasrt4uasrt.png"
@@ -31,6 +39,6 @@ export function DecisionPathwaySectionSw({ onOpenDecisionModal }: DecisionPathwa
       <Button onClick={onOpenDecisionModal} size="lg" className="text-lg font-headline" suppressHydrationWarning={true}>
         Nimeamua Leo <HandHeart className="ml-2 h-5 w-5" />
       </Button>
-    </section>
+    </motion.section>
   );
 }

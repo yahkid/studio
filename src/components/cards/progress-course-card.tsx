@@ -22,7 +22,7 @@ export function ProgressCourseCard({
   const totalLessons = course.lessons.length;
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg transition-shadow duration-300">
+    <Card className="flex flex-col h-full overflow-hidden border rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       <CardHeader className="p-0 relative group">
         <Link href={`/kozi/${course.course_slug}`} aria-label={`Endelea na kozi ${course.title}`}>
           <div className="aspect-[16/9] w-full overflow-hidden">
