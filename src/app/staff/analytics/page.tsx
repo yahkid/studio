@@ -27,11 +27,16 @@ function MetricCard({ title, value, icon: Icon, description, isLoading }: Metric
             </CardHeader>
             <CardContent>
                 {isLoading ? (
-                  <Skeleton className="h-8 w-3/4" />
+                  <>
+                    <Skeleton className="h-7 w-3/4" />
+                    {description && <Skeleton className="h-4 w-1/2 mt-2" />}
+                  </>
                 ) : (
-                  <div className="text-2xl font-bold">{value}</div>
+                  <>
+                    <div className="text-2xl font-bold">{value}</div>
+                    {description && <p className="text-xs text-muted-foreground">{description}</p>}
+                  </>
                 )}
-                {description && <p className="text-xs text-muted-foreground">{description}</p>}
             </CardContent>
         </Card>
     )
@@ -80,11 +85,11 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          <MetricCard title="Total Users" value={stats.totalUsers?.toLocaleString() || '...'} icon={Users} description="Placeholder value" isLoading={isLoading} />
-          <MetricCard title="Faith Decisions" value={stats.totalDecisions?.toLocaleString() || '...'} icon={HandHeart} description="Total decisions submitted" isLoading={isLoading} />
-          <MetricCard title="Testimonies" value={stats.totalTestimonies?.toLocaleString() || '...'} icon={MessageSquareText} description="Total stories shared" isLoading={isLoading} />
-          <MetricCard title="Total Donations (TZS)" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('sw-TZ') || '...'}` : 'Loading...'} icon={DollarSign} description={`${stats.totalSuccessfulDonations || 0} successful donations`} isLoading={isLoading} />
-          <MetricCard title="Lessons Completed" value={stats.totalLessonsCompleted?.toLocaleString() || '...'} icon={BookOpen} description={`Across ${stats.totalCoursesStarted || 0} started courses`} isLoading={isLoading} />
+          <MetricCard title="Total Users" value={stats.totalUsers?.toLocaleString()} icon={Users} description="Placeholder value" isLoading={isLoading} />
+          <MetricCard title="Faith Decisions" value={stats.totalDecisions?.toLocaleString()} icon={HandHeart} description="Total decisions submitted" isLoading={isLoading} />
+          <MetricCard title="Testimonies" value={stats.totalTestimonies?.toLocaleString()} icon={MessageSquareText} description="Total stories shared" isLoading={isLoading} />
+          <MetricCard title="Total Donations (TZS)" value={isClient ? `TZS ${stats.totalDonationAmount?.toLocaleString('sw-TZ')}` : ''} icon={DollarSign} description={`${stats.totalSuccessfulDonations || 0} successful donations`} isLoading={isLoading} />
+          <MetricCard title="Lessons Completed" value={stats.totalLessonsCompleted?.toLocaleString()} icon={BookOpen} description={`Across ${stats.totalCoursesStarted || 0} started courses`} isLoading={isLoading} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
